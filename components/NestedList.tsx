@@ -10,24 +10,53 @@ export default function NestedList({ tags }: { tags: TagProps[] }) {
     return tags.filter(tag => !tag.parentId || !allIds.has(tag.parentId));
   };
   
+  // const rendertags = (parentId: number | null) => {
+  //   const tagsToRender = parentId === null ? findRoottags() : tags.filter(tag => tag.parentId === parentId);
+    
+  //   return tagsToRender
+  //     .sort((a, b) => b.id - a.id)
+  //     .map((tag, index) => (
+  //       <View 
+  //         key={tag.id} 
+  //         style={[
+  //           parentId !== null ? styles.subtask : undefined,
+  //           parentId === null && index !== 0 ? styles.headerSpacing : undefined,
+  //         ]}
+  //       >
+  //         <Task {...tag}/>
+  //         {rendertags(tag.id)}
+  //       </View>
+  //     ));
+  // };
+
   const rendertags = (parentId: number | null) => {
     const tagsToRender = parentId === null ? findRoottags() : tags.filter(tag => tag.parentId === parentId);
     
-    return tagsToRender
-      .sort((a, b) => b.id - a.id)
-      .map((tag, index) => (
-        <View 
-          key={tag.id} 
-          style={[
-            parentId !== null ? styles.subtask : undefined,
-            parentId === null && index !== 0 ? styles.headerSpacing : undefined,
-          ]}
-        >
-          <Task {...tag}/>
-          {rendertags(tag.id)}
-        </View>
-      ));
+    // Determine sort direction based on whether it's a root tag or a child tag
+    tagsToRender.sort((a, b) => {
+      if (parentId === null) {
+        // For root tags, sort by id in descending order (newest to oldest)
+        return b.id - a.id;
+      } else {
+        // For child tags, sort by id in ascending order (oldest to newest)
+        return a.id - b.id;
+      }
+    });
+    
+    return tagsToRender.map((tag, index) => (
+      <View 
+        key={tag.id} 
+        style={[
+          parentId !== null ? styles.subtask : undefined,
+          parentId === null && index !== 0 ? styles.headerSpacing : undefined,
+        ]}
+      >
+        <Task {...tag}/>
+        {rendertags(tag.id)}
+      </View>
+    ));
   };
+  
   
   return (
     <View style={styles.container}>

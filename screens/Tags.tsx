@@ -44,7 +44,6 @@ export default function TagScreen() {
         return isInScopeForTodayOrFuture && isUncompletedOrCompletedAfter;
       });
     }
-
     return groupTags;
   };
 
@@ -61,7 +60,7 @@ export default function TagScreen() {
         >
           <View style={styles.sectionsContainer}>
             {groups.map((group) => {
-              const groupTags = tags.filter((tag) => tag.group_id === group.id);
+              const groupTags = tags.filter((tag) => tag.section === group.name);
               const filteredTags = filterTags(
                 group.name,
                 groupTags,

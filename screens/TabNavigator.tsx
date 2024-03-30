@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Tasks from './Tasks';
 import Tags from './Tags';
+import Settings from './Settings';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,6 +17,7 @@ export function MyTabs() {
     >
       <Tab.Screen name="Today" component={Tags} options={{ headerShown: false }}/>
       <Tab.Screen name="Projects" component={Tasks} options={{ headerShown: false }}/>
+      <Tab.Screen name="Settings" component={Settings} options={{ headerShown: false }}/>
     </Tab.Navigator>
   );
 }
