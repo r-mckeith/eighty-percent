@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
+import { useTagDataContext } from "../../src/contexts/tagData/UseTagDataContext";
 import { getTagData } from "../../src/api/SupabaseTags";
 import { TagDataProps } from "../../src/types/TagTypes";
 
@@ -15,6 +16,8 @@ interface TagAggregatedData {
 export default function SelectedTagList() {
   const [tagsTableData, setTagsTableData] = useState<TagAggregatedData[]>([]);
   const { selectedDate } = useDateContext();
+  const { tagData } = useTagDataContext();
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +31,7 @@ export default function SelectedTagList() {
     };
 
     fetchData();
-  }, [selectedDate]);
+  }, [selectedDate, tagData]);
 
   const aggregateTagData = (
     yearData: TagDataProps[],
