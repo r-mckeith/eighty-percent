@@ -72,7 +72,7 @@ export default function TagScreen() {
               if (filteredTags.length > 0 || group.name !== "today") {
                 return (
                   <View key={group.id}>
-                    <Text style={styles.sectionTitle}>{group.name}</Text>
+                    <Text style={styles.sectionTitle}>{group.name === 'today' ? 'projects' : group.name}</Text>
                     <Section
                       tags={filteredTags}
                       sectionName={group.name}
