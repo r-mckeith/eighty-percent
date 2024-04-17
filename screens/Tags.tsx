@@ -54,20 +54,22 @@ export default function TagScreen() {
         selectedDate={selectedDate}
         onDateChange={setSelectedDate}
       />
-      <ScrollView style={styles.scrollView}>
+      <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="handled">
         <TouchableWithoutFeedback
           onPress={() => isEditMode && setIsEditMode(false)}
         >
           <View style={styles.sectionsContainer}>
             {groups.map((group) => {
-              const groupTags = tags.filter((tag) => tag.section === group.name);
+              const groupTags = tags.filter(
+                (tag) => tag.section === group.name
+              );
               const filteredTags = filterTags(
                 group.name,
                 groupTags,
                 selectedDateString
               );
 
-              if (filteredTags) {
+              if (filteredTags.length > 0 || group.name !== "today") {
                 return (
                   <View key={group.id}>
                     <Text style={styles.sectionTitle}>{group.name}</Text>
@@ -85,12 +87,14 @@ export default function TagScreen() {
               return null;
             })}
 
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={() => setShowModal(true)}
-            >
-              <MaterialCommunityIcons name="plus-circle-outline" size={24} />
-            </TouchableOpacity>
+            {isEditMode && (
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => setShowModal(true)}
+              >
+                <MaterialCommunityIcons name="plus-circle-outline" size={24} />
+              </TouchableOpacity>
+            )}
 
             <AddGroupModal
               visible={showModal}

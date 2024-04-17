@@ -52,6 +52,9 @@ export default function AddGroupModal ({ visible, onClose }: AddGroupModalProps)
             placeholder={'Group name...'}
             value={newGroupName}
             onChangeText={setNewGroupName}
+            autoFocus={true}
+            onSubmitEditing={handleAddGroup}
+            returnKeyType="done"
           />
           <View style={styles.buttonContainer}>
             <TouchableOpacity 

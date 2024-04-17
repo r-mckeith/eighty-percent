@@ -89,7 +89,7 @@ export default function SelectedTagList() {
   return (
     <View style={styles.selectedTagList}>
       <View style={styles.tableHeader}>
-        <Text style={[styles.headerCell, styles.tagNameCell]}>Tag Name</Text>
+        <Text style={[styles.headerCell, styles.tagNameCell]}></Text>
         <Text style={[styles.headerCell, styles.timeCell]}>Day</Text>
         <Text style={[styles.headerCell, styles.timeCell]}>Week</Text>
         <Text style={[styles.headerCell, styles.timeCell]}>Month</Text>
