@@ -31,8 +31,6 @@ export default function AddTag({ sectionName, groupId }: AddTag) {
     }
   };
 
-  if (sectionName === "today") return;
-
   return (
     <View style={styles.sectionHeader}>
       <TouchableOpacity

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  ActivityIndicator,
   View,
   StyleSheet,
   TouchableOpacity,
@@ -21,12 +22,11 @@ export default function TagScreen() {
   const { selectedDate, setSelectedDate } = useDateContext();
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const { tags } = useTagContext();
   const { groups } = useGroupContext();
-  const selectedDateString = selectedDate.toISOString().split("T")[0];
-
-  useEffect(() => {}, [tags, selectedDate, groups]);
+  const selectedDateString = selectedDate.toLocaleDateString('en-CA');
 
   const filterTags = (
     groupName: string,

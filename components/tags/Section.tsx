@@ -27,7 +27,9 @@ export default function Section({
     >
       <View style={styles.section}>
         <View style={styles.addTagContainer}>
-          {!isEditMode && <AddTag sectionName={sectionName} groupId={groupId} />}
+          {!isEditMode && sectionName !== "today" && (
+            <AddTag sectionName={sectionName} groupId={groupId} />
+          )}
         </View>
         {isEditMode && (
           <RenameTag
@@ -36,7 +38,7 @@ export default function Section({
             setIsEditMode={setIsEditMode}
           />
         )}
-        <View style={styles.tagContainer}>
+        <View style={[styles.tagContainer, sectionName !== 'today' ? styles.marginTop : {}]}>
           {tags.map((tag, index) => (
             <Tag
               key={index}
@@ -61,10 +63,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginBottom: 8,
     borderWidth: 2,
-    position: 'relative',
+    position: "relative",
   },
   addTagContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: -5,
     right: -5,
   },
@@ -72,7 +74,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "flex-start",
-    marginTop: 15,
+  },
+  marginTop: {
+    marginTop: 10,
   },
   title: {
     fontWeight: "bold",
