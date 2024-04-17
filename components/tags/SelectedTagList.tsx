@@ -1,59 +1,104 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { TagProps, TagDataProps, DateRange } from "../../src/types/TagTypes";
+import { View, Text, StyleSheet } from "react-native";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import { getTagData } from "../../src/api/SupabaseTags";
-import { useTagDataContext } from "../../src/contexts/tagData/UseTagDataContext";
+import { TagDataProps } from "../../src/types/TagTypes";
+
+interface TagAggregatedData {
+  tag_name: string;
+  day: number;
+  week: number;
+  month: number;
+  year: number;
+}
 
 export default function SelectedTagList() {
-  const [timeframe, setTimeframe] = useState('day');
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [selectedTagsList, setSelectedTagsList] = useState<any>([]);
-
+  const [tagsTableData, setTagsTableData] = useState<TagAggregatedData[]>([]);
   const { selectedDate } = useDateContext();
-  const { tagData } = useTagDataContext();
-
-  const optionToEnumMap: any = {
-    'day': DateRange.Today,
-    'week': DateRange.ThisWeek,
-    'month': DateRange.ThisMonth,
-    'year': DateRange.ThisYear,
-  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getTagData(optionToEnumMap[timeframe], selectedDate);
-        setSelectedTagsList(data);
+        const yearData = await getTagData(selectedDate);
+        const processedData = aggregateTagData(yearData, selectedDate);
+        setTagsTableData(processedData);
       } catch (error) {
-        console.error('Failed to fetch tag data:', error);
+        console.error("Failed to fetch tag data:", error);
       }
     };
 
     fetchData();
-  }, [selectedDate, timeframe, tagData]);
+  }, [selectedDate]);
+
+  const aggregateTagData = (
+    yearData: TagDataProps[],
+    selectedDate: Date
+  ): TagAggregatedData[] => {
+    const tagMap: {
+      [key: string]: { day: number; week: number; month: number; year: number };
+    } = {};
+
+    const startDay = new Date(
+      Date.UTC(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate()
+      )
+    );
+    const startWeek = new Date(startDay);
+    startWeek.setDate(startDay.getDate() - 6);
+    const startMonth = new Date(startDay);
+    startMonth.setDate(startDay.getDate() - 29);
+
+    yearData.forEach((tag) => {
+      const createdAtDate = new Date(tag.created_at);
+      const tagDateUTC = new Date(
+        Date.UTC(
+          createdAtDate.getFullYear(),
+          createdAtDate.getMonth(),
+          createdAtDate.getDate()
+        )
+      );
+
+      if (!tagMap[tag.tag_name]) {
+        tagMap[tag.tag_name] = { day: 0, week: 0, month: 0, year: 0 };
+      }
+      if (tagDateUTC.toISOString() === startDay.toISOString()) {
+        tagMap[tag.tag_name].day += tag.count;
+      }
+      if (tagDateUTC >= startWeek && tagDateUTC <= startDay) {
+        tagMap[tag.tag_name].week += tag.count;
+      }
+      if (tagDateUTC >= startMonth && tagDateUTC <= startDay) {
+        tagMap[tag.tag_name].month += tag.count;
+      }
+      tagMap[tag.tag_name].year += tag.count;
+    });
+
+    return Object.entries(tagMap).map(([tag_name, counts]) => ({
+      tag_name,
+      ...counts,
+    }))
+    .filter(tag => tag.month > 0);
+    ;
+  };
   
   return (
     <View style={styles.selectedTagList}>
-      <TouchableOpacity style={styles.dropdownButton} onPress={() => setDropdownVisible(!dropdownVisible)}>
-        <Text style={styles.dropdownOption}>{timeframe}</Text>
-        <MaterialCommunityIcons name={dropdownVisible ? "chevron-up" : "chevron-down"} size={24} />
-      </TouchableOpacity>
-      {dropdownVisible && (
-        <View style={styles.dropdownList}>
-          {['day', 'week', 'month', 'year'].map(option => (
-            <TouchableOpacity key={option} style={styles.dropdownItem} onPress={() => { setTimeframe(option); setDropdownVisible(false); }}>
-              <Text style={styles.dropdownOption}>{option}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-        <View style={styles.table}></View>
-        {selectedTagsList.map((item: any, index: any) => (
+      <View style={styles.tableHeader}>
+        <Text style={[styles.headerCell, styles.tagNameCell]}>Tag Name</Text>
+        <Text style={[styles.headerCell, styles.timeCell]}>Day</Text>
+        <Text style={[styles.headerCell, styles.timeCell]}>Week</Text>
+        <Text style={[styles.headerCell, styles.timeCell]}>Month</Text>
+        <Text style={[styles.headerCell, styles.timeCell]}>Year</Text>
+      </View>
+      {tagsTableData.map((tag, index) => (
         <View key={index} style={styles.row}>
-          <Text style={styles.cell}>{item.tag_name}</Text>
-          <Text style={styles.cell}>{item.count}</Text>
+          <Text style={[styles.cell, styles.tagNameCell]}>{tag.tag_name}</Text>
+          <Text style={[styles.cell, styles.timeCell]}>{tag.day}</Text>
+          <Text style={[styles.cell, styles.timeCell]}>{tag.week}</Text>
+          <Text style={[styles.cell, styles.timeCell]}>{tag.month}</Text>
+          <Text style={[styles.cell, styles.timeCell]}>{tag.year}</Text>
         </View>
       ))}
     </View>
@@ -64,72 +109,45 @@ const styles = StyleSheet.create({
   selectedTagList: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#eee',
+    backgroundColor: "#eee",
     borderTopWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
   },
-  selectedTag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 8,
-    margin: 4,
-    alignSelf: 'flex-start',
-  },
-  dropdownButton: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#f0f0f0',
+  tableHeader: {
+    flexDirection: "row",
+    paddingBottom: 4,
     borderBottomWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: "#ccc",
+    backgroundColor: "#f9f9f9",
   },
-  dropdownList: {
-    backgroundColor: '#f9f9f9',
-    borderColor: '#ddd',
-    borderWidth: 1,
-    position: 'absolute',
-    top: 50,
-    left: 10,
-    right: 10,
-    zIndex: 1,
-  },
-  dropdownOption: {
-    fontWeight: 'bold',
-    textTransform: 'capitalize',
-  },
-  dropdownItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: '#ddd',
-  },
-  tagName: {
-    marginRight: 8,
-    fontSize: 16,
-  },
-  tagCount: {
-      fontSize: 16,
-      color: '#555',
-  },
-  table: {
-    borderWidth: 1,
-    borderColor: 'black',
+  header: {
+    fontWeight: "bold",
+    marginTop: 20,
+    marginBottom: 5,
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderColor: "#eee",
   },
   headerCell: {
     flex: 1,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'black',
-    backgroundColor: 'lightgray',
-    fontWeight: 'bold',
+    fontWeight: "bold",
+    padding: 5,
+    textAlign: "center",
   },
   cell: {
     flex: 1,
-    padding: 10,
-    // borderWidth: 1,
-    // borderColor: 'black',
+    padding: 8,
+    textAlign: "center",
+  },
+  tagNameCell: {
+    flex: 3, 
+    textAlign: "left",
+  },
+  timeCell: {
+    flex: 1, 
+    textAlign: "right",
   },
 });
