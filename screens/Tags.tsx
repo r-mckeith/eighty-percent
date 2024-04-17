@@ -22,7 +22,6 @@ export default function TagScreen() {
   const { selectedDate, setSelectedDate } = useDateContext();
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   const { tags } = useTagContext();
   const { groups } = useGroupContext();
