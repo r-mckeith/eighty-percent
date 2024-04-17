@@ -36,6 +36,9 @@ export default function AddTagModal ({ visible, sectionName, onClose, onAddTag }
             placeholder={'Tag name...'}
             value={newTagName}
             onChangeText={setNewTagName}
+            autoFocus={true}
+            onSubmitEditing={handleAddTag}
+            returnKeyType="done"
           />
           <View style={styles.buttonContainer}>
             <TouchableOpacity 

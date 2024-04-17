@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  ActivityIndicator,
   View,
   StyleSheet,
   TouchableOpacity,
@@ -21,12 +22,11 @@ export default function TagScreen() {
   const { selectedDate, setSelectedDate } = useDateContext();
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const { tags } = useTagContext();
   const { groups } = useGroupContext();
-  const selectedDateString = selectedDate.toISOString().split("T")[0];
-
-  useEffect(() => {}, [tags, selectedDate, groups]);
+  const selectedDateString = selectedDate.toLocaleDateString('en-CA');
 
   const filterTags = (
     groupName: string,
@@ -54,23 +54,25 @@ export default function TagScreen() {
         selectedDate={selectedDate}
         onDateChange={setSelectedDate}
       />
-      <ScrollView style={styles.scrollView}>
+      <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="handled">
         <TouchableWithoutFeedback
           onPress={() => isEditMode && setIsEditMode(false)}
         >
           <View style={styles.sectionsContainer}>
             {groups.map((group) => {
-              const groupTags = tags.filter((tag) => tag.section === group.name);
+              const groupTags = tags.filter(
+                (tag) => tag.section === group.name
+              );
               const filteredTags = filterTags(
                 group.name,
                 groupTags,
                 selectedDateString
               );
 
-              if (filteredTags) {
+              if (filteredTags.length > 0 || group.name !== "today") {
                 return (
                   <View key={group.id}>
-                    <Text style={styles.sectionTitle}>{group.name}</Text>
+                    <Text style={styles.sectionTitle}>{group.name === 'today' ? 'projects' : group.name}</Text>
                     <Section
                       tags={filteredTags}
                       sectionName={group.name}
@@ -85,12 +87,14 @@ export default function TagScreen() {
               return null;
             })}
 
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={() => setShowModal(true)}
-            >
-              <MaterialCommunityIcons name="plus-circle-outline" size={24} />
-            </TouchableOpacity>
+            {isEditMode && (
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => setShowModal(true)}
+              >
+                <MaterialCommunityIcons name="plus-circle-outline" size={24} />
+              </TouchableOpacity>
+            )}
 
             <AddGroupModal
               visible={showModal}

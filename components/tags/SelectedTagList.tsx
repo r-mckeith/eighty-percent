@@ -18,7 +18,6 @@ export default function SelectedTagList() {
   const { selectedDate } = useDateContext();
   const { tagData } = useTagDataContext();
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -78,18 +77,22 @@ export default function SelectedTagList() {
       tagMap[tag.tag_name].year += tag.count;
     });
 
-    return Object.entries(tagMap).map(([tag_name, counts]) => ({
-      tag_name,
-      ...counts,
-    }))
-    .filter(tag => tag.month > 0);
-    ;
+    return Object.entries(tagMap)
+      .map(([tag_name, counts]) => ({
+        tag_name,
+        ...counts,
+      }))
+      .filter((tag) => tag.month > 0);
   };
-  
+
+  if (tagsTableData.length === 0) {
+    return;
+  }
+
   return (
     <View style={styles.selectedTagList}>
       <View style={styles.tableHeader}>
-        <Text style={[styles.headerCell, styles.tagNameCell]}>Tag Name</Text>
+        <Text style={[styles.headerCell, styles.tagNameCell]}></Text>
         <Text style={[styles.headerCell, styles.timeCell]}>Day</Text>
         <Text style={[styles.headerCell, styles.timeCell]}>Week</Text>
         <Text style={[styles.headerCell, styles.timeCell]}>Month</Text>
@@ -146,11 +149,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   tagNameCell: {
-    flex: 3, 
+    flex: 3,
     textAlign: "left",
   },
   timeCell: {
-    flex: 1, 
+    flex: 1,
     textAlign: "right",
   },
 });
