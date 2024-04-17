@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Text, Switch } from 'react-native';
-import { useTagContext } from '../src/contexts/tags/UseTagContext';
+import { useTaskContext } from '../src/contexts/tasks/UseTaskContext';
 import { useDateContext } from '../src/contexts/date/useDateContext';
 import TaskContainer from '../components/tasks/TaskContainer';
 import Header from '../components/ListHeader';
@@ -8,10 +8,10 @@ import AddTask from '../components/tasks/AddTask';
 
 export default function MonthlyScreen() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false)
-  const { tags } = useTagContext();
+  const { state } = useTaskContext();
   const { selectedDate, setSelectedDate } = useDateContext();
 
-  const listTags = showCompleted ? tags.filter(tag => tag.section === 'today') : tags.filter(tag => tag.section === 'today' && !tag.completed)
+  const tasks = showCompleted ? state : state.filter(task => !task.completed)
 
   return (
     <>
@@ -33,7 +33,7 @@ export default function MonthlyScreen() {
         </View>
       </View>
       <View style={styles.container}>
-        <TaskContainer tags={listTags} />
+        <TaskContainer tasks={tasks} />
       </View>
     </>
   );

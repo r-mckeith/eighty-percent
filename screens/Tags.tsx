@@ -9,13 +9,16 @@ import {
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { ScrollView } from "react-native-gesture-handler";
 import { useTagContext } from "../src/contexts/tags/UseTagContext";
+import { useTaskContext } from "../src/contexts/tasks/UseTaskContext";
 import { useDateContext } from "../src/contexts/date/useDateContext";
 import { useGroupContext } from "../src/contexts/groups/UseGroupContext";
 import { TagProps } from "../src/types/TagTypes";
 import Header from "../components/DateHeader";
 import Section from "../components/tags/Section";
+import TaskSection from "../components/tags/TaskSection";
 import SelectedTagList from "../components/tags/SelectedTagList";
 import AddGroupModal from "../components/AddGroupModal";
+import { Task } from "../src/types/TaskTypes";
 
 export default function TagScreen() {
   const { selectedDate, setSelectedDate } = useDateContext();
@@ -23,28 +26,22 @@ export default function TagScreen() {
   const [showModal, setShowModal] = useState(false);
 
   const { tags } = useTagContext();
+  const { state: tasks } = useTaskContext();
   const { groups } = useGroupContext();
   const selectedDateString = selectedDate.toISOString().split("T")[0];
 
   useEffect(() => {}, [tags, selectedDate, groups]);
 
-  const filterTags = (
-    groupName: string,
-    groupTags: TagProps[],
-    selectedDateString: string
-  ) => {
-    if (groupName.toLowerCase() === "today") {
-      return groupTags.filter((tag) => {
-        const isInScopeForTodayOrFuture =
-          tag.inScopeDay === selectedDateString ||
-          (tag.inScopeDay && tag.inScopeDay < selectedDateString);
-        const isUncompletedOrCompletedAfter =
-          !tag.completed ||
-          (tag.completed && tag.completed >= selectedDateString);
-        return isInScopeForTodayOrFuture && isUncompletedOrCompletedAfter;
-      });
-    }
-    return groupTags;
+  const filterTasks = (groupTags: Task[]) => {
+    return groupTags.filter((tag) => {
+      const isInScopeForTodayOrFuture =
+        tag.inScopeDay === selectedDateString ||
+        (tag.inScopeDay && tag.inScopeDay < selectedDateString);
+      const isUncompletedOrCompletedAfter =
+        !tag.completed ||
+        (tag.completed && tag.completed >= selectedDateString);
+      return isInScopeForTodayOrFuture && isUncompletedOrCompletedAfter;
+    });
   };
 
   return (
@@ -59,30 +56,28 @@ export default function TagScreen() {
           onPress={() => isEditMode && setIsEditMode(false)}
         >
           <View style={styles.sectionsContainer}>
+            {filterTasks(tasks).length > 0 && (
+              <>
+                <Text style={styles.sectionTitle}>{"Today"}</Text>
+                <TaskSection tasks={filterTasks(tasks)} />
+              </>
+            )}
             {groups.map((group) => {
-              const groupTags = tags.filter((tag) => tag.section === group.name);
-              const filteredTags = filterTags(
-                group.name,
-                groupTags,
-                selectedDateString
+              const groupTags = tags.filter(
+                (tag) => tag.section === group.name
               );
-
-              if (filteredTags) {
-                return (
-                  <View key={group.id}>
-                    <Text style={styles.sectionTitle}>{group.name}</Text>
-                    <Section
-                      tags={filteredTags}
-                      sectionName={group.name}
-                      groupId={group.id}
-                      isEditMode={isEditMode}
-                      setIsEditMode={setIsEditMode}
-                    />
-                  </View>
-                );
-              }
-
-              return null;
+              return (
+                <View key={group.id}>
+                  <Text style={styles.sectionTitle}>{group.name}</Text>
+                  <Section
+                    tags={groupTags}
+                    sectionName={group.name}
+                    groupId={group.id}
+                    isEditMode={isEditMode}
+                    setIsEditMode={setIsEditMode}
+                  />
+                </View>
+              );
             })}
 
             <TouchableOpacity

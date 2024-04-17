@@ -5,9 +5,9 @@ import { handleDeleteTag } from "../../helpers/tagHelpers";
 import RightSwipe from "./RightSwipe";
 import AddTask from "./AddTask";
 import ScopeTask from "./ScopeTask";
-import { TagProps } from "../../src/types/TagTypes";
 import { useTagContext } from "../../src/contexts/tags/UseTagContext";
 import { useTagDataContext } from "../../src/contexts/tagData/UseTagDataContext";
+import { Task as TaskProps } from "../../src/types/TaskTypes";
 
 export default function Task({
   id,
@@ -15,7 +15,7 @@ export default function Task({
   completed,
   inScopeDay,
   depth,
-}: TagProps) {
+}: TaskProps) {
   const { tags, dispatch: tagDispatch } = useTagContext();
   const { tagData } = useTagDataContext();
 

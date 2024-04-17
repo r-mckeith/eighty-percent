@@ -6,6 +6,7 @@ import { MenuProvider } from "react-native-popup-menu";
 import "react-native-url-polyfill/auto";
 import Auth from "./components/auth/Auth";
 import TagContextProvider from "./src/contexts/tags/TagContextProvider";
+import TaskContextProvider from "./src/contexts/tasks/TaskContextProvider";
 import TagDataContextProvider from "./src/contexts/tagData/TagDataContextProvider";
 import DateProvider from "./src/contexts/date/Dateprovider";
 import GroupContextProvider from "./src/contexts/groups/GroupContextProvider";
@@ -19,23 +20,25 @@ export default function App() {
   return (
     <DateProvider>
       <GroupContextProvider>
-        <TagContextProvider>
-          <TagDataContextProvider>
-            <SafeAreaView style={styles.container}>
-              <MenuProvider>
-                <GestureHandlerRootView style={{ flex: 1 }}>
-                  {session && session.user ? (
-                    <NavigationContainer>
-                      <MyTabs />
-                    </NavigationContainer>
-                  ) : (
-                    <Auth />
-                  )}
-                </GestureHandlerRootView>
-              </MenuProvider>
-            </SafeAreaView>
-          </TagDataContextProvider>
-        </TagContextProvider>
+        <TaskContextProvider>
+          <TagContextProvider>
+            <TagDataContextProvider>
+              <SafeAreaView style={styles.container}>
+                <MenuProvider>
+                  <GestureHandlerRootView style={{ flex: 1 }}>
+                    {session && session.user ? (
+                      <NavigationContainer>
+                        <MyTabs />
+                      </NavigationContainer>
+                    ) : (
+                      <Auth />
+                    )}
+                  </GestureHandlerRootView>
+                </MenuProvider>
+              </SafeAreaView>
+            </TagDataContextProvider>
+          </TagContextProvider>
+        </TaskContextProvider>
       </GroupContextProvider>
     </DateProvider>
   );

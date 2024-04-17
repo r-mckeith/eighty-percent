@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Task from './tasks/Task';
-import { TagProps } from '../src/types/TagTypes';
+import { Task as TaskProps } from '../src/types/TaskTypes';
 
-export default function NestedList({ tags }: { tags: TagProps[] }) {
+export default function NestedList({ tasks }: { tasks: TaskProps[] }) {
 
   const findRoottags = () => {
-    const allIds = new Set(tags.map(tag => tag.id));
-    return tags.filter(tag => !tag.parentId || !allIds.has(tag.parentId));
+    const allIds = new Set(tasks.map(task => task.id));
+    return tasks.filter(task => !task.parentId || !allIds.has(task.parentId));
   };
   
   // const rendertags = (parentId: number | null) => {
@@ -30,7 +30,7 @@ export default function NestedList({ tags }: { tags: TagProps[] }) {
   // };
 
   const rendertags = (parentId: number | null) => {
-    const tagsToRender = parentId === null ? findRoottags() : tags.filter(tag => tag.parentId === parentId);
+    const tagsToRender = parentId === null ? findRoottags() : tasks.filter(task => task.parentId === parentId);
     
     // Determine sort direction based on whether it's a root tag or a child tag
     tagsToRender.sort((a, b) => {
@@ -43,16 +43,16 @@ export default function NestedList({ tags }: { tags: TagProps[] }) {
       }
     });
     
-    return tagsToRender.map((tag, index) => (
+    return tagsToRender.map((task, index) => (
       <View 
-        key={tag.id} 
+        key={task.id} 
         style={[
           parentId !== null ? styles.subtask : undefined,
           parentId === null && index !== 0 ? styles.headerSpacing : undefined,
         ]}
       >
-        <Task {...tag}/>
-        {rendertags(tag.id)}
+        <Task {...task}/>
+        {rendertags(task.id)}
       </View>
     ));
   };

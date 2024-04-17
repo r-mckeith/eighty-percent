@@ -1,9 +1,9 @@
 import React, { useState, useEffect} from 'react';
 import { View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTagContext } from '../../src/contexts/tags/UseTagContext';
-import { handleToggleScope } from '../../helpers/tagHelpers';
+import { useTaskContext } from '../../src/contexts/tasks/UseTaskContext';
 import { useDateContext } from '../../src/contexts/date/useDateContext';
+import { toggleScope } from '../../src/api/SupabaseTasks';
 
 interface Scope {
   id: number,
@@ -12,15 +12,27 @@ interface Scope {
 
 export default function ScopeTask({id, inScopeDay}: Scope) {
   const [inScope, setInScope] = useState<any>();
-  const { dispatch } = useTagContext();
+  const { dispatch } = useTaskContext();
   const { selectedDate } = useDateContext();
 
   useEffect(() => {
     setInScope(inScopeDay && inScopeDay <= selectedDate.toISOString().split('T')[0]);
   }, [inScopeDay]);
 
-  const toggleScope = () => {
-    handleToggleScope(id, selectedDate.toISOString().split('T')[0], dispatch);
+  async function handleToggleScope () {  
+    console.log(id, selectedDate)
+    dispatch({ type: 'TOGGLE_SCOPE', id: id, selectedDate: selectedDate.toISOString() });
+  
+    try {
+      const updatedTask = await toggleScope(id, selectedDate.toISOString());
+      
+      if (updatedTask) {
+      } else {
+        console.error('Failed to toggle scope for day');
+      }
+    } catch (error) {
+      console.error('Failed to toggle scope for day:', error);
+    }
   };
 
   return (
@@ -29,7 +41,7 @@ export default function ScopeTask({id, inScopeDay}: Scope) {
         name={inScope ? "radiobox-marked" : "radiobox-blank"} 
         size={24} 
         color={'#767577'}
-        onPress={toggleScope}
+        onPress={() => handleToggleScope}
         style={{paddingLeft: 8}}
       />
     </View>

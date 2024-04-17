@@ -8,7 +8,6 @@ import { deleteTag, selectTag } from "../../src/api/SupabaseTags";
 import { useTagDataContext } from "../../src/contexts/tagData/UseTagDataContext";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import RightSwipe from "./RightSwipe";
-import { handleToggleCompleted } from "../../helpers/tagHelpers";
 
 type TagComponent = {
   tag: TagProps;
@@ -47,19 +46,14 @@ export default function Tag({ tag, sectionName, isEditMode }: TagComponent) {
   }
 
   const handleSelectTag = async (selectedTag: TagProps) => {
-    if (sectionName === "today") {
-      setIsSelected(!isSelected);
-      handleToggleCompleted(tag.id, selectedDate, tagDispatch);
-    } else {
-      try {
-        setIsSelected(true);
-        const updatedTagData = await selectTag(selectedTag, selectedDate);
-        tagDataDispatch({ type: "UPDATE_TAG_DATA", payload: updatedTagData });
-        setTimeout(() => setIsSelected(false), 1);
-      } catch (error) {
-        console.error("Error selecting tag:", error);
-        setIsSelected(false);
-      }
+    try {
+      setIsSelected(true);
+      const updatedTagData = await selectTag(selectedTag, selectedDate);
+      tagDataDispatch({ type: "UPDATE_TAG_DATA", payload: updatedTagData });
+      setTimeout(() => setIsSelected(false), 1);
+    } catch (error) {
+      console.error("Error selecting tag:", error);
+      setIsSelected(false);
     }
   };
 
