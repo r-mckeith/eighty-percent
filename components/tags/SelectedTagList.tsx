@@ -101,7 +101,6 @@ export default function SelectedTagList({ tags }: { tags: TagProps[] }) {
       if (task.completed) {
         const completedDate = new Date(task.completed);
 
-        // Counting completions within the desired time frames
         if (completedDate >= startDay && completedDate < endDay) {
           aggregatedData.today++;
         }

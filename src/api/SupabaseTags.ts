@@ -2,7 +2,6 @@ import {
   NewTagProps,
   TagProps,
   TagDataProps,
-  DateRange,
 } from "../types/TagTypes";
 import { supabase } from "./SupabaseClient";
 
