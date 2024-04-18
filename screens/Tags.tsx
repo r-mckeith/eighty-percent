@@ -100,7 +100,7 @@ export default function TagScreen() {
               onClose={() => setShowModal(false)}
             />
 
-            <SelectedTagList />
+            <SelectedTagList tags={tags}/>
           </View>
         </TouchableWithoutFeedback>
       </ScrollView>

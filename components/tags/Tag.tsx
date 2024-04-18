@@ -45,7 +45,7 @@ export default function ShakingItem({
     } else {
       setIsSelected(false);
     }
-  }, []);
+  }, [selectedDate]);
 
   async function handleDeleteTag(id: number) {
     try {

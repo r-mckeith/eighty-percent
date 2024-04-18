@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import { useTagDataContext } from "../../src/contexts/tagData/UseTagDataContext";
 import { getTagData } from "../../src/api/SupabaseTags";
-import { TagDataProps } from "../../src/types/TagTypes";
+import { TagDataProps, TagProps } from "../../src/types/TagTypes";
 
 interface TagAggregatedData {
   tag_name: string;
@@ -13,7 +13,7 @@ interface TagAggregatedData {
   year: number;
 }
 
-export default function SelectedTagList() {
+export default function SelectedTagList({ tags }: { tags: TagProps[]}) {
   const [tagsTableData, setTagsTableData] = useState<TagAggregatedData[]>([]);
   const { selectedDate } = useDateContext();
   const { tagData } = useTagDataContext();
@@ -31,6 +31,8 @@ export default function SelectedTagList() {
 
     fetchData();
   }, [selectedDate, tagData]);
+
+  
 
   const aggregateTagData = (
     yearData: TagDataProps[],
