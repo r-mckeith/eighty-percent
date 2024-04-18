@@ -248,6 +248,7 @@ const styles = StyleSheet.create({
   tableHeader: {
     flexDirection: "row",
     paddingBottom: 4,
+    paddingRight: 8,
     borderBottomWidth: 1,
     borderColor: "#ccc",
     backgroundColor: "#f9f9f9",
@@ -266,20 +267,20 @@ const styles = StyleSheet.create({
   headerCell: {
     flex: 1,
     fontWeight: "bold",
-    padding: 5,
+    padding: 1,
     textAlign: "center",
   },
   cell: {
     flex: 1,
-    padding: 8,
+    padding: 1,
     textAlign: "center",
   },
   tagNameCell: {
-    flex: 3,
+    flex: 2.75,
     textAlign: "left",
   },
   timeCell: {
     flex: 1,
-    textAlign: "right",
+    textAlign: "center",
   },
 });
