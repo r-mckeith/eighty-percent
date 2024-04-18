@@ -102,9 +102,15 @@ export default function SelectedTagList() {
         <View key={index} style={styles.row}>
           <Text style={[styles.cell, styles.tagNameCell]}>{tag.tag_name}</Text>
           <Text style={[styles.cell, styles.timeCell]}>{tag.day}</Text>
-          <Text style={[styles.cell, styles.timeCell]}>{tag.week}</Text>
-          <Text style={[styles.cell, styles.timeCell]}>{tag.month}</Text>
-          <Text style={[styles.cell, styles.timeCell]}>{tag.year}</Text>
+          <Text style={[styles.cell, styles.timeCell]}>
+            {tag.week > tag.day && tag.week}
+          </Text>
+          <Text style={[styles.cell, styles.timeCell]}>
+            {tag.month > tag.day && tag.month}
+          </Text>
+          <Text style={[styles.cell, styles.timeCell]}>
+            {tag.year > tag.month && tag.year}
+          </Text>
         </View>
       ))}
     </View>

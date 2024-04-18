@@ -9,25 +9,6 @@ export default function NestedList({ tags }: { tags: TagProps[] }) {
     const allIds = new Set(tags.map(tag => tag.id));
     return tags.filter(tag => !tag.parentId || !allIds.has(tag.parentId));
   };
-  
-  // const rendertags = (parentId: number | null) => {
-  //   const tagsToRender = parentId === null ? findRoottags() : tags.filter(tag => tag.parentId === parentId);
-    
-  //   return tagsToRender
-  //     .sort((a, b) => b.id - a.id)
-  //     .map((tag, index) => (
-  //       <View 
-  //         key={tag.id} 
-  //         style={[
-  //           parentId !== null ? styles.subtask : undefined,
-  //           parentId === null && index !== 0 ? styles.headerSpacing : undefined,
-  //         ]}
-  //       >
-  //         <Task {...tag}/>
-  //         {rendertags(tag.id)}
-  //       </View>
-  //     ));
-  // };
 
   const rendertags = (parentId: number | null) => {
     const tagsToRender = parentId === null ? findRoottags() : tags.filter(tag => tag.parentId === parentId);
