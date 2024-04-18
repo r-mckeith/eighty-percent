@@ -21,8 +21,6 @@ export default function Task({
 
   const swipeableRow = useRef<Swipeable | null>(null);
 
-  console.log(tags)
-
   function getDepthStyle() {
     switch (depth) {
       case 0:
