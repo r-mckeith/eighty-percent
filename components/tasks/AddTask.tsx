@@ -48,7 +48,7 @@ export default function AddTask({ parentId, depth, variant = "default" }: any) {
           style={styles.defaultAddButton}
         >
           <MaterialCommunityIcons
-            name="plus-circle-outline"
+            name="plus"
             size={24}
             color="#767577"
           />

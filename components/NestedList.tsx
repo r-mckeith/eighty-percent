@@ -1,77 +1,98 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import Task from './tasks/Task';
-import { TagProps } from '../src/types/TagTypes';
+import React, { useState } from "react";
+import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import Task from "./tasks/Task";
+import { TagProps } from "../src/types/TagTypes";
 
 export default function NestedList({ tags }: { tags: TagProps[] }) {
+  const [collapsed, setCollapsed] = useState(new Set());
+  const [expandAll, setExpandAll] = useState(true);
 
-  const findRoottags = () => {
-    const allIds = new Set(tags.map(tag => tag.id));
-    return tags.filter(tag => !tag.parentId || !allIds.has(tag.parentId));
+  const toggleCollapse = (id: number) => {
+    const updatedCollapsed = new Set(collapsed);
+    if (collapsed.has(id)) {
+      updatedCollapsed.delete(id);
+    } else {
+      updatedCollapsed.add(id);
+    }
+    setCollapsed(updatedCollapsed);
   };
 
-  const rendertags = (parentId: number | null) => {
-    const tagsToRender = parentId === null ? findRoottags() : tags.filter(tag => tag.parentId === parentId);
-    
-    // Determine sort direction based on whether it's a root tag or a child tag
+  const handleExpandAll = () => {
+    if (expandAll) {
+      setCollapsed(new Set(tags.map((tag) => tag.id)));
+    } else {
+      setCollapsed(new Set());
+    }
+    setExpandAll(!expandAll);
+  };
+
+  const findRootTags = () => {
+    const allIds = new Set(tags.map((tag) => tag.id));
+    return tags.filter((tag) => !tag.parentId || !allIds.has(tag.parentId));
+  };
+
+  const renderTags = (parentId: number | null) => {
+    const tagsToRender =
+      parentId === null
+        ? findRootTags()
+        : tags.filter((tag) => tag.parentId === parentId);
+
     tagsToRender.sort((a, b) => {
       if (parentId === null) {
-        // For root tags, sort by id in descending order (newest to oldest)
         return b.id - a.id;
       } else {
-        // For child tags, sort by id in ascending order (oldest to newest)
         return a.id - b.id;
       }
     });
-    
+
     return tagsToRender.map((tag, index) => (
-      <View 
-        key={tag.id} 
+      <View
+        key={tag.id}
         style={[
           parentId !== null ? styles.subtask : undefined,
           parentId === null && index !== 0 ? styles.headerSpacing : undefined,
         ]}
       >
-        <Task {...tag}/>
-        {rendertags(tag.id)}
+        {parentId === null && (
+          <TouchableOpacity onPress={() => toggleCollapse(tag.id)}>
+            <Text>{collapsed.has(tag.id) ? "Expand" : "Collapse"}</Text>
+          </TouchableOpacity>
+        )}
+        <Task {...tag} />
+        {!collapsed.has(tag.id) && renderTags(tag.id)}
       </View>
     ));
   };
-  
-  
+
   return (
     <View style={styles.container}>
-      {rendertags(null)}
+      <TouchableOpacity style={styles.expandButton} onPress={handleExpandAll}>
+        <Text>{expandAll ? "Collapse All" : "Expand All"}</Text>
+      </TouchableOpacity>
+      {renderTags(null)}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 5,
     paddingHorizontal: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
     padding: 10,
     marginTop: 15,
     marginHorizontal: 10,
   },
-  input: {
-    height: 40,
-    borderColor: 'lightgray',
-    borderWidth: 1,
-    marginTop: 20,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: 'white',
-    shadowColor: "#000",
-    shadowOffset: {
-        width: 0,
-        height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+  expandButton: {
+    alignSelf: "flex-end",
+    marginBottom: 10,
+  },
+  iconStyle: {
+    marginRight: 10,
+  },
+  taskName: {
+    fontWeight: "bold",
   },
   headerSpacing: {
     marginTop: 20,
