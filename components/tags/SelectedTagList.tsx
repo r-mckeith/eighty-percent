@@ -59,58 +59,42 @@ export default function SelectedTagList({ tags }: { tags: TagProps[] }) {
       last30Days: 0,
       last365Days: 0,
     };
-
-    // Setup the date ranges
-    const endDay = new Date(
+    const startDay = new Date(
+      Date.UTC(
+        selectedDate.getUTCFullYear(),
+        selectedDate.getUTCMonth(),
+        selectedDate.getUTCDate()
+      )
+    );
+        const endDay = new Date(
       Date.UTC(
         selectedDate.getFullYear(),
         selectedDate.getMonth(),
         selectedDate.getDate() + 1
       )
     );
-    const startDay = new Date(
-      Date.UTC(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate()
-      )
-    );
-    const start7Days = new Date(
-      Date.UTC(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate() - 6
-      )
-    );
-    const start30Days = new Date(
-      Date.UTC(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate() - 29
-      )
-    );
-    const start365Days = new Date(
-      Date.UTC(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate() - 364
-      )
-    );
+    const startWeek = new Date(startDay);
+    startWeek.setUTCDate(startDay.getUTCDate() - 6);
+    const startMonth = new Date(startDay);
+    startMonth.setUTCDate(startDay.getUTCDate() - 29);
+    const startYear = new Date(startDay);
+    startYear.setUTCDate(startDay.getUTCDate() - 364);
 
     tasks.forEach((task) => {
       if (task.completed) {
         const completedDate = new Date(task.completed);
+        console.log(task.name, completedDate)
 
         if (completedDate >= startDay && completedDate < endDay) {
           aggregatedData.today++;
         }
-        if (completedDate >= start7Days && completedDate < endDay) {
+        if (completedDate >= startWeek && completedDate < endDay) {
           aggregatedData.last7Days++;
         }
-        if (completedDate >= start30Days && completedDate < endDay) {
+        if (completedDate >= startMonth && completedDate < endDay) {
           aggregatedData.last30Days++;
         }
-        if (completedDate >= start365Days && completedDate < endDay) {
+        if (completedDate >= startYear && completedDate < endDay) {
           aggregatedData.last365Days++;
         }
       }
