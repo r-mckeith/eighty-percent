@@ -209,8 +209,7 @@ const styles = StyleSheet.create({
     borderColor: "#E0E0E0",
   },
   disabledText: {
-    // color: "E0E0E0",
-    textDecorationLine: "line-through", // This applies the strikethrough
+    textDecorationLine: "line-through",
   },
   x: {
     marginRight: 8,
