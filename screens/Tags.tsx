@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   ActivityIndicator,
   View,
@@ -12,6 +12,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useTagContext } from "../src/contexts/tags/UseTagContext";
 import { useDateContext } from "../src/contexts/date/useDateContext";
 import { useGroupContext } from "../src/contexts/groups/UseGroupContext";
+import { getGroups } from "../src/api/SupabaseGroups";
 import { TagProps } from "../src/types/TagTypes";
 import Header from "../components/DateHeader";
 import Section from "../components/tags/Section";
@@ -25,7 +26,7 @@ export default function TagScreen() {
 
   const { tags } = useTagContext();
   const { groups } = useGroupContext();
-  const selectedDateString = selectedDate.toLocaleDateString('en-CA');
+  const selectedDateString = selectedDate.toLocaleDateString("en-CA");
 
   const filterTags = (
     groupName: string,
@@ -45,6 +46,14 @@ export default function TagScreen() {
     }
     return groupTags;
   };
+
+  if (groups.length === 0) {
+    return (
+      <View style={[styles.activityContainer, styles.activityHorizontal]}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <>
@@ -71,7 +80,9 @@ export default function TagScreen() {
               if (filteredTags.length > 0 || group.name !== "today") {
                 return (
                   <View key={group.id}>
-                    <Text style={styles.sectionTitle}>{group.name === 'today' ? 'projects' : group.name}</Text>
+                    <Text style={styles.sectionTitle}>
+                      {group.name === "today" ? "projects" : group.name}
+                    </Text>
                     <Section
                       tags={filteredTags}
                       sectionName={group.name}
@@ -100,7 +111,7 @@ export default function TagScreen() {
               onClose={() => setShowModal(false)}
             />
 
-            <SelectedTagList />
+            <SelectedTagList tags={tags} />
           </View>
         </TouchableWithoutFeedback>
       </ScrollView>
@@ -109,6 +120,15 @@ export default function TagScreen() {
 }
 
 const styles = StyleSheet.create({
+  activityContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  activityHorizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10,
+  },
   scrollView: {
     flex: 1,
     backgroundColor: "#f5f5f5",

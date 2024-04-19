@@ -26,16 +26,6 @@ export default function AddGroupModal ({ visible, onClose }: AddGroupModalProps)
     setNewGroupName('');
     onClose();
   };
-
-  // const handleAddGroup = () => {
-  //   if (newGroupName) {
-  //     addGroup(newGroupName)
-  //     // onAddGroup(newGroupName);
-  //     console.log(newGroupName)
-  //     setNewGroupName('');
-  //     onClose();
-  //   }
-  // };
   
   return (
     <Modal

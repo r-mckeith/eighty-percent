@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { addDays } from 'date-fns';
 import DatePicker from './DatePicker';
 import { StyleSheet } from 'react-native';
 
@@ -11,17 +12,14 @@ type HeaderProps = {
 };
 
 export default function Header({ title, selectedDate, onDateChange }: HeaderProps) {
+  const decrementDate = () => {
+    const previousDay = addDays(selectedDate, -1);
+    onDateChange(previousDay);
+  };
 
   const incrementDate = () => {
-    const nextDay = new Date(selectedDate);
-    nextDay.setDate(selectedDate.getDate() + 1);
+    const nextDay = addDays(selectedDate, 1);
     onDateChange(nextDay);
-  };
-  
-  const decrementDate = () => {
-    const previousDay = new Date(selectedDate);
-    previousDay.setDate(selectedDate.getDate() - 1);
-    onDateChange(previousDay);
   };
 
   return (

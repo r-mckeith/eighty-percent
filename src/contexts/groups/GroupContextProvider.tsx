@@ -12,8 +12,17 @@ const GroupContextProvider = ({ children }: GroupContextProviderProps) => {
 
   useEffect(() => {
     const fetchGroups = async () => {
-      const groups = await getGroups();
-      dispatch({ type: 'INITIALIZE_GROUPS', payload: groups });
+      try {
+        const fetchedGroups = await getGroups();
+        if (fetchedGroups.length > 0) {
+          dispatch({ type: 'INITIALIZE_GROUPS', payload: fetchedGroups });
+        } else {
+          setTimeout(fetchGroups, 5000);
+        }
+      } catch (error) {
+        console.error('Error fetching groups:', error);
+        setTimeout(fetchGroups, 5000);
+      }
     };
 
     fetchGroups();
@@ -25,6 +34,5 @@ const GroupContextProvider = ({ children }: GroupContextProviderProps) => {
     </GroupContext.Provider>
   );
 };
-
 
 export default GroupContextProvider;

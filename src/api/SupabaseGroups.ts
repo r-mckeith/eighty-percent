@@ -18,7 +18,6 @@ export const getGroups = async () => {
 };
 
 export async function addGroup(groupName: string): Promise<GroupProps> {
-  console.log('in function')
   let { data: groupData, error: groupError } = await supabase
     .from('groups')
     .insert({ name: groupName })
@@ -37,7 +36,6 @@ export async function addGroup(groupName: string): Promise<GroupProps> {
 }
 
 export async function updateGroupName (groupId: number, updatedName: string) {
-  console.log(groupId, updatedName)
   const { data, error } = await supabase
     .from('groups')
     .update({ name: updatedName })

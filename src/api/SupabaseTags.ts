@@ -2,7 +2,6 @@ import {
   NewTagProps,
   TagProps,
   TagDataProps,
-  DateRange,
 } from "../types/TagTypes";
 import { supabase } from "./SupabaseClient";
 
@@ -25,12 +24,17 @@ export const getTags = async () => {
 export const getTagData = async (
   selectedDate: Date
 ): Promise<TagDataProps[]> => {
-  const endDate = new Date(selectedDate); // exact selected date
+  if (!selectedDate || !(selectedDate instanceof Date) || isNaN(selectedDate.getTime())) {
+    console.log('Selected date is not valid:', selectedDate);
+    return []; 
+  }
+
+  const endDate = new Date(selectedDate);
   const startDate = new Date(
     selectedDate.getFullYear(),
     selectedDate.getMonth(),
     selectedDate.getDate() - 365
-  ); // 365 days before the selected date
+  );
 
   const { data, error } = await supabase
     .from("tag_data")
