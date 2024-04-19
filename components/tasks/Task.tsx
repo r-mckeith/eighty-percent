@@ -52,7 +52,7 @@ export default function Task({
         rightThreshold={120}
       >
         <View style={styles.taskContainer}>
-          <ScopeTask id={id} inScopeDay={inScopeDay ? inScopeDay : null} />
+          <ScopeTask id={id} inScopeDay={inScopeDay ? inScopeDay : null} completed={completed} />
           <Text
             style={[
               styles.taskName,

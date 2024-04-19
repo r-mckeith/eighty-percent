@@ -8,9 +8,10 @@ import { useDateContext } from "../../src/contexts/date/useDateContext";
 interface Scope {
   id: number;
   inScopeDay: Date | string | null;
+  completed: string | null | undefined;
 }
 
-export default function ScopeTask({ id, inScopeDay }: Scope) {
+export default function ScopeTask({ id, inScopeDay, completed }: Scope) {
   const [inScope, setInScope] = useState<any>();
   const { dispatch } = useTagContext();
   const { selectedDate } = useDateContext();
@@ -22,6 +23,10 @@ export default function ScopeTask({ id, inScopeDay }: Scope) {
   }, [inScopeDay]);
 
   const toggleScope = () => {
+    if (completed) {
+      return;
+    }
+
     handleToggleScope(id, selectedDate.toISOString().split("T")[0], dispatch);
   };
 
@@ -32,6 +37,7 @@ export default function ScopeTask({ id, inScopeDay }: Scope) {
           name={inScope ? "radiobox-marked" : "radiobox-blank"}
           size={24}
           style={{ paddingLeft: 8 }}
+          color={completed ? 'grey' : 'black'}
         />
       </TouchableOpacity>
     </View>
