@@ -31,7 +31,6 @@ export default function ScopeTask({ id, inScopeDay }: Scope) {
         <MaterialCommunityIcons
           name={inScope ? "radiobox-marked" : "radiobox-blank"}
           size={24}
-          color={"#767577"}
           style={{ paddingLeft: 8 }}
         />
       </TouchableOpacity>

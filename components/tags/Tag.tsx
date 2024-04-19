@@ -28,25 +28,17 @@ export default function ShakingItem({
   sectionName,
 }: TagComponent) {
   const [isSelected, setIsSelected] = useState(false);
-  const [isCompletedLater, setIsCompletedLater] = useState(false);
+  const [isSelectedLater, setIsSelectedLater] = useState(false);
 
   const { dispatch: tagDispatch } = useTagContext();
   const { dispatch: tagDataDispatch } = useTagDataContext();
   const { selectedDate } = useDateContext();
-  console.log(
-    "name",
-    tag.name,
-    "is selected",
-    isSelected,
-    "completed later",
-    isCompletedLater
-  );
 
   const swipeableRow = useRef<Swipeable | null>(null);
 
   useEffect(() => {
     if (sectionName === "today") {
-      setIsCompletedLater(false);
+      setIsSelectedLater(false);
       setIsSelected(false);
       if (
         tag.completed &&
@@ -57,10 +49,10 @@ export default function ShakingItem({
         tag.completed &&
         tag.completed > selectedDate.toISOString().split("T")[0]
       ) {
-        setIsCompletedLater(true);
+        setIsSelectedLater(true);
       }
     }
-  }, [selectedDate, isSelected, isCompletedLater, tag.completed]);
+  }, [selectedDate, isSelected, isSelectedLater, tag.completed]);
 
   async function handleDeleteTag(id: number) {
     try {
@@ -90,7 +82,7 @@ export default function ShakingItem({
 
   const tagStyle = isSelected
     ? [styles.tag, styles.selectedTag]
-    : isCompletedLater
+    : isSelectedLater
     ? [styles.tag, styles.disabledTag]
     : styles.tag;
 
@@ -167,16 +159,20 @@ export default function ShakingItem({
             </TouchableOpacity>
           )}
           <TouchableOpacity
-            activeOpacity={isCompletedLater ? 1 : 0.2}
-            onPress={!isCompletedLater ? () => handleSelectTag(tag) : () => {}}
+            activeOpacity={isSelectedLater ? 1 : 0.2}
+            onPress={!isSelectedLater ? () => handleSelectTag(tag) : () => {}}
             style={styles.tagText}
           >
             <View style={styles.tagText}>
               <Text style={isSelected ? styles.disabledText : {}}>
                 {tag.name}
               </Text>
-              {isCompletedLater && (
-                <MaterialCommunityIcons name="arrow-right" size={16} color="black" />
+              {isSelectedLater && (
+                <MaterialCommunityIcons
+                  name="arrow-right"
+                  size={16}
+                  color="black"
+                />
               )}
             </View>
           </TouchableOpacity>
@@ -199,10 +195,10 @@ const styles = StyleSheet.create({
     borderColor: "black",
   },
   tagText: {
-    flexDirection: 'row'
+    flexDirection: "row",
   },
   selectedTag: {
-    backgroundColor: '#F5F5F5'
+    backgroundColor: "#F5F5F5",
   },
   disabledTag: {
     backgroundColor: "#F5F5F5",

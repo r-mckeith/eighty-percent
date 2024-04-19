@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import DatePicker from './DatePicker';
 import { StyleSheet } from 'react-native';
 
 type HeaderProps = {
@@ -10,7 +9,7 @@ type HeaderProps = {
   onDateChange: (date: Date) => void;
 };
 
-export default function Header({ title, selectedDate, onDateChange }: HeaderProps) {
+export default function ListHeader({ title }: HeaderProps) {
   return (
     <View style={styles.headerContainer}>
       <Text style={styles.headerText}>{title}</Text>
@@ -24,10 +23,6 @@ export default function Header({ title, selectedDate, onDateChange }: HeaderProp
         </Text>
         <MaterialCommunityIcons name="menu-down" size={30} color="#767577" /> 
       </TouchableOpacity>
-      {/* <DatePicker
-        selectedDate={selectedDate}
-        onDateChange={onDateChange}
-      /> */}
     </View>  
   );
 };
