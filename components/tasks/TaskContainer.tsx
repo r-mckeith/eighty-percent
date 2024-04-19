@@ -8,7 +8,7 @@ import { ScrollView } from "react-native-gesture-handler";
 type TaskContainerProps = {
   tags: TagProps[];
   collapsed: Set<number | unknown>;
-  setCollapsed: (arg0: Set<number>) => void;
+  setCollapsed: (arg0: Set<number | unknown>) => void;
 };
 
 export default function TaskContainer({ tags, collapsed, setCollapsed }: TaskContainerProps) {

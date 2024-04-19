@@ -18,7 +18,7 @@ export default function MonthlyScreen() {
   useEffect(() => {
     const listTags = showCompleted ? tags.filter(tag => tag.section === 'today') : tags.filter(tag => tag.section === 'today' && !tag.completed)
     setListTags(listTags)
-  }, [showCompleted])
+  }, [showCompleted, tags])
 
 
   const handleExpandAll = () => {

@@ -5,13 +5,12 @@ import Task from "./tasks/Task";
 import AddTask from "../components/tasks/AddTask";
 
 type NestedListProps = {
-  tags: TagProps[]
-  collapsed: any;
-  setCollapsed: (arg0: any) => void;
-}
+  tags: TagProps[];
+  collapsed: Set<number | unknown>;
+  setCollapsed: (arg0: Set<number | unknown>) => void;
+};
 
-export default function NestedList({ tags, collapsed, setCollapsed}: NestedListProps) {
-
+export default function NestedList({ tags, collapsed, setCollapsed }: NestedListProps) {
   const toggleCollapse = (id: number) => {
     const updatedCollapsed = new Set(collapsed);
     if (collapsed.has(id)) {
@@ -23,23 +22,18 @@ export default function NestedList({ tags, collapsed, setCollapsed}: NestedListP
   };
 
   const findRootTags = () => {
-    const allIds = new Set(tags.map((tag) => tag.id));
-    return tags.filter((tag) => !tag.parentId || !allIds.has(tag.parentId));
+    const allIds = new Set(tags.map(tag => tag.id));
+    return tags.filter(tag => !tag.parentId || !allIds.has(tag.parentId));
+  };
+
+  const hasChildren = (id: number) => {
+    return tags.some(tag => tag.parentId === id);
   };
 
   const renderTags = (parentId: number | null) => {
-    const tagsToRender =
-      parentId === null
-        ? findRootTags()
-        : tags.filter((tag) => tag.parentId === parentId);
+    const tagsToRender = parentId === null ? findRootTags() : tags.filter(tag => tag.parentId === parentId);
 
-    tagsToRender.sort((a, b) => {
-      if (parentId === null) {
-        return b.id - a.id;
-      } else {
-        return a.id - b.id;
-      }
-    });
+    tagsToRender.sort((a, b) => (parentId === null ? b.id - a.id : a.id - b.id));
 
     return tagsToRender.map((tag, index) => (
       <View
@@ -49,9 +43,9 @@ export default function NestedList({ tags, collapsed, setCollapsed}: NestedListP
           parentId === null && index !== 0 ? styles.headerSpacing : undefined,
         ]}
       >
-        {parentId === null && (
-          <TouchableOpacity onPress={() => toggleCollapse(tag.id)}>
-            <Text>{collapsed.has(tag.id) ? "Expand" : "Collapse"}</Text>
+        {parentId === null && hasChildren(tag.id) && (
+          <TouchableOpacity onPress={() => toggleCollapse(tag.id)} style={styles.taskHeader}>
+            <Text>{collapsed.has(tag.id) ? "Collapse" : "Expand"}</Text>
           </TouchableOpacity>
         )}
         <Task {...tag} />
@@ -80,16 +74,14 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginHorizontal: 10,
   },
+  taskHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   addButton: {
     alignSelf: "flex-end",
     marginRight: 4,
-    marginBottom: 5
-  },
-  iconStyle: {
-    marginRight: 10,
-  },
-  taskName: {
-    fontWeight: "bold",
+    marginBottom: 5,
   },
   headerSpacing: {
     marginTop: 20,
