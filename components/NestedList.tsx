@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import Task from "./tasks/Task";
 import { TagProps } from "../src/types/TagTypes";
+import Task from "./tasks/Task";
+import AddTask from "../components/tasks/AddTask";
 
-export default function NestedList({ tags }: { tags: TagProps[] }) {
-  const [collapsed, setCollapsed] = useState(new Set());
-  const [expandAll, setExpandAll] = useState(true);
+type NestedListProps = {
+  tags: TagProps[]
+  collapsed: any;
+  setCollapsed: (arg0: any) => void;
+}
+
+export default function NestedList({ tags, collapsed, setCollapsed}: NestedListProps) {
 
   const toggleCollapse = (id: number) => {
     const updatedCollapsed = new Set(collapsed);
@@ -15,15 +20,6 @@ export default function NestedList({ tags }: { tags: TagProps[] }) {
       updatedCollapsed.add(id);
     }
     setCollapsed(updatedCollapsed);
-  };
-
-  const handleExpandAll = () => {
-    if (expandAll) {
-      setCollapsed(new Set(tags.map((tag) => tag.id)));
-    } else {
-      setCollapsed(new Set());
-    }
-    setExpandAll(!expandAll);
   };
 
   const findRootTags = () => {
@@ -66,9 +62,9 @@ export default function NestedList({ tags }: { tags: TagProps[] }) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.expandButton} onPress={handleExpandAll}>
-        <Text>{expandAll ? "Collapse All" : "Expand All"}</Text>
-      </TouchableOpacity>
+      <View style={styles.addButton}>
+        <AddTask parentId={0} depth={0} />
+      </View>
       {renderTags(null)}
     </View>
   );
@@ -84,9 +80,10 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginHorizontal: 10,
   },
-  expandButton: {
+  addButton: {
     alignSelf: "flex-end",
-    marginBottom: 10,
+    marginRight: 4,
+    marginBottom: 5
   },
   iconStyle: {
     marginRight: 10,

@@ -1,39 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, Switch } from 'react-native';
-import { useTagContext } from '../src/contexts/tags/UseTagContext';
-import { useDateContext } from '../src/contexts/date/useDateContext';
-import TaskContainer from '../components/tasks/TaskContainer';
-import Header from '../components/ListHeader';
-import AddTask from '../components/tasks/AddTask';
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Text, Switch, TouchableOpacity } from "react-native";
+import { useTagContext } from "../src/contexts/tags/UseTagContext";
+import { useDateContext } from "../src/contexts/date/useDateContext";
+import TaskContainer from "../components/tasks/TaskContainer";
+import ListHeader from "../components/ListHeader";
+import { TagProps } from "../src/types/TagTypes";
 
 export default function MonthlyScreen() {
-  const [showCompleted, setShowCompleted] = useState<boolean>(false)
+  const [showCompleted, setShowCompleted] = useState<boolean>(false);
+  const [listTags, setListTags] = useState<TagProps[]>([]);
+  const [collapsed, setCollapsed] = useState(new Set());
+  const [expandAll, setExpandAll] = useState(true);
+
   const { tags } = useTagContext();
   const { selectedDate, setSelectedDate } = useDateContext();
 
-  const listTags = showCompleted ? tags.filter(tag => tag.section === 'today') : tags.filter(tag => tag.section === 'today' && !tag.completed)
+  useEffect(() => {
+    const listTags = showCompleted ? tags.filter(tag => tag.section === 'today') : tags.filter(tag => tag.section === 'today' && !tag.completed)
+    setListTags(listTags)
+  }, [showCompleted])
+
+
+  const handleExpandAll = () => {
+    if (expandAll) {
+      setCollapsed(new Set(tags.map((tag) => tag.id)));
+    } else {
+      setCollapsed(new Set());
+    }
+    setExpandAll(!expandAll);
+  };
 
   return (
     <>
-      <Header
-        title={''}
-        selectedDate={selectedDate} 
+      <ListHeader
+        title={""}
+        selectedDate={selectedDate}
         onDateChange={setSelectedDate}
       />
       <View style={styles.toggleAndAddContainer}>
         <View style={styles.toggleContainer}>
           <Text style={styles.toggleLabel}>Show Completed</Text>
-          <Switch
-            value={showCompleted}
-            onValueChange={setShowCompleted}
-          />
+          <Switch value={showCompleted} onValueChange={setShowCompleted} />
         </View>
-        <View style={styles.addButton}>
-          <AddTask parentId={0} depth={0} />
-        </View>
+        <TouchableOpacity style={styles.expandButton} onPress={handleExpandAll}>
+          <Text>{expandAll ? "Collapse All" : "Expand All"}</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.container}>
-        <TaskContainer tags={listTags} />
+        <TaskContainer tags={listTags} collapsed={collapsed} setCollapsed={setCollapsed}/>
       </View>
     </>
   );
@@ -44,19 +58,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   toggleAndAddContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 10,
   },
   toggleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   toggleLabel: {
     marginRight: 8,
   },
-  addButton: {
-    marginRight: 20
-  }
+  expandButton: {
+    alignSelf: "flex-end",
+    marginBottom: 10,
+  },
 });
