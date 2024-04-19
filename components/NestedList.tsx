@@ -45,7 +45,7 @@ export default function NestedList({ tags, collapsed, setCollapsed }: NestedList
       >
         {parentId === null && hasChildren(tag.id) && (
           <TouchableOpacity onPress={() => toggleCollapse(tag.id)} style={styles.taskHeader}>
-            <Text>{collapsed.has(tag.id) ? "Collapse" : "Expand"}</Text>
+            <Text>{collapsed.has(tag.id) ? "Expand" : "Collapse"}</Text>
           </TouchableOpacity>
         )}
         <Task {...tag} />
