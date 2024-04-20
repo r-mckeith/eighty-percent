@@ -1,9 +1,10 @@
 import React from "react";
-import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import { View, StyleSheet, TouchableWithoutFeedback, Text } from "react-native";
 import { TagProps } from "../../src/types/TagTypes";
 import Tag from "./Tag";
 import RenameTag from "./RenameTag";
 import AddTag from "./AddTag";
+import { useAggregateTagData } from "../../src/hooks/aggregateTagData";
 
 type SectionProps = {
   tags: TagProps[];
@@ -20,6 +21,8 @@ export default function Section({
   isEditMode,
   setIsEditMode,
 }: SectionProps) {
+  const { tasksTableData } = useAggregateTagData();
+
   return (
     <TouchableWithoutFeedback
       onLongPress={() => setIsEditMode(!isEditMode)}
@@ -38,7 +41,17 @@ export default function Section({
             setIsEditMode={setIsEditMode}
           />
         )}
-        <View style={[styles.tagContainer, sectionName !== 'today' ? styles.marginTop : {}]}>
+        <View style={styles.tagContainer}>
+          {sectionName !== "today" && (
+            <View style={styles.statsHeader}>
+              <Text style={styles.headerCellTagName}></Text>
+              <Text style={styles.headerCell}>Day</Text>
+              <Text style={styles.headerCell}>Week</Text>
+              <Text style={styles.headerCell}>Month</Text>
+              <Text style={styles.headerCell}>Year</Text>
+            </View>
+          )}
+
           {tags.map((tag, index) => (
             <Tag
               key={index}
@@ -48,6 +61,16 @@ export default function Section({
             />
           ))}
         </View>
+        {sectionName === "today" && tasksTableData && (
+          
+          
+            <View style={styles.statsContainer}>
+              <Text style={styles.statsText}>{tasksTableData.today}</Text>
+              <Text style={styles.statsText}>{tasksTableData.last7Days > tasksTableData.last7Days && tasksTableData.last7Days}</Text>
+              <Text style={styles.statsText}>{tasksTableData.last30Days > tasksTableData.last7Days && tasksTableData.last30Days}</Text>
+              <Text style={styles.statsText}>{tasksTableData.last365Days > tasksTableData.last30Days && tasksTableData.last365Days}</Text>
+            </View>
+          )}
       </View>
     </TouchableWithoutFeedback>
   );
@@ -57,13 +80,13 @@ const styles = StyleSheet.create({
   section: {
     flexShrink: 1,
     flexGrow: 1,
-    minHeight: 70,
-    padding: 10,
+    padding: 0,
     borderRadius: 10,
     marginVertical: 10,
-    marginBottom: 8,
     borderWidth: 2,
-    position: "relative",
+    borderColor: "#333333",
+    backgroundColor: "#1c1c1e",
+    marginBottom: 20,
   },
   addTagContainer: {
     position: "absolute",
@@ -71,16 +94,43 @@ const styles = StyleSheet.create({
     right: -5,
   },
   tagContainer: {
+    flexDirection: "column",
+    alignSelf: "stretch",
+  },
+  tagText: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "flex-start",
+    flex: 1,
+    justifyContent: "space-between",
   },
-  marginTop: {
-    marginTop: 10,
+  statsHeader: {
+    flexDirection: "row",
+    backgroundColor: "#333",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    alignItems: "center",
   },
-  title: {
+  statsContainer: {
+    flexDirection: "row",
+    flex: 3,
+    justifyContent: "space-between",
+    paddingVertical: 8
+  },
+  statsText: {
+    paddingHorizontal: 5,
+    color: "#DDD",
+    flex: 1,
+    textAlign: "center",
+  },
+  headerCell: {
+    flex: 1,
+    textAlign: "center",
+    color: "white",
     fontWeight: "bold",
-    fontSize: 16,
-    marginBottom: 10,
+  },
+  headerCellTagName: {
+    flex: 3.5,
+    textAlign: "left",
+    color: "white",
+    fontWeight: "bold",
   },
 });

@@ -4,13 +4,13 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useGroupContext } from "../../src/contexts/groups/UseGroupContext";
 import { updateGroupName } from "../../src/api/SupabaseGroups";
 
-type AddTag = {
+type RenameTag = {
   sectionName: string;
   groupId: number;
   setIsEditMode: (arg0: boolean) => void;
 };
 
-export default function AddTag({ sectionName, groupId, setIsEditMode }: AddTag) {
+export default function RenameTag({ sectionName, groupId, setIsEditMode }: RenameTag) {
   const [newGroupName, setNewGroupName] = useState("");
 
   const { dispatch: groupDispatch } = useGroupContext();

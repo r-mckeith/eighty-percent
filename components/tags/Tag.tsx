@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Animated,
 } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -15,6 +14,10 @@ import { useTagDataContext } from "../../src/contexts/tagData/UseTagDataContext"
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import RightSwipe from "../tags/RightSwipe";
 import { handleToggleCompleted } from "../../helpers/tagHelpers";
+import {
+  TagAggregatedData,
+  useAggregateTagData,
+} from "../../src/hooks/aggregateTagData";
 
 type TagComponent = {
   tag: TagProps;
@@ -22,21 +25,25 @@ type TagComponent = {
   isEditMode: boolean;
 };
 
-export default function ShakingItem({
-  isEditMode,
-  tag,
-  sectionName,
-}: TagComponent) {
+export default function Tag({ tag, sectionName }: TagComponent) {
   const [isSelected, setIsSelected] = useState(false);
   const [isSelectedLater, setIsSelectedLater] = useState(false);
+  const [tagData, setTagData] = useState<TagAggregatedData | null>(null);
 
   const { dispatch: tagDispatch } = useTagContext();
   const { dispatch: tagDataDispatch } = useTagDataContext();
   const { selectedDate } = useDateContext();
+  const { tagsTableData } = useAggregateTagData();
 
   const swipeableRow = useRef<Swipeable | null>(null);
 
   useEffect(() => {
+    const data = tagsTableData.find((data) => data.tag_name === tag.name);
+    if (data !== undefined) {
+      setTagData(data);
+    } else {
+      setTagData(null);
+    }
     if (sectionName === "today") {
       setIsSelectedLater(false);
       setIsSelected(false);
@@ -52,11 +59,12 @@ export default function ShakingItem({
         setIsSelectedLater(true);
       }
     }
-  }, [selectedDate, isSelected, isSelectedLater, tag.completed]);
+  }, [selectedDate, isSelected, isSelectedLater, tag.completed, tagsTableData]);
 
   async function handleDeleteTag(id: number) {
     try {
       await deleteTag(id);
+      swipeableRow.current?.close();
       tagDispatch({ type: "DELETE_TAG", id });
     } catch (error) {
       console.error("Failed to delete tag:", error);
@@ -86,99 +94,54 @@ export default function ShakingItem({
     ? [styles.tag, styles.disabledTag]
     : styles.tag;
 
-  const shakeAnimation = useRef(new Animated.Value(0)).current;
-
-  const startShaking = () => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(shakeAnimation, {
-          toValue: 0.25,
-          duration: 60,
-          useNativeDriver: true,
-        }),
-        Animated.timing(shakeAnimation, {
-          toValue: -0.25,
-          duration: 120,
-          useNativeDriver: true,
-        }),
-        Animated.timing(shakeAnimation, {
-          toValue: 0,
-          duration: 60,
-          useNativeDriver: true,
-        }),
-      ]),
-      {
-        iterations: -1,
-      }
-    ).start();
-  };
-
-  useEffect(() => {
-    if (isEditMode && sectionName !== "today") {
-      startShaking();
-    } else {
-      shakeAnimation.stopAnimation(() => {
-        shakeAnimation.setValue(0);
-      });
-    }
-  }, [isEditMode, shakeAnimation]);
-
-  const rotation = shakeAnimation.interpolate({
-    inputRange: [-1, 1],
-    outputRange: ["-0.1rad", "0.1rad"],
-  });
-
   return (
-    <Animated.View
-      style={[
-        styles.shakingItem,
-        {
-          transform: [{ rotate: rotation }],
-        },
-      ]}
+    <Swipeable
+      ref={swipeableRow}
+      renderRightActions={() => (
+        <RightSwipe
+          handleDelete={handleDeleteTag}
+          id={tag.id}
+          swipeableRow={swipeableRow}
+        />
+      )}
+      overshootLeft={false}
+      rightThreshold={20}
     >
-      <Swipeable
-        ref={swipeableRow}
-        renderRightActions={() => (
-          <RightSwipe
-            handleDelete={handleDeleteTag}
-            id={tag.id}
-            swipeableRow={swipeableRow}
-          />
-        )}
-        overshootLeft={false}
-        rightThreshold={20}
+      <TouchableOpacity
+        activeOpacity={isSelectedLater ? 1 : 0.2}
+        onPress={!isSelectedLater ? () => handleSelectTag(tag) : () => {}}
+        style={tagStyle}
       >
-        <View style={tagStyle}>
-          {isEditMode && sectionName !== "today" && (
-            <TouchableOpacity
-              style={styles.deleteBubble}
-              onPress={() => handleDeleteTag(tag.id)}
-            >
-              <MaterialCommunityIcons name="minus" size={16} color="black" />
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            activeOpacity={isSelectedLater ? 1 : 0.2}
-            onPress={!isSelectedLater ? () => handleSelectTag(tag) : () => {}}
-            style={styles.tagText}
+        <View style={styles.tagText}>
+          <Text
+            style={[
+              styles.tagName,
+              tag.section === 'today' && isSelected
+                ? styles.selectedText
+                : isSelectedLater
+                ? styles.selectedLaterText
+                : {},
+            ]}
           >
-            <View style={styles.tagText}>
-              <Text style={isSelected ? styles.disabledText : {}}>
-                {tag.name}
-              </Text>
-              {isSelectedLater && (
-                <MaterialCommunityIcons
-                  name="arrow-right"
-                  size={16}
-                  color="black"
-                />
-              )}
+            {tag.name}
+          </Text>
+          {tag.section !== "today" && tagData && (
+            <View style={styles.statsContainer}>
+              <Text style={styles.statsText}>{tagData.day}</Text>
+              <Text style={styles.statsText}>{tagData.week > tagData.day && tagData.week}</Text>
+              <Text style={styles.statsText}>{tagData.month > tagData.week && tagData.month}</Text>
+              <Text style={styles.statsText}>{tagData.year > tagData.month && tagData.year}</Text>
             </View>
-          </TouchableOpacity>
+          )}
         </View>
-      </Swipeable>
-    </Animated.View>
+        {tag.section === 'today' && isSelected && (
+          <MaterialCommunityIcons name="check" size={16} color="white" />
+        )}
+        {tag.section === 'today' && isSelectedLater && (
+          <MaterialCommunityIcons name="arrow-right" size={16} color="white" />
+        )}
+      </TouchableOpacity>
+    </Swipeable>
   );
 }
 
@@ -186,43 +149,48 @@ const styles = StyleSheet.create({
   tag: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 8,
-    borderRadius: 16,
-    backgroundColor: "#FFF",
-    margin: 4,
-    alignSelf: "flex-start",
-    borderWidth: 2,
-    borderColor: "black",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: "#2c2c2e",
+    borderBottomWidth: 1,
+    borderColor: "#404040",
+    alignSelf: "stretch",
+  },
+  selectedTag: {
+    backgroundColor: "#3a3a3c",
+  },
+  disabledTag: {
+    backgroundColor: "#3a3a3c",
+    borderColor: "#505050",
   },
   tagText: {
     flexDirection: "row",
+    color: "#FFF",
+    flex: 1,
+    justifyContent: "space-between",
   },
-  selectedTag: {
-    backgroundColor: "#F5F5F5",
+  tagName: {
+    flex: 2.75,
+    fontWeight: "bold",
+    color: "white",
+    textAlign: "left",
   },
-  disabledTag: {
-    backgroundColor: "#F5F5F5",
-    borderColor: "#E0E0E0",
+  statsContainer: {
+    flexDirection: "row",
+    flex: 3,
+    justifyContent: "space-between",
   },
-  disabledText: {
+  statsText: {
+    paddingHorizontal: 5,
+    color: "#DDD",
+    flex: 1,
+    textAlign: "center",
+  },
+  selectedText: {
     textDecorationLine: "line-through",
+    color: "#b1b1b3",
   },
-  x: {
-    marginRight: 8,
+  selectedLaterText: {
+    color: "#b1b1b3",
   },
-  deleteBubble: {
-    position: "absolute",
-    top: -6,
-    left: -5,
-    borderColor: "black",
-    borderWidth: 1,
-    color: "black",
-    backgroundColor: "grey",
-    borderRadius: 50,
-    width: 20,
-    height: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  shakingItem: {},
 });

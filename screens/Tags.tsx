@@ -12,12 +12,12 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useTagContext } from "../src/contexts/tags/UseTagContext";
 import { useDateContext } from "../src/contexts/date/useDateContext";
 import { useGroupContext } from "../src/contexts/groups/UseGroupContext";
-import { getGroups } from "../src/api/SupabaseGroups";
 import { TagProps } from "../src/types/TagTypes";
 import Header from "../components/DateHeader";
 import Section from "../components/tags/Section";
-import SelectedTagList from "../components/tags/SelectedTagList";
 import AddGroupModal from "../components/AddGroupModal";
+import AddTag from "../components/tags/AddTag";
+import { GroupProps } from "../src/types/GroupTypes";
 
 export default function TagScreen() {
   const { selectedDate, setSelectedDate } = useDateContext();
@@ -47,6 +47,15 @@ export default function TagScreen() {
     return groupTags;
   };
 
+  const sortGroups = (groups: GroupProps[]) => {
+    return groups.sort((a, b) => {
+      if (a.name.toLowerCase() === "today") return 1; 
+      if (b.name.toLowerCase() === "today") return -1;
+      return 0;
+    });
+  };
+  
+
   if (groups.length === 0) {
     return (
       <View style={[styles.activityContainer, styles.activityHorizontal]}>
@@ -67,7 +76,7 @@ export default function TagScreen() {
           onPress={() => isEditMode && setIsEditMode(false)}
         >
           <View style={styles.sectionsContainer}>
-            {groups.map((group) => {
+            {sortGroups(groups).map((group) => {
               const groupTags = tags.filter(
                 (tag) => tag.section === group.name
               );
@@ -80,9 +89,16 @@ export default function TagScreen() {
               if (filteredTags.length > 0 || group.name !== "today") {
                 return (
                   <View key={group.id}>
-                    <Text style={styles.sectionTitle}>
-                      {group.name === "today" ? "projects" : group.name}
-                    </Text>
+                    <View style={styles.sectionName}>
+                      <Text style={styles.sectionTitle}>
+                        {group.name === "today" ? "projects" : group.name}
+                      </Text>
+                      <View style={styles.addButton}>
+                        {group.name !== "today" && (
+                          <AddTag sectionName={group.name} groupId={group.id} />
+                        )}
+                      </View>
+                    </View>
                     <Section
                       tags={filteredTags}
                       sectionName={group.name}
@@ -102,7 +118,7 @@ export default function TagScreen() {
                 style={styles.addButton}
                 onPress={() => setShowModal(true)}
               >
-                <MaterialCommunityIcons name="plus" size={24} />
+                <MaterialCommunityIcons name="plus" size={24} color={"white"} />
               </TouchableOpacity>
             )}
 
@@ -110,8 +126,6 @@ export default function TagScreen() {
               visible={showModal}
               onClose={() => setShowModal(false)}
             />
-
-            <SelectedTagList tags={tags} />
           </View>
         </TouchableWithoutFeedback>
       </ScrollView>
@@ -129,25 +143,31 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     padding: 10,
   },
+  sectionName: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 5,
+  },
+  addButton: {
+    alignSelf: "flex-end",
+  },
   scrollView: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#000",
   },
   sectionsContainer: {
     padding: 16,
   },
   sectionTitle: {
-    fontSize: 18,
+    flex: 1,
+    fontSize: 20,
     fontWeight: "bold",
+    color: "#FFF",
     textTransform: "capitalize",
-  },
-  addButton: {
-    alignSelf: "flex-end",
-    padding: 16,
   },
   editableSection: {
     padding: 10,
-    // Add your styling here for the editable section
   },
   input: {
     height: 40,

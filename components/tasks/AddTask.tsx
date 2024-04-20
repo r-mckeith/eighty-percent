@@ -50,7 +50,7 @@ export default function AddTask({ parentId, depth, variant = "default" }: any) {
           <MaterialCommunityIcons
             name="plus"
             size={24}
-            color="#767577"
+            color="white"
           />
         </TouchableOpacity>
       )}

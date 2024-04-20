@@ -29,9 +29,9 @@ export default function ListHeader({ title }: HeaderProps) {
 
 const styles=StyleSheet.create({
   headerContainer: {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#1c1c1e",
     padding: 15,
-    marginBottom: 5,
+    marginBottom: 1,
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: 2,
@@ -40,5 +40,6 @@ const styles=StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     textTransform: "capitalize",
+    color: 'white'
   },
 });

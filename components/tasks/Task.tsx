@@ -52,7 +52,7 @@ export default function Task({
         rightThreshold={120}
       >
         <View style={styles.taskContainer}>
-          <ScopeTask id={id} inScopeDay={inScopeDay ? inScopeDay : null} />
+          <ScopeTask id={id} inScopeDay={inScopeDay ? inScopeDay : null} completed={completed} />
           <Text
             style={[
               styles.taskName,
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   },
   taskName: {
     marginLeft: 7,
-    color: "#333",
+    color: "#FFF",
     fontWeight: "bold",
     fontSize: 18,
     flex: 1,
@@ -111,6 +111,6 @@ const styles = StyleSheet.create({
   },
   completedTask: {
     textDecorationLine: "line-through",
-    color: "#999",
+    color: "#b1b1b3",
   },
 });

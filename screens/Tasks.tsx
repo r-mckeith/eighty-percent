@@ -40,10 +40,10 @@ export default function MonthlyScreen() {
       <View style={styles.toggleAndAddContainer}>
         <View style={styles.toggleContainer}>
           <Text style={styles.toggleLabel}>Show Completed</Text>
-          <Switch value={showCompleted} onValueChange={setShowCompleted} />
+          <Switch value={showCompleted} onValueChange={setShowCompleted} ios_backgroundColor={'#FFF'} trackColor={{true: '#3a3a3c'}} />
         </View>
         <TouchableOpacity style={styles.expandButton} onPress={handleExpandAll}>
-          <Text>{expandAll ? "Collapse All" : "Expand All"}</Text>
+          <Text style={styles.expandButtonText}>{expandAll ? "Collapse All" : "Expand All"}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
@@ -56,11 +56,13 @@ export default function MonthlyScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#000",
   },
   toggleAndAddContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    backgroundColor: "#000",
     padding: 10,
   },
   toggleContainer: {
@@ -69,9 +71,13 @@ const styles = StyleSheet.create({
   },
   toggleLabel: {
     marginRight: 8,
+    color: "#FFF",
   },
   expandButton: {
     alignSelf: "flex-end",
     marginBottom: 10,
   },
+  expandButtonText: {
+    color: "#FFF",
+  }
 });
