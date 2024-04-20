@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Swipeable } from 'react-native-gesture-handler';
-import { Tag } from '../../src/types/TagTypes';
 import { StyleSheet } from 'react-native';
 
 type RightSwipe = {

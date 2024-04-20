@@ -90,7 +90,6 @@ const styles = StyleSheet.create({
   section: {
     flexShrink: 1,
     flexGrow: 1,
-    padding: 0,
     borderRadius: 10,
     marginVertical: 10,
     borderWidth: 2,
@@ -113,6 +112,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     alignItems: "center",
+    borderBottomWidth: 1,
+    borderColor: "#404040",
   },
   headerCell: {
     flex: 1,
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     alignItems: "center",
-    backgroundColor: "#333", // Optional for visual consistency
+    backgroundColor: "#333",
   },
   statsText: {
     flex: 1,
@@ -140,67 +141,7 @@ const styles = StyleSheet.create({
     color: "#DDD",
   },
   tagText: {
-    flex: 3.5,  // Ensure it aligns with the 'headerCellTagName'
-    color: "transparent", // Making it invisible but it takes up space
+    flex: 3.5,
+    color: "transparent",
   },
 });
-
-
-// const styles = StyleSheet.create({
-//   section: {
-//     flexShrink: 1,
-//     flexGrow: 1,
-//     padding: 0,
-//     borderRadius: 10,
-//     marginVertical: 10,
-//     borderWidth: 2,
-//     borderColor: "#333333",
-//     backgroundColor: "#1c1c1e",
-//     marginBottom: 20,
-//   },
-//   addTagContainer: {
-//     position: "absolute",
-//     top: -5,
-//     right: -5,
-//   },
-//   tagContainer: {
-//     flexDirection: "column",
-//     alignSelf: "stretch",
-//   },
-//   tagText: {
-//     flexDirection: "row",
-//     flex: 1,
-//     justifyContent: "space-between",
-//   },
-//   statsHeader: {
-//     flexDirection: "row",
-//     backgroundColor: "#333",
-//     paddingHorizontal: 16,
-//     paddingVertical: 8,
-//     alignItems: "center",
-//   },
-//   statsContainer: {
-//     flexDirection: "row",
-//     flex: 3,
-//     justifyContent: "space-between",
-//     paddingVertical: 8
-//   },
-//   statsText: {
-//     paddingHorizontal: 5,
-//     color: "#DDD",
-//     flex: 1,
-//     textAlign: "center",
-//   },
-//   headerCell: {
-//     flex: 1,
-//     textAlign: "center",
-//     color: "white",
-//     fontWeight: "bold",
-//   },
-//   headerCellTagName: {
-//     flex: 3.5,
-//     textAlign: "left",
-//     color: "white",
-//     fontWeight: "bold",
-//   },
-// });

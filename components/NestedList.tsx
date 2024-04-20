@@ -45,7 +45,7 @@ export default function NestedList({ tags, collapsed, setCollapsed }: NestedList
       >
         {parentId === null && hasChildren(tag.id) && (
           <TouchableOpacity onPress={() => toggleCollapse(tag.id)} style={styles.taskHeader}>
-            <Text>{collapsed.has(tag.id) ? "Expand" : "Collapse"}</Text>
+            <Text style={{color: 'white'}}>{collapsed.has(tag.id) ? "Expand" : "Collapse"}</Text>
           </TouchableOpacity>
         )}
         <Task {...tag} />
@@ -56,9 +56,6 @@ export default function NestedList({ tags, collapsed, setCollapsed }: NestedList
 
   return (
     <View style={styles.container}>
-      <View style={styles.addButton}>
-        <AddTask parentId={0} depth={0} />
-      </View>
       {renderTags(null)}
     </View>
   );
@@ -77,11 +74,6 @@ const styles = StyleSheet.create({
   taskHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  addButton: {
-    alignSelf: "flex-end",
-    marginRight: 4,
-    marginBottom: 5,
   },
   headerSpacing: {
     marginTop: 20,

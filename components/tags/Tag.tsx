@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: "#2c2c2e",
     borderBottomWidth: 1,
-    borderColor: "#404040",
+    borderColor: "#333",
     alignSelf: "stretch",
   },
   selectedTag: {

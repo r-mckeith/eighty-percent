@@ -17,7 +17,6 @@ import Header from "../components/DateHeader";
 import Section from "../components/tags/Section";
 import AddGroupModal from "../components/AddGroupModal";
 import AddTag from "../components/tags/AddTag";
-import { GroupProps } from "../src/types/GroupTypes";
 
 export default function TagScreen() {
   const { selectedDate, setSelectedDate } = useDateContext();
@@ -79,7 +78,7 @@ export default function TagScreen() {
               );
 
               // if (filteredTags.length > 0 || group.name !== "today") {
-              if (0 === 0) {
+              if (filteredTags) {
                 return (
                   <View key={group.id}>
                     <View style={styles.sectionName}>
