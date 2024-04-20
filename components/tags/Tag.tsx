@@ -125,7 +125,7 @@ export default function Tag({ tag, sectionName }: TagComponent) {
           >
             {tag.name}
           </Text>
-          {tag.section !== "today" && tagData && (
+          {tag.section === "habits" && tagData && (
             <View style={styles.statsContainer}>
               <Text style={styles.statsText}>{tagData.day}</Text>
               <Text style={styles.statsText}>{tagData.week > tagData.day && tagData.week}</Text>

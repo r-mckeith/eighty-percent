@@ -46,14 +46,6 @@ export default function TagScreen() {
     }
     return groupTags;
   };
-
-  const sortGroups = (groups: GroupProps[]) => {
-    return groups.sort((a, b) => {
-      if (a.name.toLowerCase() === "today") return 1; 
-      if (b.name.toLowerCase() === "today") return -1;
-      return 0;
-    });
-  };
   
 
   if (groups.length === 0) {
@@ -76,7 +68,7 @@ export default function TagScreen() {
           onPress={() => isEditMode && setIsEditMode(false)}
         >
           <View style={styles.sectionsContainer}>
-            {sortGroups(groups).map((group) => {
+            {groups.map((group) => {
               const groupTags = tags.filter(
                 (tag) => tag.section === group.name
               );
@@ -86,7 +78,8 @@ export default function TagScreen() {
                 selectedDateString
               );
 
-              if (filteredTags.length > 0 || group.name !== "today") {
+              // if (filteredTags.length > 0 || group.name !== "today") {
+              if (0 === 0) {
                 return (
                   <View key={group.id}>
                     <View style={styles.sectionName}>
