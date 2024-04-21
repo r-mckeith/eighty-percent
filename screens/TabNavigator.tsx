@@ -12,6 +12,7 @@ export function MyTabs() {
       screenOptions={{
         tabBarStyle: {
           paddingVertical: 10,
+          backgroundColor: '#000'
         },
       }}
     >

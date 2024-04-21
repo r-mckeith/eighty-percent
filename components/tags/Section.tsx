@@ -1,55 +1,67 @@
 import React from "react";
-import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import { View, StyleSheet, TouchableWithoutFeedback, Text } from "react-native";
 import { TagProps } from "../../src/types/TagTypes";
 import Tag from "./Tag";
 import RenameTag from "./RenameTag";
 import AddTag from "./AddTag";
+import { useAggregateTagData } from "../../src/hooks/aggregateTagData";
 
 type SectionProps = {
   tags: TagProps[];
   sectionName: string;
   groupId: number;
-  isEditMode: boolean;
-  setIsEditMode: (arg0: boolean) => void;
 };
 
 export default function Section({
   tags,
   sectionName,
   groupId,
-  isEditMode,
-  setIsEditMode,
 }: SectionProps) {
+  const { tasksTableData } = useAggregateTagData();
+
   return (
-    <TouchableWithoutFeedback
-      onLongPress={() => setIsEditMode(!isEditMode)}
-      onPress={() => isEditMode && setIsEditMode(false)}
-    >
       <View style={styles.section}>
         <View style={styles.addTagContainer}>
-          {!isEditMode && sectionName !== "today" && (
-            <AddTag sectionName={sectionName} groupId={groupId} />
-          )}
         </View>
-        {isEditMode && (
-          <RenameTag
-            sectionName={sectionName}
-            groupId={groupId}
-            setIsEditMode={setIsEditMode}
-          />
-        )}
-        <View style={[styles.tagContainer, sectionName !== 'today' ? styles.marginTop : {}]}>
+        <View style={styles.tagContainer}>
+          <View style={styles.statsHeader}>
+            <Text style={styles.headerCellTagName}></Text>
+            <Text style={styles.headerCell}>Day</Text>
+            <Text style={styles.headerCell}>Week</Text>
+            <Text style={styles.headerCell}>Month</Text>
+            <Text style={styles.headerCell}>Year</Text>
+          </View>
+
           {tags.map((tag, index) => (
             <Tag
               key={index}
               tag={tag}
               sectionName={sectionName}
-              isEditMode={isEditMode}
+              isEditMode={false}
             />
           ))}
         </View>
+        {sectionName === "today" && tasksTableData && (
+          <View style={styles.statsContainer}>
+            <Text style={styles.tagText}></Text>
+            <Text style={styles.statsText}>
+              {tasksTableData.today > 0 && tasksTableData.today}
+            </Text>
+            <Text style={styles.statsText}>
+              {tasksTableData.last7Days > tasksTableData.today &&
+                tasksTableData.last7Days}
+            </Text>
+            <Text style={styles.statsText}>
+              {tasksTableData.last30Days > tasksTableData.last7Days &&
+                tasksTableData.last30Days}
+            </Text>
+            <Text style={styles.statsText}>
+              {tasksTableData.last365Days > tasksTableData.last30Days &&
+                tasksTableData.last365Days}
+            </Text>
+          </View>
+        )}
       </View>
-    </TouchableWithoutFeedback>
   );
 }
 
@@ -57,13 +69,12 @@ const styles = StyleSheet.create({
   section: {
     flexShrink: 1,
     flexGrow: 1,
-    minHeight: 70,
-    padding: 10,
     borderRadius: 10,
     marginVertical: 10,
-    marginBottom: 8,
     borderWidth: 2,
-    position: "relative",
+    borderColor: "#333333",
+    backgroundColor: "#1c1c1e",
+    marginBottom: 20,
   },
   addTagContainer: {
     position: "absolute",
@@ -71,16 +82,46 @@ const styles = StyleSheet.create({
     right: -5,
   },
   tagContainer: {
+    flexDirection: "column",
+    alignSelf: "stretch",
+  },
+  statsHeader: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "flex-start",
+    backgroundColor: "#333",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderColor: "#404040",
   },
-  marginTop: {
-    marginTop: 10,
-  },
-  title: {
+  headerCell: {
+    flex: 1,
+    textAlign: "center",
+    color: "white",
     fontWeight: "bold",
-    fontSize: 16,
-    marginBottom: 10,
+    fontSize: 12
+  },
+  headerCellTagName: {
+    flex: 3.5,
+    textAlign: "left",
+    color: "white",
+    fontWeight: "bold",
+  },
+  statsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    alignItems: "center",
+    backgroundColor: "#333",
+  },
+  statsText: {
+    flex: 1,
+    textAlign: "center",
+    color: "#DDD",
+  },
+  tagText: {
+    flex: 3.5,
+    color: "transparent",
   },
 });

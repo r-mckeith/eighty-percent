@@ -32,12 +32,14 @@ export default function ScopeTask({ id, inScopeDay, completed }: Scope) {
 
   return (
     <View>
-      <TouchableOpacity onPress={toggleScope}>
+      <TouchableOpacity onPress={toggleScope}        activeOpacity={completed ? 1 : 0.2}
+ >
         <MaterialCommunityIcons
           name={inScope ? "radiobox-marked" : "radiobox-blank"}
           size={24}
           style={{ paddingLeft: 8 }}
-          color={completed ? 'grey' : 'black'}
+          color={completed ? 'grey' : 'white'}
+
         />
       </TouchableOpacity>
     </View>

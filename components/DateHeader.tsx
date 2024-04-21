@@ -27,14 +27,14 @@ export default function Header({ title, selectedDate, onDateChange }: HeaderProp
       <Text style={styles.headerText}>{title}</Text>
       <View style={styles.datePickerContainer}>
         <TouchableOpacity onPress={decrementDate} style={styles.iconButton}>
-          <MaterialCommunityIcons name="chevron-left" size={24} />
+          <MaterialCommunityIcons name="chevron-left" size={24} color={'white'} />
         </TouchableOpacity>
         <DatePicker
           selectedDate={selectedDate}
           onDateChange={onDateChange}
         />
         <TouchableOpacity onPress={incrementDate} style={styles.iconButton}>
-          <MaterialCommunityIcons name="chevron-right" size={24} />
+          <MaterialCommunityIcons name="chevron-right" size={24} color={'white'} />
         </TouchableOpacity>
       </View>
     </View>
@@ -43,9 +43,9 @@ export default function Header({ title, selectedDate, onDateChange }: HeaderProp
 
 const styles=StyleSheet.create({
   headerContainer: {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#1c1c1e",
     padding: 15,
-    marginBottom: 5,
+    marginBottom: 1,
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: 2,
@@ -54,6 +54,7 @@ const styles=StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     textTransform: "capitalize",
+    color: 'white'
   },
   datePickerContainer: {
     flexDirection: 'row',

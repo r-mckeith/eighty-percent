@@ -25,7 +25,6 @@ export const getTagData = async (
   selectedDate: Date
 ): Promise<TagDataProps[]> => {
   if (!selectedDate || !(selectedDate instanceof Date) || isNaN(selectedDate.getTime())) {
-    console.log('Selected date is not valid:', selectedDate);
     return []; 
   }
 

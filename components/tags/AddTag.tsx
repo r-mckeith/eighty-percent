@@ -36,7 +36,7 @@ export default function AddTag({ sectionName, groupId }: AddTag) {
       <TouchableOpacity
         onPress={() => setShowModal(true)}
       >
-        <MaterialCommunityIcons name="plus" size={24} />
+        <MaterialCommunityIcons name="plus" size={24} color={'white'} />
       </TouchableOpacity>
 
       <AddTagModal
