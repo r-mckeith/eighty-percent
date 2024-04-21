@@ -39,6 +39,7 @@ export default function ScopeTask({ id, inScopeDay, completed }: Scope) {
           size={24}
           style={{ paddingLeft: 8 }}
           color={completed ? 'grey' : 'white'}
+
         />
       </TouchableOpacity>
     </View>
