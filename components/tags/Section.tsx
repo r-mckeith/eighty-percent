@@ -10,39 +10,20 @@ type SectionProps = {
   tags: TagProps[];
   sectionName: string;
   groupId: number;
-  isEditMode: boolean;
-  setIsEditMode: (arg0: boolean) => void;
 };
 
 export default function Section({
   tags,
   sectionName,
   groupId,
-  isEditMode,
-  setIsEditMode,
 }: SectionProps) {
   const { tasksTableData } = useAggregateTagData();
 
   return (
-    <TouchableWithoutFeedback
-      onLongPress={() => setIsEditMode(!isEditMode)}
-      onPress={() => isEditMode && setIsEditMode(false)}
-    >
       <View style={styles.section}>
         <View style={styles.addTagContainer}>
-          {!isEditMode && sectionName !== "today" && (
-            <AddTag sectionName={sectionName} groupId={groupId} />
-          )}
         </View>
-        {isEditMode && (
-          <RenameTag
-            sectionName={sectionName}
-            groupId={groupId}
-            setIsEditMode={setIsEditMode}
-          />
-        )}
         <View style={styles.tagContainer}>
-          {/* {sectionName === "today" && ( */}
           <View style={styles.statsHeader}>
             <Text style={styles.headerCellTagName}></Text>
             <Text style={styles.headerCell}>Day</Text>
@@ -50,14 +31,13 @@ export default function Section({
             <Text style={styles.headerCell}>Month</Text>
             <Text style={styles.headerCell}>Year</Text>
           </View>
-          {/* )} */}
 
           {tags.map((tag, index) => (
             <Tag
               key={index}
               tag={tag}
               sectionName={sectionName}
-              isEditMode={isEditMode}
+              isEditMode={false}
             />
           ))}
         </View>
@@ -82,7 +62,6 @@ export default function Section({
           </View>
         )}
       </View>
-    </TouchableWithoutFeedback>
   );
 }
 

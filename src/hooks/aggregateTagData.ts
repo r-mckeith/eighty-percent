@@ -140,7 +140,6 @@ export function useAggregateTagData() {
     tasks.forEach((task) => {
       if (task.completed) {
         const completedDate = new Date(task.completed);
-        console.log(task.name, completedDate)
 
         if (completedDate >= startDay && completedDate < endDay) {
           aggregatedData.today++;

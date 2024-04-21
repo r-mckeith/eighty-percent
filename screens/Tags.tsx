@@ -13,14 +13,13 @@ import { useTagContext } from "../src/contexts/tags/UseTagContext";
 import { useDateContext } from "../src/contexts/date/useDateContext";
 import { useGroupContext } from "../src/contexts/groups/UseGroupContext";
 import { TagProps } from "../src/types/TagTypes";
-import Header from "../components/DateHeader";
 import Section from "../components/tags/Section";
 import AddGroupModal from "../components/AddGroupModal";
 import AddTag from "../components/tags/AddTag";
+import DateHeaderNew from "../components/DateHeaderNew";
 
 export default function TagScreen() {
   const { selectedDate, setSelectedDate } = useDateContext();
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
 
   const { tags } = useTagContext();
@@ -45,7 +44,6 @@ export default function TagScreen() {
     }
     return groupTags;
   };
-  
 
   if (groups.length === 0) {
     return (
@@ -57,15 +55,8 @@ export default function TagScreen() {
 
   return (
     <>
-      <Header
-        title={""}
-        selectedDate={selectedDate}
-        onDateChange={setSelectedDate}
-      />
       <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="handled">
-        <TouchableWithoutFeedback
-          onPress={() => isEditMode && setIsEditMode(false)}
-        >
+    
           <View style={styles.sectionsContainer}>
             {groups.map((group) => {
               const groupTags = tags.filter(
@@ -77,10 +68,17 @@ export default function TagScreen() {
                 selectedDateString
               );
 
-              // if (filteredTags.length > 0 || group.name !== "today") {
               if (filteredTags) {
                 return (
                   <View key={group.id}>
+                    {group.name === "today" && (
+                      <View style={styles.datePicker}>
+                        <DateHeaderNew
+                          selectedDate={selectedDate}
+                          onDateChange={setSelectedDate}
+                        />
+                      </View>
+                    )}
                     <View style={styles.sectionName}>
                       <Text style={styles.sectionTitle}>
                         {group.name === "today" ? "projects" : group.name}
@@ -95,8 +93,6 @@ export default function TagScreen() {
                       tags={filteredTags}
                       sectionName={group.name}
                       groupId={group.id}
-                      isEditMode={isEditMode}
-                      setIsEditMode={setIsEditMode}
                     />
                   </View>
                 );
@@ -105,27 +101,22 @@ export default function TagScreen() {
               return null;
             })}
 
-            {isEditMode && (
-              <TouchableOpacity
-                style={styles.addButton}
-                onPress={() => setShowModal(true)}
-              >
-                <MaterialCommunityIcons name="plus" size={24} color={"white"} />
-              </TouchableOpacity>
-            )}
-
             <AddGroupModal
               visible={showModal}
               onClose={() => setShowModal(false)}
             />
           </View>
-        </TouchableWithoutFeedback>
       </ScrollView>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  datePicker: {
+    alignSelf: "flex-end",
+    marginRight: 4,
+    marginBottom: 5,
+  },
   activityContainer: {
     flex: 1,
     justifyContent: "center",

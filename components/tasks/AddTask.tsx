@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Modal, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Modal, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
 import useUserId from "../../src/contexts/sessions/UseSessionHook";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { StyleSheet } from "react-native";
@@ -14,7 +14,9 @@ export default function AddTask({ parentId, depth, variant = "default" }: any) {
 
   const userId = useUserId();
 
-  const onAddTask = async () => {
+  const taskLevel = getTaskLevelName(depth)
+
+  const handleAddTask = async () => {
     const success = await addTagToList(
       newTaskName,
       userId,
@@ -54,7 +56,57 @@ export default function AddTask({ parentId, depth, variant = "default" }: any) {
           />
         </TouchableOpacity>
       )}
-      <Modal
+          <Modal
+      animationType="slide"
+      transparent={true}
+      visible={showModal}
+      onRequestClose={() => setShowModal(!showModal)}
+    >
+      <KeyboardAvoidingView
+        style={styles.centeredView}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <View style={styles.modalView}>
+          <View style={styles.modalHeader}>
+            <TouchableOpacity
+              style={[styles.modalButton, styles.leftButton]}
+              onPress={() => setShowModal(false)}
+            >
+              <Text style={[styles.buttonText, { color: "red" }]}>Cancel</Text>
+            </TouchableOpacity>
+            <Text style={[styles.buttonText, { color: "white" }]}>{`New ${taskLevel}`}</Text>
+            <TouchableOpacity
+              style={[
+                styles.modalButton,
+                styles.rightButton,
+                newTaskName ? {} : styles.disabledButton,
+              ]}
+              onPress={handleAddTask}
+              disabled={!newTaskName}
+            >
+              <Text
+                style={[
+                  styles.buttonText,
+                  newTaskName ? { color: "blue" } : { color: "grey" },
+                ]}
+              >
+                Done
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <TextInput
+            style={styles.textInput}
+            placeholder={`${taskLevel}...`}
+            placeholderTextColor="white"
+            value={newTaskName}
+            onChangeText={setNewTaskName}
+            autoFocus={true}
+            returnKeyType="done"
+          />
+        </View>
+      </KeyboardAvoidingView>
+    </Modal>
+      {/* <Modal
         animationType="slide"
         transparent={true}
         visible={showModal}
@@ -97,7 +149,7 @@ export default function AddTask({ parentId, depth, variant = "default" }: any) {
             </View>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
     </View>
   );
 }
@@ -107,16 +159,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    marginTop: 50,
   },
   modalView: {
-    margin: 20,
+    marginHorizontal: 20,
     width: "90%",
-    backgroundColor: "white",
+    backgroundColor: "#000",
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: "white",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -124,22 +176,32 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    position: "relative",
+  },
+  modalHeader: {
+    position: "absolute",
+    top: 10,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    paddingHorizontal: 10,
   },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
     fontWeight: "bold",
   },
-  input: {
+  textInput: {
+    marginTop: 30,
+    alignSelf: "stretch",
     height: 40,
-    borderWidth: 0,
+    color: "white",
     borderBottomWidth: 1,
     borderColor: "#bbb",
-    marginBottom: 10,
     paddingHorizontal: 0,
     paddingVertical: 10,
-  },
-  textInput: {
     width: "100%",
   },
 
@@ -189,5 +251,21 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: "#000",
     fontSize: 16,
+  },
+  modalButton: {
+    padding: 10,
+  },
+  leftButton: {
+    alignSelf: "flex-start",
+  },
+  rightButton: {
+    alignSelf: "flex-end",
+    marginRight: -70,
+  },
+  disabledButton: {
+    opacity: 0.5,
+  },
+  buttonText: {
+    fontWeight: "bold",
   },
 });

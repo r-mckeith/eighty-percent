@@ -1,40 +1,35 @@
 import React, { useRef } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
-import { handleDeleteTag } from "../../helpers/tagHelpers";
+import { deleteTag } from "../../src/api/SupabaseTags";
 import RightSwipe from "./RightSwipe";
 import AddTask from "./AddTask";
 import ScopeTask from "./ScopeTask";
 import { TagProps } from "../../src/types/TagTypes";
 import { useTagContext } from "../../src/contexts/tags/UseTagContext";
-import { useTagDataContext } from "../../src/contexts/tagData/UseTagDataContext";
 
 export default function Task({
-  id,
-  name,
-  completed,
-  inScopeDay,
-  depth,
-}: TagProps) {
-  const { tags, dispatch: tagDispatch } = useTagContext();
-  const { tagData } = useTagDataContext();
+  tag,
+  rootTagId,
+  setSelected,
+}: {
+  tag: TagProps;
+  rootTagId?: number | null;
+  setSelected?: (arg0: number) => void;
+}) {
+  const { dispatch: tagDispatch } = useTagContext();
 
   const swipeableRow = useRef<Swipeable | null>(null);
 
-  function getDepthStyle() {
-    switch (depth) {
-      case 0:
-        return styles.sectionLevel;
-      case 1:
-        return styles.objectiveLevel;
-      case 2:
-        return styles.goalLevel;
-      case 3:
-        return styles.taskLevel;
-      default:
-        return styles.subtaskLevel;
+  async function handleDeleteTag (id: number, dispatch: React.Dispatch<any>) {
+    try {
+      await deleteTag(id);
+      swipeableRow.current?.close();
+      dispatch({ type: 'DELETE_TAG', id });
+    } catch (error) {
+      console.error('Failed to delete tag:', error);
     }
-  }
+  };
 
   return (
     <View>
@@ -43,7 +38,7 @@ export default function Task({
         renderRightActions={() => (
           <RightSwipe
             handleDelete={handleDeleteTag}
-            id={id}
+            id={tag.id}
             dispatch={tagDispatch}
             swipeableRow={swipeableRow}
           />
@@ -51,18 +46,32 @@ export default function Task({
         overshootLeft={false}
         rightThreshold={120}
       >
-        <View style={styles.taskContainer}>
-          <ScopeTask id={id} inScopeDay={inScopeDay ? inScopeDay : null} completed={completed} />
-          <Text
-            style={[
-              styles.taskName,
-              getDepthStyle(),
-              completed ? styles.completedTask : null,
-            ]}
+        <View>
+          <TouchableOpacity
+                  activeOpacity={rootTagId ? 1 : 0.2}
+
+            style={styles.task}
+            onPress={() => setSelected && setSelected(tag.id)}
           >
-            {name}
-          </Text>
-          <AddTask parentId={id} depth={depth ? depth : 0} />
+            {rootTagId && (
+              <ScopeTask
+                id={tag.id}
+                inScopeDay={tag.inScopeDay ? tag.inScopeDay : null}
+                completed={tag.completed}
+              />
+            )}
+            <Text
+              style={[
+                styles.taskName,
+                tag.completed ? styles.completedTask : null,
+              ]}
+            >
+              {tag.name}
+            </Text>
+            {rootTagId && !tag.completed && (
+              <AddTask parentId={tag.id} depth={tag.depth ? tag.depth : 0} />
+            )}
+          </TouchableOpacity>
         </View>
       </Swipeable>
     </View>
@@ -70,12 +79,15 @@ export default function Task({
 }
 
 const styles = StyleSheet.create({
-  taskContainer: {
-    marginTop: 10,
+  task: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 3,
-    paddingVertical: 3,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: "#2c2c2e",
+    borderBottomWidth: 1,
+    borderColor: "#333",
+    alignSelf: "stretch",
   },
   taskName: {
     marginLeft: 7,
@@ -83,31 +95,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
     flex: 1,
-  },
-  sectionLevel: {
-    // color: 'red'
-    // fontWeight: 'bold',
-    // fontSize: 18, // Bigger and bolder for higher hierarchy
-  },
-  addButton: {
-    // marginLeft: 'auto',
-    // padding: 8,
-  },
-  objectiveLevel: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  goalLevel: {
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  taskLevel: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  subtaskLevel: {
-    fontSize: 14,
-    fontWeight: "400",
   },
   completedTask: {
     textDecorationLine: "line-through",

@@ -8,11 +8,11 @@ import { ScrollView } from "react-native-gesture-handler";
 
 type TaskContainerProps = {
   tags: TagProps[];
-  collapsed: Set<number | unknown>;
-  setCollapsed: (arg0: Set<number | unknown>) => void;
+  // collapsed: Set<number>;
+  // setCollapsed: (arg0: Set<number | unknown>) => void;
 };
 
-export default function TaskContainer({ tags, collapsed, setCollapsed }: TaskContainerProps) {
+export default function TaskContainer({ tags }: TaskContainerProps) {
   return (
     <View style={styles.container}>
          <View style={styles.addButton}>
@@ -20,7 +20,7 @@ export default function TaskContainer({ tags, collapsed, setCollapsed }: TaskCon
       </View>
       {tags.length > 0 ? (
         <ScrollView style={styles.taskList} keyboardShouldPersistTaps="handled">
-          <NestedList tags={tags} collapsed={collapsed} setCollapsed={setCollapsed} />
+          <NestedList tags={tags} rootTagId={0}/>
         </ScrollView>
       ) : (
         <View style={styles.emptyContainer} />
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
   },
-  addButton: {
+    addButton: {
     alignSelf: "flex-end",
     marginRight: 4,
     marginBottom: 5,

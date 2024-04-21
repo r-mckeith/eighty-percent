@@ -29,15 +29,15 @@ export default function RightSwipe({id, dispatch, handleDelete}: RightSwipe) {
 const styles=StyleSheet.create({
   rightActionContainer: {
     flexDirection: 'row',
-    height: 60,
-    width: 90,
+    height: 30,
+    width: 30,
   },
   rightSwipeItem: {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 0,
-    height: 60,
-    width: 90,
+    height: 30,
+    width: 30,
     marginVertical: 5,
     backgroundColor: '#EE4B60',
   },
