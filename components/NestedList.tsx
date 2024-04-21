@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     flexGrow: 1,
     borderRadius: 10,
-    marginVertical: 10,
     borderWidth: 2,
     borderColor: "#333333",
     backgroundColor: "#1c1c1e",
@@ -52,17 +51,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignSelf: "stretch",
   },
-  header: {
-    padding: 15,
-    backgroundColor: "#333",
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
   headerText: {
-    fontWeight: "bold",
     color: "white",
-    fontSize: 18,
-    padding: 10,
   },
   childTask: {
     paddingLeft: 20,
@@ -71,75 +61,3 @@ const styles = StyleSheet.create({
 });
 
 export default NestedList;
-
-// import React from "react";
-// import { View, StyleSheet, Text } from "react-native";
-// import Task from "./tasks/Task";
-// import { TagProps } from "../src/types/TagTypes";
-
-// function NestedList({
-//   tags,
-//   rootTagId,
-// }: {
-//   tags: TagProps[];
-//   rootTagId: number | null;
-// }) {
-//   const rootTag = tags.find((tag) => tag.id === rootTagId);
-
-//   const renderChildTasks = (parentId: number) => {
-//     return tags
-//       .filter((tag) => tag.parentId === parentId)
-//       .map((tag) => (
-//         <View key={tag.id}>
-//           <Task tag={tag} rootTagId={rootTagId} />
-//         </View>
-//       ));
-//   };
-
-//   return (
-//     <View style={styles.section}>
-//       {rootTag && (
-//         <View style={styles.tagContainer}>
-//           <Task tag={rootTag} rootTagId={rootTagId} />
-//           {renderChildTasks(rootTag.id)}
-//         </View>
-//       )}
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   section: {
-//     flexShrink: 1,
-//     flexGrow: 1,
-//     borderRadius: 10,
-//     marginVertical: 10,
-//     borderWidth: 2,
-//     borderColor: "#333333",
-//     backgroundColor: "#1c1c1e",
-//     marginBottom: 20,
-//   },
-//   tagContainer: {
-//     flexDirection: "column",
-//     alignSelf: "stretch",
-//   },
-//   header: {
-//     padding: 15,
-//     backgroundColor: "#333",
-//     borderTopLeftRadius: 10,
-//     borderTopRightRadius: 10,
-//   },
-//   headerText: {
-//     fontWeight: "bold",
-//     color: "white",
-//     fontSize: 18,
-//   },
-//   childTask: {
-//     padding: 10,
-//     borderBottomWidth: 1,
-//     borderBottomColor: "#333",
-//     backgroundColor: "#2c2c2e",
-//   },
-// });
-
-// export default NestedList;

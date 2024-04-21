@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "white",
     fontWeight: "bold",
+    fontSize: 12
   },
   headerCellTagName: {
     flex: 3.5,

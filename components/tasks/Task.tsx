@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   task: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 8,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     backgroundColor: "#2c2c2e",
     borderBottomWidth: 1,
