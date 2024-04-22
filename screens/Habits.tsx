@@ -14,7 +14,7 @@ export default function Habits() {
 
   const { habits } = useHabitContext();
   const { groups } = useGroupContext();
-  
+
   const selectedDateString = selectedDate.toLocaleDateString("en-CA");
 
   function filterHabits(
@@ -87,9 +87,9 @@ export default function Habits() {
             return null;
           })}
 
-          <AddButton
+          {/* <AddButton
             type={'group'}
-          />
+          /> */}
         </View>
       </ScrollView>
     </>
