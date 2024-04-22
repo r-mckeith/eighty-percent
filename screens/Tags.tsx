@@ -13,9 +13,9 @@ import { useTagContext } from "../src/contexts/tags/UseTagContext";
 import { useDateContext } from "../src/contexts/date/useDateContext";
 import { useGroupContext } from "../src/contexts/groups/UseGroupContext";
 import { TagProps } from "../src/types/TagTypes";
-import Section from "../components/tags/Section";
+import Section from "../components/habits/Section";
 import AddGroupModal from "../components/AddGroupModal";
-import AddTag from "../components/tags/AddTag";
+import AddTag from "../components/habits/AddTag";
 import DateHeaderNew from "../components/DateHeaderNew";
 
 export default function TagScreen() {
