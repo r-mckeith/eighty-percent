@@ -84,7 +84,14 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
     }
   }
 
-  const displayName = depth ? getProjectLevelName(depth) :  habit ? 'Habit' : 'Group'
+  function getDisplayName() {
+    if (habit) {
+      return 'Habit'
+    } else if (project) {
+      return depth ? getProjectLevelName(depth) : 'List'
+    }
+    return 'Group'
+  }
 
   return (
     <View>
@@ -92,7 +99,7 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
         <MaterialCommunityIcons name="plus" size={24} color={"white"} />
       </TouchableOpacity>
 
-      <AddModal visible={showModal} onClose={() => setShowModal(false)} onAdd={handleAction} displayName={displayName} />
+      <AddModal visible={showModal} onClose={() => setShowModal(false)} onAdd={handleAction} displayName={getDisplayName()} />
     </View>
   );
 }
