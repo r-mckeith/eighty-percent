@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import { TagContext } from './TagContext';
+import { HabitContext } from './HabitContext';
 
-export const useTagContext = () => {
-  const context = useContext(TagContext);
+export const useHabitContext = () => {
+  const context = useContext(HabitContext);
 
   if (!context) {
     throw new Error('useTagContext must be used within a TagContextProvider');

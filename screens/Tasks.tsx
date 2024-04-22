@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, Switch, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useTagContext } from "../src/contexts/tags/UseTagContext";
+import { useTagContext } from "../src/contexts/habits/UseHabitContext";
 import AddTask from "../components/projects/AddTask";
-import { TagProps } from "../src/types/TagTypes";
+import { TagProps } from "../src/types/HabitTypes";
 import TaskSection from "../components/projects/TaskSection";
 import NestedList from "../components/NestedList";
 

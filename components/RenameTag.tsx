@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { View, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useGroupContext } from "../../src/contexts/groups/UseGroupContext";
-import { updateGroupName } from "../../src/api/SupabaseGroups";
+import { useGroupContext } from "../src/contexts/groups/UseGroupContext";
+import { updateGroupName } from "../src/api/SupabaseGroups";
 
 type RenameTag = {
   sectionName: string;

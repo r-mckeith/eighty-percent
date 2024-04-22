@@ -5,8 +5,8 @@ import { deleteTag } from "../../src/api/SupabaseTags";
 import RightSwipe from "./RightSwipe";
 import AddTask from "./AddTask";
 import ScopeTask from "./ScopeTask";
-import { TagProps } from "../../src/types/TagTypes";
-import { useTagContext } from "../../src/contexts/tags/UseTagContext";
+import { TagProps } from "../../src/types/HabitTypes";
+import { useTagContext } from "../../src/contexts/habits/UseHabitContext";
 
 export default function Task({
   tag,

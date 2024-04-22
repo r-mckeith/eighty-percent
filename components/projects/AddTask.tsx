@@ -3,8 +3,8 @@ import { View, Text, TextInput, Modal, TouchableOpacity, KeyboardAvoidingView, P
 import useUserId from "../../src/contexts/sessions/UseSessionHook";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { StyleSheet } from "react-native";
-import { useTagContext } from "../../src/contexts/tags/UseTagContext";
-import { addTagToList, getTaskLevelName } from "../../helpers/tagHelpers";
+import { useTagContext } from "../../src/contexts/habits/UseHabitContext";
+import { addTagToList, getTaskLevelName } from "../../helpers/habitHelpers";
 
 export default function AddTask({ parentId, depth, variant = "default" }: any) {
   const [showModal, setShowModal] = useState(false);

@@ -1,16 +1,16 @@
-import { TagDataProps } from "../types/TagTypes";
+import { HabitDataProps } from "../types/HabitTypes";
 
 export type Action = 
-  | { type: 'INITIALIZE_TAG_DATA', payload: TagDataProps[] }
-  | { type: 'ADD_TAG_DATA', payload: TagDataProps }
-  | { type: 'UPDATE_TAG_DATA', payload: TagDataProps }; // New action type
+  | { type: 'INITIALIZE_HABIT_DATA', payload: HabitDataProps[] }
+  | { type: 'ADD_TAG_DATA', payload: HabitDataProps }
+  | { type: 'UPDATE_HABIT_DATA', payload: HabitDataProps }; // New action type
 
-  export const tagDataReducer = (state: TagDataProps[], action: Action): TagDataProps[] => {
+  export const habitDataReducer = (state: HabitDataProps[], action: Action): HabitDataProps[] => {
     switch(action.type) {
-      case 'INITIALIZE_TAG_DATA':
+      case 'INITIALIZE_HABIT_DATA':
         return action.payload;
       case 'ADD_TAG_DATA':
-      case 'UPDATE_TAG_DATA':
+      case 'UPDATE_HABIT_DATA':
         const existingIndex = state.findIndex(item => item.tag_id === action.payload.tag_id);
         if (existingIndex >= 0) {
           const updatedState = [...state];

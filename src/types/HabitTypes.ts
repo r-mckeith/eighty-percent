@@ -1,16 +1,16 @@
-export interface Tag extends NewTagProps {
+export interface Tag extends NewHabitProps {
   id: number;
   user_id: number;
-  tag_data: TagDataProps[]; 
+  tag_data: HabitDataProps[]; 
 };
 
-export type NewTagProps = {
+export type NewHabitProps = {
   name: string;
   section: string;
   group_id: number
 }
 
-export type TagDataProps = {
+export type HabitDataProps = {
   created_at: Date;
   tag_id: number;
   count: number;
@@ -25,10 +25,10 @@ export enum DateRange {
   ThisYear
 }
 
-export interface TagProps extends NewTagProps {
+export interface HabitProps extends NewHabitProps {
   id: number;
   user_id: number;
-  tag_data: TagDataProps[];
+  tag_data: HabitDataProps[];
   inScopeDay?: string | null;
   completed?: string | null;
   depth?: number;

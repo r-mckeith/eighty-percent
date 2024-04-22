@@ -1,8 +1,8 @@
 import {
-  NewTagProps,
-  TagProps,
-  TagDataProps,
-} from "../types/TagTypes";
+  NewHabitProps,
+  HabitProps,
+  HabitDataProps,
+} from "../types/HabitTypes";
 import { supabase } from "./SupabaseClient";
 
 export const getTags = async () => {
@@ -21,9 +21,9 @@ export const getTags = async () => {
   return tags;
 };
 
-export const getTagData = async (
+export const getHabitData = async (
   selectedDate: Date
-): Promise<TagDataProps[]> => {
+): Promise<HabitDataProps[]> => {
   if (!selectedDate || !(selectedDate instanceof Date) || isNaN(selectedDate.getTime())) {
     return []; 
   }
@@ -50,7 +50,7 @@ export const getTagData = async (
   return data || [];
 };
 
-export async function addTag(newTag: NewTagProps): Promise<TagProps> {
+export async function addHabit(newTag: NewHabitProps): Promise<HabitProps> {
   let { data: tagData, error: tagError } = await supabase
     .from("tags")
     .insert([newTag])
@@ -68,7 +68,7 @@ export async function addTag(newTag: NewTagProps): Promise<TagProps> {
   }
 }
 
-export async function addListTag(newTag: any): Promise<TagProps> {
+export async function addListTag(newTag: any): Promise<HabitProps> {
   let { data: tagData, error: tagError } = await supabase
     .from("tags")
     .insert([newTag])
@@ -97,7 +97,7 @@ export async function addListTag(newTag: any): Promise<TagProps> {
 //   }
 // };
 
-export async function deleteTag(tagId: number) {
+export async function deleteHabit(tagId: number) {
   const { data, error } = await supabase.from("tags").delete().eq("id", tagId);
 
   if (error) {
@@ -137,10 +137,10 @@ export const toggleScope = async (tagId: number, selectedDate: string) => {
   }
 };
 
-export async function selectTag(
-  tag: TagProps,
+export async function selectHabit(
+  tag: HabitProps,
   selectedDate: any
-): Promise<TagDataProps> {
+): Promise<HabitDataProps> {
   const dateFormatted = selectedDate.toISOString().split("T")[0];
 
   const { data, error } = await supabase
@@ -177,7 +177,7 @@ export async function selectTag(
     return updatedData[0];
   } else {
     // Tag data doesn't exist, insert a new row
-    const newData: Partial<TagDataProps> = {
+    const newData: Partial<HabitDataProps> = {
       tag_id: tag.id,
       count: 1,
       tag_name: tag.name,

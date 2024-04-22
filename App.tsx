@@ -6,8 +6,8 @@ import { StatusBar } from 'expo-status-bar';  // Make sure you have imported Sta
 import { MenuProvider } from "react-native-popup-menu";
 import "react-native-url-polyfill/auto";
 import Auth from "./components/auth/Auth";
-import TagContextProvider from "./src/contexts/tags/TagContextProvider";
-import TagDataContextProvider from "./src/contexts/tagData/TagDataContextProvider";
+import TagContextProvider from "./src/contexts/habits/HabitContextProvider";
+import TagDataContextProvider from "./src/contexts/habitData/TagDataContextProvider";
 import DateProvider from "./src/contexts/date/Dateprovider";
 import GroupContextProvider from "./src/contexts/groups/GroupContextProvider";
 import { MyTabs } from "./screens/TabNavigator";

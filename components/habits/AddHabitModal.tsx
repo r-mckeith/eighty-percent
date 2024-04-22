@@ -10,32 +10,32 @@ import {
   Platform,
 } from "react-native";
 
-type AddTagModalProps = {
+type AddHabitModalProps = {
   visible: boolean;
   sectionName: string;
   onClose: () => void;
   onAddTag: (name: string, section: string) => void;
 };
 
-export default function AddTagModal({
+export default function AddHabitModal({
   visible,
   sectionName,
   onClose,
   onAddTag,
-}: AddTagModalProps) {
-  const [newTagName, setNewTagName] = useState("");
+}: AddHabitModalProps) {
+  const [newHabitName, setNewHabitName] = useState("");
 
-  const handleAddTag = () => {
-    if (newTagName) {
-      onAddTag(newTagName, sectionName);
-      setNewTagName("");
+  function handleAddHabit() {
+    if (newHabitName) {
+      onAddTag(newHabitName, sectionName);
+      setNewHabitName("");
       onClose();
     }
-  };
+  }
 
   function handlePressCancel() {
-    setNewTagName('')
-    onClose()
+    setNewHabitName("");
+    onClose();
   }
 
   return (
@@ -57,20 +57,22 @@ export default function AddTagModal({
             >
               <Text style={[styles.buttonText, { color: "red" }]}>Cancel</Text>
             </TouchableOpacity>
-            <Text style={[styles.buttonText, { color: "white" }]}>New Habit</Text>
+            <Text style={[styles.buttonText, { color: "white" }]}>
+              New Habit
+            </Text>
             <TouchableOpacity
               style={[
                 styles.modalButton,
                 styles.rightButton,
-                newTagName ? {} : styles.disabledButton,
+                newHabitName ? {} : styles.disabledButton,
               ]}
-              onPress={handleAddTag}
-              disabled={!newTagName}
+              onPress={handleAddHabit}
+              disabled={!newHabitName}
             >
               <Text
                 style={[
                   styles.buttonText,
-                  newTagName ? { color: "blue" } : { color: "grey" },
+                  newHabitName ? { color: "blue" } : { color: "grey" },
                 ]}
               >
                 Done
@@ -81,8 +83,8 @@ export default function AddTagModal({
             style={styles.textInput}
             placeholder="Habit..."
             placeholderTextColor="white"
-            value={newTagName}
-            onChangeText={setNewTagName}
+            value={newHabitName}
+            onChangeText={setNewHabitName}
             autoFocus={true}
             returnKeyType="done"
           />

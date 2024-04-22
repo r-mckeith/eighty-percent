@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { TagProps } from "../../src/types/TagTypes";
+import { TagProps } from "../../src/types/HabitTypes";
 import Task from "./Task";
 
 type SectionProps = {

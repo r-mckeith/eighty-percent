@@ -1,38 +1,30 @@
 import React, { useState } from "react";
-import {
-  ActivityIndicator,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Text,
-} from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { ActivityIndicator, View, StyleSheet, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { useTagContext } from "../src/contexts/tags/UseTagContext";
+import { useHabitContext } from "../src/contexts/habits/UseHabitContext";
 import { useDateContext } from "../src/contexts/date/useDateContext";
 import { useGroupContext } from "../src/contexts/groups/UseGroupContext";
-import { TagProps } from "../src/types/TagTypes";
-import Section from "../components/habits/Section";
+import { HabitProps } from "../src/types/HabitTypes";
+import HabitSection from "../components/habits/HabitSection";
 import AddGroupModal from "../components/AddGroupModal";
-import AddTag from "../components/habits/AddTag";
+import AddHabit from "../components/habits/AddHabitButton";
 import DateHeaderNew from "../components/DateHeaderNew";
 
 export default function TagScreen() {
   const { selectedDate, setSelectedDate } = useDateContext();
   const [showModal, setShowModal] = useState(false);
 
-  const { tags } = useTagContext();
+  const { habits } = useHabitContext();
   const { groups } = useGroupContext();
   const selectedDateString = selectedDate.toLocaleDateString("en-CA");
 
-  const filterTags = (
+  function filterHabits(
     groupName: string,
-    groupTags: TagProps[],
+    groupHabits: HabitProps[],
     selectedDateString: string
-  ) => {
+  ) {
     if (groupName.toLowerCase() === "today") {
-      return groupTags.filter((tag) => {
+      return groupHabits.filter((tag) => {
         const isInScopeForTodayOrFuture =
           tag.inScopeDay === selectedDateString ||
           (tag.inScopeDay && tag.inScopeDay < selectedDateString);
@@ -42,8 +34,8 @@ export default function TagScreen() {
         return isInScopeForTodayOrFuture && isUncompletedOrCompletedAfter;
       });
     }
-    return groupTags;
-  };
+    return groupHabits;
+  }
 
   if (groups.length === 0) {
     return (
@@ -56,56 +48,51 @@ export default function TagScreen() {
   return (
     <>
       <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="handled">
-    
-          <View style={styles.sectionsContainer}>
-            {groups.map((group) => {
-              const groupTags = tags.filter(
-                (tag) => tag.section === group.name
-              );
-              const filteredTags = filterTags(
-                group.name,
-                groupTags,
-                selectedDateString
-              );
+        <View style={styles.sectionsContainer}>
+          {groups.map((group) => {
+            const groupTags = habits.filter(
+              (habit) => habit.section === group.name
+            );
+            const filteredHabits = filterHabits(
+              group.name,
+              groupTags,
+              selectedDateString
+            );
 
-              if (filteredTags) {
-                return (
-                  <View key={group.id}>
-                    {group.name === "today" && (
-                      <View style={styles.datePicker}>
-                        <DateHeaderNew
-                          selectedDate={selectedDate}
-                          onDateChange={setSelectedDate}
-                        />
-                      </View>
-                    )}
-                    <View style={styles.sectionName}>
-                      <Text style={styles.sectionTitle}>
-                        {group.name === "today" ? "projects" : group.name}
-                      </Text>
-                      <View style={styles.addButton}>
-                        {group.name !== "today" && (
-                          <AddTag sectionName={group.name} groupId={group.id} />
-                        )}
-                      </View>
+            if (filteredHabits) {
+              return (
+                <View key={group.id}>
+                  {group.name === "today" && (
+                    <View style={styles.datePicker}>
+                      <DateHeaderNew
+                        selectedDate={selectedDate}
+                        onDateChange={setSelectedDate}
+                      />
                     </View>
-                    <Section
-                      tags={filteredTags}
-                      sectionName={group.name}
-                      groupId={group.id}
-                    />
+                  )}
+                  <View style={styles.sectionName}>
+                    <Text style={styles.sectionTitle}>
+                      {group.name === "today" ? "projects" : group.name}
+                    </Text>
+                    <View style={styles.addButton}>
+                      {group.name !== "today" && (
+                        <AddHabit sectionName={group.name} groupId={group.id} />
+                      )}
+                    </View>
                   </View>
-                );
-              }
+                  <HabitSection habits={filteredHabits} sectionName={group.name} />
+                </View>
+              );
+            }
 
-              return null;
-            })}
+            return null;
+          })}
 
-            <AddGroupModal
-              visible={showModal}
-              onClose={() => setShowModal(false)}
-            />
-          </View>
+          <AddGroupModal
+            visible={showModal}
+            onClose={() => setShowModal(false)}
+          />
+        </View>
       </ScrollView>
     </>
   );

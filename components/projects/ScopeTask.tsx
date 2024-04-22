@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, TouchableOpacity } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useTagContext } from "../../src/contexts/tags/UseTagContext";
-import { handleToggleScope } from "../../helpers/tagHelpers";
+import { useTagContext } from "../../src/contexts/habits/UseHabitContext";
+import { handleToggleScope } from "../../helpers/habitHelpers";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 
 interface Scope {

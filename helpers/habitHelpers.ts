@@ -1,10 +1,10 @@
 import addDays from 'date-fns/addDays';
-import { toggleScope, addListTag, deleteTag, markTagAsComplete } from '../src/api/SupabaseTags';
-import { TagProps } from '../src/types/TagTypes';
+import { toggleScope, addListTag, deleteHabit, markTagAsComplete } from '../src/api/SupabaseTags';
+import { HabitProps } from '../src/types/HabitTypes';
 
 export const handleDeleteTag = async (id: number, dispatch: React.Dispatch<any>) => {
   try {
-    await deleteTag(id);
+    await deleteHabit(id);
     dispatch({ type: 'DELETE_TAG', id });
   } catch (error) {
     console.error('Failed to delete tag:', error);
@@ -72,7 +72,7 @@ export const handleToggleScope = async (id: any, selectedDate: any, dispatch: an
   }
 };
 
-export const findChildTags = (tagId: number, tags: TagProps[]): TagProps[] => {
+export const findChildTags = (tagId: number, tags: HabitProps[]): HabitProps[] => {
   if (!tags) {
     console.error('Tasks is undefined!');
     return [];
@@ -89,7 +89,7 @@ export const findChildTags = (tagId: number, tags: TagProps[]): TagProps[] => {
   return allChildren;
 };
 
-export const findParentTags = (taskId: number, tags: TagProps[]): TagProps[] => {
+export const findParentTags = (taskId: number, tags: HabitProps[]): HabitProps[] => {
   const parentTask = tags.find(task => task.id === taskId);
   return parentTask && parentTask.parentId
     ? [...findParentTags(parentTask.parentId, tags), parentTask]

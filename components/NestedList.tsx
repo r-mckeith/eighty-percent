@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Task from "./projects/Task";
-import { TagProps } from "../src/types/TagTypes";
+import { TagProps } from "../src/types/HabitTypes";
 
 function NestedList({
   tags,
