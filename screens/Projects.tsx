@@ -2,29 +2,29 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, Switch, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useTagContext } from "../src/contexts/habits/UseHabitContext";
-import AddTask from "../components/projects/AddTask";
-import { TagProps } from "../src/types/HabitTypes";
-import TaskSection from "../components/projects/TaskSection";
+import { useHabitContext as useProjectContext } from "../src/contexts/habits/UseHabitContext";
+import AddProject from "../components/projects/AddProject";
+import { HabitProps as ProjectProps } from "../src/types/HabitTypes";
+import ProjectSection from "../components/projects/ProjectSection";
 import NestedList from "../components/NestedList";
 
-export default function MonthlyScreen() {
+export default function Projects() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
-  const [rootTags, setRootTags] = useState<TagProps[]>([]);
-  const [listTags, setListTags] = useState<TagProps[]>([]);
+  const [projectRoots, setProjectRoots] = useState<ProjectProps[]>([]);
+  const [filteredProjects, setFilteredProjects] = useState<ProjectProps[]>([]);
   const [selected, setSelected] = useState<number | null>(null);
 
-  const { tags } = useTagContext();
+  const { habits: projects } = useProjectContext();
 
   useEffect(() => {
-    const listTags = showCompleted
-      ? tags.filter((tag) => tag.section === "today")
-      : tags.filter((tag) => tag.section === "today" && !tag.completed);
-    setListTags(listTags);
+    const filteredProjects = showCompleted
+      ? projects.filter((tag) => tag.section === "today")
+      : projects.filter((tag) => tag.section === "today" && !tag.completed);
+    setFilteredProjects(filteredProjects);
 
-    const rootTags = listTags.filter((tag) => tag.parentId === 0);
-    setRootTags(rootTags);
-  }, [showCompleted, tags, selected]);
+    const projectRoots = filteredProjects.filter((tag) => tag.parentId === 0);
+    setProjectRoots(projectRoots);
+  }, [showCompleted, projects, selected]);
 
   function handlePressBack() {
     setSelected(null);
@@ -59,7 +59,7 @@ export default function MonthlyScreen() {
         <View style={styles.sectionsContainer}>
           {!selected && (
             <View style={styles.addButton}>
-              <AddTask parentId={0} depth={0} />
+              <AddProject parentId={0} depth={0} />
             </View>
           )}
           {!selected && (
@@ -69,10 +69,11 @@ export default function MonthlyScreen() {
           )}
 
           {!selected && (
-    
-            <TaskSection tags={rootTags} setSelected={setSelected} />
+            <ProjectSection projects={projectRoots} setSelected={setSelected} />
           )}
-          {selected && <NestedList tags={listTags} rootTagId={selected} />}
+          {selected && (
+            <NestedList tags={filteredProjects} rootTagId={selected} />
+          )}
         </View>
       </View>
     </ScrollView>

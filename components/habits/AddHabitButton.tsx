@@ -3,7 +3,7 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { NewHabitProps } from "../../src/types/HabitTypes";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
-import { addHabit } from "../../src/api/SupabaseTags";
+import { addHabit } from "../../src/api/SupabaseHabits";
 import AddHabitModal from "./AddHabitModal";
 
 type AddHabitButton = {

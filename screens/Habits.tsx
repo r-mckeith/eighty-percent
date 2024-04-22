@@ -8,9 +8,9 @@ import { HabitProps } from "../src/types/HabitTypes";
 import HabitSection from "../components/habits/HabitSection";
 import AddGroupModal from "../components/AddGroupModal";
 import AddHabit from "../components/habits/AddHabitButton";
-import DateHeaderNew from "../components/DateHeaderNew";
+import DateSelector from "../components/habits/DateSelector";
 
-export default function TagScreen() {
+export default function Habits() {
   const { selectedDate, setSelectedDate } = useDateContext();
   const [showModal, setShowModal] = useState(false);
 
@@ -64,7 +64,7 @@ export default function TagScreen() {
                 <View key={group.id}>
                   {group.name === "today" && (
                     <View style={styles.datePicker}>
-                      <DateHeaderNew
+                      <DateSelector
                         selectedDate={selectedDate}
                         onDateChange={setSelectedDate}
                       />

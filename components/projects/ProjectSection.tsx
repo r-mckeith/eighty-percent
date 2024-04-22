@@ -1,21 +1,21 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { TagProps } from "../../src/types/HabitTypes";
-import Task from "./Task";
+import { HabitProps } from "../../src/types/HabitTypes";
+import Project from "./Project";
 
-type SectionProps = {
-  tags: TagProps[];
+type ProjectSection = {
+  projects: HabitProps[];
   setSelected: (arg0: number) => void;
 };
 
-export default function TaskSection({ tags, setSelected }: SectionProps) {
+export default function ProjectSection({ projects, setSelected }: ProjectSection) {
   return (
     <View style={styles.section}>
-      <View style={styles.tagContainer}>
-        {tags.map((tag, index) => (
-          <Task
+      <View style={styles.projectContainer}>
+        {projects.map((project, index) => (
+          <Project
             key={index}
-            tag={tag}
+            project={project}
             setSelected={setSelected}
           />
         ))}
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#1c1c1e",
     marginBottom: 20,
   },
-  tagContainer: {
+  projectContainer: {
     flexDirection: "column",
     alignSelf: "stretch",
   },

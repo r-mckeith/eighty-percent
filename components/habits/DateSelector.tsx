@@ -2,18 +2,14 @@ import React from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { addDays } from "date-fns";
-import DatePicker from "./DatePicker";
 import { StyleSheet } from "react-native";
 
-type HeaderProps = {
+type DateSelector = {
   selectedDate: Date;
   onDateChange: (date: Date) => void;
 };
 
-export default function DateHeaderNew({
-  selectedDate,
-  onDateChange,
-}: HeaderProps) {
+export default function DateSelector({ selectedDate, onDateChange }: DateSelector) {
   const decrementDate = () => {
     const previousDay = addDays(selectedDate, -1);
     onDateChange(previousDay);
@@ -50,20 +46,12 @@ export default function DateHeaderNew({
 
   const dayDisplay = formatDateRelative(selectedDate);
 
-  const dayOfWeek = new Intl.DateTimeFormat("en-US", {
-    weekday: "long",
-  }).format(selectedDate);
-
   return (
     <View style={styles.datePickerContainer}>
       <TouchableOpacity onPress={decrementDate} style={styles.iconButton}>
         <MaterialCommunityIcons name="chevron-left" size={24} color={"white"} />
       </TouchableOpacity>
       <Text style={styles.headerText}>{dayDisplay}</Text>
-      {/* <DatePicker
-          selectedDate={selectedDate}
-          onDateChange={onDateChange}
-        /> */}
       <TouchableOpacity onPress={incrementDate} style={styles.iconButton}>
         <MaterialCommunityIcons
           name="chevron-right"

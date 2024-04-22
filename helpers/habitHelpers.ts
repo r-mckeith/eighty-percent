@@ -1,15 +1,15 @@
 import addDays from 'date-fns/addDays';
-import { toggleScope, addListTag, deleteHabit, markTagAsComplete } from '../src/api/SupabaseTags';
+import { toggleScope, addListTag, deleteHabit, markTagAsComplete } from '../src/api/SupabaseHabits';
 import { HabitProps } from '../src/types/HabitTypes';
 
-export const handleDeleteTag = async (id: number, dispatch: React.Dispatch<any>) => {
-  try {
-    await deleteHabit(id);
-    dispatch({ type: 'DELETE_TAG', id });
-  } catch (error) {
-    console.error('Failed to delete tag:', error);
-  }
-};
+// export const handleDeleteTag = async (id: number, dispatch: React.Dispatch<any>) => {
+//   try {
+//     await deleteHabit(id);
+//     dispatch({ type: 'DELETE_TAG', id });
+//   } catch (error) {
+//     console.error('Failed to delete tag:', error);
+//   }
+// };
 
 export const addTagToList = async (
   newTaskName: string,

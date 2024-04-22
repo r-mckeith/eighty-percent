@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, ReactNode } from 'react';
-import { getTags } from '../../api/SupabaseTags';
+import { getTags } from '../../api/SupabaseHabits';
 import { HabitContext } from './HabitContext';
 import { tagReducer } from '../../reducers/HabitReducer';
 
