@@ -10,11 +10,11 @@ import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
 
 type Project = {
   project: HabitProps;
-  rootTagId?: number | null;
+  rootProjectId?: number | null;
   setSelected?: (arg0: number) => void;
 };
 
-export default function Project({ project, rootTagId, setSelected }: Project) {
+export default function Project({ project, rootProjectId, setSelected }: Project) {
   const { dispatch: habitDispatch } = useHabitContext();
 
   const swipeableRow = useRef<Swipeable | null>(null);
@@ -49,11 +49,11 @@ export default function Project({ project, rootTagId, setSelected }: Project) {
       >
         <View>
           <TouchableOpacity
-            activeOpacity={rootTagId ? 1 : 0.2}
+            activeOpacity={rootProjectId ? 1 : 0.2}
             style={styles.project}
             onPress={() => setSelected && setSelected(project.id)}
           >
-            {rootTagId && (
+            {rootProjectId && (
               <ScopeTask
                 id={project.id}
                 inScopeDay={project.inScopeDay ? project.inScopeDay : null}
@@ -68,7 +68,7 @@ export default function Project({ project, rootTagId, setSelected }: Project) {
             >
               {project.name}
             </Text>
-            {rootTagId && !project.completed && (
+            {rootProjectId && !project.completed && (
               <AddProject parentId={project.id} depth={project.depth ? project.depth : 0} />
             )}
           </TouchableOpacity>

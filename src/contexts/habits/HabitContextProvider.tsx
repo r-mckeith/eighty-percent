@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, ReactNode } from 'react';
-import { getTags } from '../../api/SupabaseHabits';
+import { getHabits } from '../../api/SupabaseHabits';
 import { HabitContext } from './HabitContext';
 import { tagReducer } from '../../reducers/HabitReducer';
 
@@ -12,7 +12,7 @@ const HabitContextProvider = ({ children }: HabitContextProviderProps) => {
 
   useEffect(() => {
     const fetchTags = async () => {
-      const tags = await getTags();
+      const tags = await getHabits();
       dispatch({ type: 'INITIALIZE_TAGS', payload: tags });
     };
 

@@ -5,7 +5,7 @@ import {
 } from "../types/HabitTypes";
 import { supabase } from "./SupabaseClient";
 
-export const getTags = async () => {
+export async function getHabits () {
   const { data, error } = await supabase
     .from("tags")
     .select("*")
@@ -16,14 +16,14 @@ export const getTags = async () => {
     throw new Error(error.message);
   }
 
-  const tags = data || [];
+  const habits = data || [];
 
-  return tags;
+  return habits;
 };
 
-export const getHabitData = async (
+export async function getHabitData (
   selectedDate: Date
-): Promise<HabitDataProps[]> => {
+): Promise<HabitDataProps[]> {
   if (!selectedDate || !(selectedDate instanceof Date) || isNaN(selectedDate.getTime())) {
     return []; 
   }
@@ -50,39 +50,39 @@ export const getHabitData = async (
   return data || [];
 };
 
-export async function addHabit(newTag: NewHabitProps): Promise<HabitProps> {
-  let { data: tagData, error: tagError } = await supabase
+export async function addHabit(newHabit: NewHabitProps): Promise<HabitProps> {
+  let { data: habitData, error: habitError } = await supabase
     .from("tags")
-    .insert([newTag])
+    .insert([newHabit])
     .select();
 
-  if (tagError) {
-    console.error(tagError);
-    throw new Error("Failed to add tag");
+  if (habitError) {
+    console.error(habitError);
+    throw new Error("Failed to add habit");
   }
 
-  if (!tagData) {
+  if (!habitData) {
     throw new Error("No data returned after insert operation");
   } else {
-    return tagData[0];
+    return habitData[0];
   }
 }
 
-export async function addListTag(newTag: any): Promise<HabitProps> {
-  let { data: tagData, error: tagError } = await supabase
+export async function addProject(newProject: any): Promise<HabitProps> {
+  let { data: habitData, error: habitError } = await supabase
     .from("tags")
-    .insert([newTag])
+    .insert([newProject])
     .select();
 
-  if (tagError) {
-    console.error(tagError);
+  if (habitError) {
+    console.error(habitError);
     throw new Error("Failed to add task");
   }
 
-  if (!tagData) {
+  if (!habitData) {
     throw new Error("No data returned after insert operation");
   } else {
-    return tagData[0];
+    return habitData[0];
   }
 }
 
@@ -97,19 +97,19 @@ export async function addListTag(newTag: any): Promise<HabitProps> {
 //   }
 // };
 
-export async function deleteHabit(tagId: number) {
-  const { data, error } = await supabase.from("tags").delete().eq("id", tagId);
+export async function deleteHabit(habitId: number) {
+  const { data, error } = await supabase.from("tags").delete().eq("id", habitId);
 
   if (error) {
     console.error(error);
   }
 }
 
-export const toggleScope = async (tagId: number, selectedDate: string) => {
+export const toggleScope = async (habitId: number, selectedDate: string) => {
   const { data, error } = await supabase
     .from("tags")
     .select("inScopeDay")
-    .eq("id", tagId)
+    .eq("id", habitId)
     .single();
 
   if (error || !data) {
@@ -122,7 +122,7 @@ export const toggleScope = async (tagId: number, selectedDate: string) => {
   const { data: updateData, error: updateError } = await supabase
     .from("tags")
     .update({ inScopeDay: newScopeDate })
-    .eq("id", tagId)
+    .eq("id", habitId)
     .select();
 
   if (updateError) {
@@ -138,7 +138,7 @@ export const toggleScope = async (tagId: number, selectedDate: string) => {
 };
 
 export async function selectHabit(
-  tag: HabitProps,
+  habit: HabitProps,
   selectedDate: any
 ): Promise<HabitDataProps> {
   const dateFormatted = selectedDate.toISOString().split("T")[0];
@@ -146,7 +146,7 @@ export async function selectHabit(
   const { data, error } = await supabase
     .from("tag_data")
     .select("*")
-    .eq("tag_id", tag.id)
+    .eq("tag_id", habit.id)
     .gte("date", dateFormatted)
     .lte("date", dateFormatted);
 
@@ -176,11 +176,11 @@ export async function selectHabit(
 
     return updatedData[0];
   } else {
-    // Tag data doesn't exist, insert a new row
+    // Habit data doesn't exist, insert a new row
     const newData: Partial<HabitDataProps> = {
-      tag_id: tag.id,
+      tag_id: habit.id,
       count: 1,
-      tag_name: tag.name,
+      tag_name: habit.name,
       date: selectedDate,
     };
 
@@ -198,14 +198,14 @@ export async function selectHabit(
   }
 }
 
-export const markTagAsComplete = async (
-  tagId: number,
+export async function markHabitAsComplete (
+  habitId: number,
   completionDate: Date
-) => {
+) {
   const fetchResult = await supabase
     .from("tags")
     .select("completed")
-    .eq("id", tagId)
+    .eq("id", habitId)
     .single();
 
   if (fetchResult.error || !fetchResult.data) {
@@ -213,14 +213,14 @@ export const markTagAsComplete = async (
     throw new Error("Failed to fetch tag");
   }
 
-  const tag = fetchResult.data;
+  const habit = fetchResult.data;
 
-  const newCompletionDate = tag.completed ? null : completionDate;
+  const newCompletionDate = habit.completed ? null : completionDate;
 
   const data = await supabase
     .from("tags")
     .update({ completed: newCompletionDate })
-    .eq("id", tagId);
+    .eq("id", habitId);
 
   if (data.error) {
     console.error("Failed to mark task as complete/incomplete:", data.error);
@@ -233,3 +233,29 @@ export const markTagAsComplete = async (
     return data;
   }
 };
+
+// to be used later to toggle/ complete children tags
+
+// export const findChildTags = (tagId: number, tags: HabitProps[]): HabitProps[] => {
+//   if (!tags) {
+//     console.error('Tasks is undefined!');
+//     return [];
+//   }
+
+//   const directChildren = tags.filter(tag => tag.parentId === tagId);
+//   let allChildren = [...directChildren];
+
+//   directChildren.forEach(child => {
+//     const grandchildren = findChildTags(child.id, tags);
+//     allChildren = [...allChildren, ...grandchildren];
+//   });
+
+//   return allChildren;
+// };
+
+// export const findParentTags = (taskId: number, tags: HabitProps[]): HabitProps[] => {
+//   const parentTask = tags.find(task => task.id === taskId);
+//   return parentTask && parentTask.parentId
+//     ? [...findParentTags(parentTask.parentId, tags), parentTask]
+//     : [];
+// };

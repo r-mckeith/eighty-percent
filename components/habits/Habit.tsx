@@ -4,11 +4,10 @@ import { Swipeable } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
 import { HabitProps } from "../../src/types/HabitTypes";
-import { deleteHabit, selectHabit } from "../../src/api/SupabaseHabits";
+import { deleteHabit, selectHabit, markHabitAsComplete } from "../../src/api/SupabaseHabits";
 import { useHabitDataContext } from "../../src/contexts/habitData/UseHabitDataContext";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import RightSwipe from "./RightSwipe";
-import { handleToggleCompleted } from "../../helpers/habitHelpers";
 import {
   useAggregatedData,
   HabitsAggregatedData,
@@ -89,6 +88,21 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
         console.error("Error selecting habit:", error);
         setIsSelected(false);
       }
+    }
+  };
+
+  async function handleToggleCompleted (id: number, selectedDate: Date, dispatch: React.Dispatch<any>) {
+    dispatch({ type: 'TOGGLE_COMPLETED', id: id, selectedDate: selectedDate });
+  
+    try {
+      const updatedTask = await markHabitAsComplete(id, selectedDate);
+      
+      if (updatedTask) {
+      } else {
+        console.error('Failed to toggle complete');
+      }
+    } catch (error) {
+      console.error('Failed to toggle complete', error);
     }
   };
 

@@ -1,4 +1,3 @@
-import { isSelectedDate } from "../../helpers/dateHelpers";
 import { HabitProps } from "../types/HabitTypes";
 
 export type Action =

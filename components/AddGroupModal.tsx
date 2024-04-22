@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { CANCEL_BUTTON, CIRCLE_CHECK_BUTTON } from '../src/utils/colors';
 import { addGroup } from '../src/api/SupabaseGroups';
 import { useGroupContext } from '../src/contexts/groups/UseGroupContext';
 
@@ -51,10 +50,10 @@ export default function AddGroupModal ({ visible, onClose }: AddGroupModalProps)
               style={styles.iconButton} 
               onPress={handleAddGroup}
             >
-              <MaterialCommunityIcons name="check-circle-outline" size={24} color={CIRCLE_CHECK_BUTTON} />
+              <MaterialCommunityIcons name="check-circle-outline" size={24} color={'#4CAF50'} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.iconButton} onPress={onClose}>
-              <MaterialCommunityIcons name="cancel" size={24} color={CANCEL_BUTTON} /> 
+              <MaterialCommunityIcons name="cancel" size={24} color={'#F44336'} /> 
             </TouchableOpacity>
           </View>
         </View>

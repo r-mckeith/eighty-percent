@@ -1,13 +1,7 @@
-export interface Tag extends NewHabitProps {
-  id: number;
-  user_id: number;
-  tag_data: HabitDataProps[]; 
-};
-
 export type NewHabitProps = {
   name: string;
   section: string;
-  group_id: number
+  group_id: number;
 }
 
 export type HabitDataProps = {
@@ -18,15 +12,11 @@ export type HabitDataProps = {
   date: Date;
 }
 
-export enum DateRange {
-  Today,
-  ThisWeek,
-  ThisMonth,
-  ThisYear
-}
-
-export interface HabitProps extends NewHabitProps {
+export type HabitProps = {
   id: number;
+  name: string;
+  section: string;
+  group_id: number
   user_id: number;
   tag_data: HabitDataProps[];
   inScopeDay?: string | null;

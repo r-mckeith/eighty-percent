@@ -6,7 +6,7 @@ import { useHabitContext as useProjectContext } from "../src/contexts/habits/Use
 import AddProject from "../components/projects/AddProject";
 import { HabitProps as ProjectProps } from "../src/types/HabitTypes";
 import ProjectSection from "../components/projects/ProjectSection";
-import NestedList from "../components/NestedList";
+import NestedList from "../components/projects/NestedList";
 
 export default function Projects() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
@@ -72,7 +72,7 @@ export default function Projects() {
             <ProjectSection projects={projectRoots} setSelected={setSelected} />
           )}
           {selected && (
-            <NestedList tags={filteredProjects} rootTagId={selected} />
+            <NestedList projects={filteredProjects} rootProjectId={selected} />
           )}
         </View>
       </View>

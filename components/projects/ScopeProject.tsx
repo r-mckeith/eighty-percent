@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, TouchableOpacity } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
-import { handleToggleScope } from "../../helpers/habitHelpers";
+import { toggleScope } from "../../src/api/SupabaseHabits";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 
 type ScopeProject = {
@@ -26,18 +26,35 @@ export default function ScopeProject({
     );
   }, [inScopeDay]);
 
-  function toggleScope() {
+  async function handleToggleScope() {
     if (completed) {
       return;
     }
+    dispatch({
+      type: "TOGGLE_SCOPE",
+      id: id,
+      selectedDate: selectedDate.toISOString().split("T")[0],
+    });
 
-    handleToggleScope(id, selectedDate.toISOString().split("T")[0], dispatch);
+    try {
+      const updatedTask = await toggleScope(
+        id,
+        selectedDate.toISOString().split("T")[0]
+      );
+
+      if (updatedTask) {
+      } else {
+        console.error("Failed to toggle scope for day");
+      }
+    } catch (error) {
+      console.error("Failed to toggle scope for day:", error);
+    }
   }
 
   return (
     <View>
       <TouchableOpacity
-        onPress={toggleScope}
+        onPress={handleToggleScope}
         activeOpacity={completed ? 1 : 0.2}
       >
         <MaterialCommunityIcons

@@ -8,11 +8,10 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import useUserId from "../../src/contexts/sessions/UseSessionHook";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { StyleSheet } from "react-native";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
-import { addTagToList, getTaskLevelName } from "../../helpers/habitHelpers";
+import { addProject } from "../../src/api/SupabaseHabits";
 
 type AddProject = {
   parentId: number;
@@ -25,24 +24,35 @@ export default function AddProject({ parentId, depth }: AddProject) {
 
   const { dispatch } = useHabitContext();
 
-  const userId = useUserId();
+  async function handleAddProject(): Promise<boolean> {
+    const newProject: any = {
+      name: newProjectName,
+      parentId: parentId,
+      depth: depth + 1,
+      section: "today",
+    };
 
-  const taskLevel = getTaskLevelName(depth);
-
-  async function handleAddProject() {
-    const success = await addTagToList(
-      newProjectName,
-      userId,
-      parentId,
-      depth,
-      "today",
-      dispatch
-    );
-    if (success) {
-      setNewProjectName("");
+    try {
+      const createdProject = await addProject(newProject);
+      dispatch({ type: "ADD_HABIT", payload: createdProject });
+      setNewProjectName('');
       setShowModal(false);
-    } else {
-      console.error("Failed to add project");
+      return true;
+    } catch (error) {
+      console.error("Failed to add project:", error);
+      return false;
+    }
+  }
+
+  function getProjectLevelName(depth: number): "List" | "Task" | "Subtask" {
+    const newProjectDepth = depth + 1;
+    switch (newProjectDepth) {
+      case 1:
+        return "List";
+      case 2:
+        return "Task";
+      default:
+        return "Subtask";
     }
   }
 
@@ -77,7 +87,7 @@ export default function AddProject({ parentId, depth }: AddProject) {
               </TouchableOpacity>
               <Text
                 style={[styles.buttonText, { color: "white" }]}
-              >{`New ${taskLevel}`}</Text>
+              >{`New ${getProjectLevelName(depth)}`}</Text>
               <TouchableOpacity
                 style={[
                   styles.modalButton,
@@ -99,7 +109,7 @@ export default function AddProject({ parentId, depth }: AddProject) {
             </View>
             <TextInput
               style={styles.textInput}
-              placeholder={`${taskLevel}...`}
+              placeholder={`${getProjectLevelName(depth)}...`}
               placeholderTextColor="white"
               value={newProjectName}
               onChangeText={setNewProjectName}
