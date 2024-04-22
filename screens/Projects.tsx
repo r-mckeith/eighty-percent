@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, Switch, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useHabitContext as useProjectContext } from "../src/contexts/habits/UseHabitContext";
-import AddProject from "../components/projects/AddProject";
+import AddButton from "../components/shared/AddButton";
 import { HabitProps as ProjectProps } from "../src/types/HabitTypes";
 import ProjectSection from "../components/projects/ProjectSection";
 import NestedList from "../components/projects/NestedList";
@@ -59,7 +59,7 @@ export default function Projects() {
         <View style={styles.sectionsContainer}>
           {!selected && (
             <View style={styles.addButton}>
-              <AddProject parentId={0} depth={0} />
+              <AddButton parentId={0} depth={0} type={'project'} />
             </View>
           )}
           {!selected && (

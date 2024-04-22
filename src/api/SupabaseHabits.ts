@@ -1,11 +1,7 @@
-import {
-  NewHabitProps,
-  HabitProps,
-  HabitDataProps,
-} from "../types/HabitTypes";
+import { NewHabitProps, HabitProps, HabitDataProps } from "../types/HabitTypes";
 import { supabase } from "./SupabaseClient";
 
-export async function getHabits () {
+export async function getHabits() {
   const { data, error } = await supabase
     .from("tags")
     .select("*")
@@ -19,13 +15,11 @@ export async function getHabits () {
   const habits = data || [];
 
   return habits;
-};
+}
 
-export async function getHabitData (
-  selectedDate: Date
-): Promise<HabitDataProps[]> {
+export async function getHabitData(selectedDate: Date): Promise<HabitDataProps[]> {
   if (!selectedDate || !(selectedDate instanceof Date) || isNaN(selectedDate.getTime())) {
-    return []; 
+    return [];
   }
 
   const endDate = new Date(selectedDate);
@@ -48,7 +42,7 @@ export async function getHabitData (
   }
 
   return data || [];
-};
+}
 
 export async function addHabit(newHabit: NewHabitProps): Promise<HabitProps> {
   let { data: habitData, error: habitError } = await supabase
@@ -105,7 +99,7 @@ export async function deleteHabit(habitId: number) {
   }
 }
 
-export const toggleScope = async (habitId: number, selectedDate: string) => {
+export async function toggleScope(habitId: number, selectedDate: string) {
   const { data, error } = await supabase
     .from("tags")
     .select("inScopeDay")
@@ -135,12 +129,9 @@ export const toggleScope = async (habitId: number, selectedDate: string) => {
   } else {
     return updateData;
   }
-};
+}
 
-export async function selectHabit(
-  habit: HabitProps,
-  selectedDate: any
-): Promise<HabitDataProps> {
+export async function selectHabit(habit: HabitProps, selectedDate: any): Promise<HabitDataProps> {
   const dateFormatted = selectedDate.toISOString().split("T")[0];
 
   const { data, error } = await supabase
@@ -152,7 +143,7 @@ export async function selectHabit(
 
   if (error) {
     console.error(error);
-    throw new Error("Failed to select tag data");
+    throw new Error("Failed to select habit data");
   }
 
   if (data && data.length > 0) {
@@ -167,7 +158,7 @@ export async function selectHabit(
 
     if (updateError) {
       console.error(updateError);
-      throw new Error("Failed to update tag data count");
+      throw new Error("Failed to update habit data count");
     }
 
     if (!updatedData) {
@@ -191,26 +182,19 @@ export async function selectHabit(
 
     if (insertError) {
       console.error(insertError);
-      throw new Error("Failed to insert tag data");
+      throw new Error("Failed to insert habit data");
     }
 
     return insertedData[0];
   }
 }
 
-export async function markHabitAsComplete (
-  habitId: number,
-  completionDate: Date
-) {
-  const fetchResult = await supabase
-    .from("tags")
-    .select("completed")
-    .eq("id", habitId)
-    .single();
+export async function markHabitAsComplete(habitId: number, completionDate: Date) {
+  const fetchResult = await supabase.from("tags").select("completed").eq("id", habitId).single();
 
   if (fetchResult.error || !fetchResult.data) {
-    console.error("Failed to fetch tag:", fetchResult.error);
-    throw new Error("Failed to fetch tag");
+    console.error("Failed to fetch habit:", fetchResult.error);
+    throw new Error("Failed to fetch habit");
   }
 
   const habit = fetchResult.data;
@@ -232,7 +216,7 @@ export async function markHabitAsComplete (
   } else {
     return data;
   }
-};
+}
 
 // to be used later to toggle/ complete children tags
 

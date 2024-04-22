@@ -7,7 +7,7 @@ import { HabitProps } from "../../src/types/HabitTypes";
 import { deleteHabit, selectHabit, markHabitAsComplete } from "../../src/api/SupabaseHabits";
 import { useHabitDataContext } from "../../src/contexts/habitData/UseHabitDataContext";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
-import RightSwipe from "./RightSwipe";
+import RightSwipe from "../shared/RightSwipe";
 import {
   useAggregatedData,
   HabitsAggregatedData,
@@ -120,6 +120,7 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
           handleDelete={handleDeleteHabit}
           id={habit.id}
           swipeableRow={swipeableRow}
+          dispatch={habitDispatch}
         />
       )}
       overshootLeft={false}

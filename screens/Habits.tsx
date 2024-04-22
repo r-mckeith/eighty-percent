@@ -6,16 +6,15 @@ import { useDateContext } from "../src/contexts/date/useDateContext";
 import { useGroupContext } from "../src/contexts/groups/UseGroupContext";
 import { HabitProps } from "../src/types/HabitTypes";
 import HabitSection from "../components/habits/HabitSection";
-import AddGroupModal from "../components/AddGroupModal";
-import AddHabit from "../components/habits/AddHabitButton";
+import AddButton from "../components/shared/AddButton";
 import DateSelector from "../components/habits/DateSelector";
 
 export default function Habits() {
   const { selectedDate, setSelectedDate } = useDateContext();
-  const [showModal, setShowModal] = useState(false);
 
   const { habits } = useHabitContext();
   const { groups } = useGroupContext();
+  
   const selectedDateString = selectedDate.toLocaleDateString("en-CA");
 
   function filterHabits(
@@ -76,7 +75,7 @@ export default function Habits() {
                     </Text>
                     <View style={styles.addButton}>
                       {group.name !== "today" && (
-                        <AddHabit sectionName={group.name} groupId={group.id} />
+                        <AddButton sectionName={group.name} groupId={group.id} type={'habit'} />
                       )}
                     </View>
                   </View>
@@ -88,9 +87,8 @@ export default function Habits() {
             return null;
           })}
 
-          <AddGroupModal
-            visible={showModal}
-            onClose={() => setShowModal(false)}
+          <AddButton
+            type={'group'}
           />
         </View>
       </ScrollView>

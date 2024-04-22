@@ -2,8 +2,8 @@ import React, { useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { deleteHabit } from "../../src/api/SupabaseHabits";
-import RightSwipe from "./RightSwipe";
-import AddProject from "./AddProject";
+import RightSwipe from "../shared/RightSwipe";
+import AddButton from "../shared/AddButton";
 import ScopeTask from "./ScopeProject";
 import { HabitProps } from "../../src/types/HabitTypes";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
@@ -69,7 +69,7 @@ export default function Project({ project, rootProjectId, setSelected }: Project
               {project.name}
             </Text>
             {rootProjectId && !project.completed && (
-              <AddProject parentId={project.id} depth={project.depth ? project.depth : 0} />
+              <AddButton parentId={project.id} depth={project.depth ? project.depth : 0} type={'project'} />
             )}
           </TouchableOpacity>
         </View>

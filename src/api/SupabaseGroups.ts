@@ -1,7 +1,7 @@
 import { GroupProps } from '../types/GroupTypes';
 import { supabase } from './SupabaseClient'
 
-export const getGroups = async () => {
+export async function getGroups () {
   const { data, error } = await supabase
     .from('groups')
     .select('*')

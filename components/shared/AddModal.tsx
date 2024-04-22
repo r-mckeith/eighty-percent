@@ -10,41 +10,31 @@ import {
   Platform,
 } from "react-native";
 
-type AddHabitModalProps = {
+type AddModal = {
   visible: boolean;
-  sectionName: string;
+  displayName: string;
   onClose: () => void;
-  onAddTag: (name: string, section: string) => void;
+  onAdd: (name: string) => void;
 };
 
-export default function AddHabitModal({
-  visible,
-  sectionName,
-  onClose,
-  onAddTag,
-}: AddHabitModalProps) {
-  const [newHabitName, setNewHabitName] = useState("");
+export default function AddModal({ visible, displayName, onClose, onAdd }: AddModal) {
+  const [newName, setNewName] = useState("");
 
-  function handleAddHabit() {
-    if (newHabitName) {
-      onAddTag(newHabitName, sectionName);
-      setNewHabitName("");
+  function handleAdd() {
+    if (newName) {
+      onAdd(newName);
+      setNewName('');
       onClose();
     }
   }
 
   function handlePressCancel() {
-    setNewHabitName("");
+    setNewName('');
     onClose();
   }
 
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={visible}
-      onRequestClose={onClose}
-    >
+    <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <KeyboardAvoidingView
         style={styles.centeredView}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -57,23 +47,18 @@ export default function AddHabitModal({
             >
               <Text style={[styles.buttonText, { color: "red" }]}>Cancel</Text>
             </TouchableOpacity>
-            <Text style={[styles.buttonText, { color: "white" }]}>
-              New Habit
-            </Text>
+            <Text style={[styles.buttonText, { color: "white" }]}>{`New ${displayName}`}</Text>
             <TouchableOpacity
               style={[
                 styles.modalButton,
                 styles.rightButton,
-                newHabitName ? {} : styles.disabledButton,
+                newName ? {} : styles.disabledButton,
               ]}
-              onPress={handleAddHabit}
-              disabled={!newHabitName}
+              onPress={handleAdd}
+              disabled={!newName}
             >
               <Text
-                style={[
-                  styles.buttonText,
-                  newHabitName ? { color: "blue" } : { color: "grey" },
-                ]}
+                style={[styles.buttonText, newName ? { color: "blue" } : { color: "grey" }]}
               >
                 Done
               </Text>
@@ -81,10 +66,10 @@ export default function AddHabitModal({
           </View>
           <TextInput
             style={styles.textInput}
-            placeholder="Habit..."
+            placeholder={`${displayName}...`}
             placeholderTextColor="white"
-            value={newHabitName}
-            onChangeText={setNewHabitName}
+            value={newName}
+            onChangeText={setNewName}
             autoFocus={true}
             returnKeyType="done"
           />

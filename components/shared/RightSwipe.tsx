@@ -9,6 +9,7 @@ type RightSwipe = {
   handleDelete: (id: number) => Promise<void>;
   id: number;
   swipeableRow: React.RefObject<Swipeable | null>;
+  dispatch: React.Dispatch<any>;
 };
 
 export default function RightSwipe({id, handleDelete}: RightSwipe) {
