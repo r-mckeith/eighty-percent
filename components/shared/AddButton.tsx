@@ -16,14 +16,14 @@ type AddButton = {
   depth?: number;
 };
 
-export default function AddButton({ sectionName, groupId, parentId, depth, type }: AddButton) {
+export default function AddButton({ sectionName, groupId, parentId, depth = 0, type }: AddButton) {
   const [showModal, setShowModal] = useState(false);
 
   const { dispatch: habitDispatch } = useHabitContext();
   const { dispatch: groupDispatch } = useGroupContext();
 
-  const habit = type === 'habit';
-  const project = type === 'project';
+  const habit = type === "habit";
+  const project = type === "project";
 
   async function handleAddHabit(name: string): Promise<void> {
     if (sectionName && groupId) {
@@ -43,32 +43,29 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
   }
 
   async function handleAddProject(name: string): Promise<void> {
-    if (depth) {
-      const newProject: any = {
-        name: name,
-        parentId: parentId,
-        depth: depth + 1,
-        section: "today",
-      };
+    const newProject: any = {
+      name: name,
+      parentId: parentId,
+      depth: depth + 1,
+      section: "today",
+    };
 
-      try {
-        const createdProject = await addProject(newProject);
-        habitDispatch({ type: "ADD_HABIT", payload: createdProject });
-      } catch (error) {
-        console.error("Failed to add habit:", error);
-      }
+    try {
+      const createdProject = await addProject(newProject);
+      habitDispatch({ type: "ADD_HABIT", payload: createdProject });
+    } catch (error) {
+      console.error("Failed to add habit:", error);
     }
   }
 
-
-  async function handleAddGroup (name: string): Promise<void> {
+  async function handleAddGroup(name: string): Promise<void> {
     try {
       const createdGroup = await addGroup(name);
       groupDispatch({ type: "ADD_GROUP", payload: createdGroup });
     } catch (error) {
       console.error("Failed to add group:", error);
     }
-  };
+  }
 
   const handleAction = habit ? handleAddHabit : project ? handleAddProject : handleAddGroup;
 
@@ -86,11 +83,11 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
 
   function getDisplayName() {
     if (habit) {
-      return 'Habit'
+      return "Habit";
     } else if (project) {
-      return depth ? getProjectLevelName(depth) : 'List'
+      return depth ? getProjectLevelName(depth) : "List";
     }
-    return 'Group'
+    return "Group";
   }
 
   return (
@@ -99,7 +96,12 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
         <MaterialCommunityIcons name="plus" size={24} color={"white"} />
       </TouchableOpacity>
 
-      <AddModal visible={showModal} onClose={() => setShowModal(false)} onAdd={handleAction} displayName={getDisplayName()} />
+      <AddModal
+        visible={showModal}
+        onClose={() => setShowModal(false)}
+        onAdd={handleAction}
+        displayName={getDisplayName()}
+      />
     </View>
   );
 }

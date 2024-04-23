@@ -1,5 +1,5 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, Text } from "react-native";
 import { HabitProps } from "../../src/types/HabitTypes";
 import Habit from "./Habit";
 import StatsHeader from "../shared/StatsHeader";
@@ -11,8 +11,20 @@ type SectionProps = {
   sectionName: string;
 };
 
+
+
 export default function HabitSection({ habits, sectionName }: SectionProps) {
+  const [projectData, setProjectData] = useState<any>();
   const { projectsTableData } = useAggregatedData();
+
+  useEffect(() => {
+    const data = projectsTableData;
+    if (data !== undefined) {
+      setProjectData(data);
+    } else {
+      setProjectData(null);
+    }
+  }, [projectsTableData]);
 
   return (
     <View style={styles.section}>
@@ -20,15 +32,14 @@ export default function HabitSection({ habits, sectionName }: SectionProps) {
         <StatsHeader />
 
         {habits.map((tag, index) => (
-          <Habit
-            key={index}
-            habit={tag}
-            sectionName={sectionName}
-            isEditMode={false}
-          />
+          <Habit key={index} habit={tag} sectionName={sectionName} isEditMode={false} />
         ))}
       </View>
-      {sectionName === "today" && projectsTableData && <ProjectStats />}
+      {sectionName === "today" && projectsTableData && (
+        <View style={styles.row}>
+            <ProjectStats name={''} data ={projectsTableData} />
+        </View>
+      )}
     </View>
   );
 }
@@ -46,6 +57,16 @@ const styles = StyleSheet.create({
   },
   habitContainer: {
     flexDirection: "column",
+    alignSelf: "stretch",
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: "#2c2c2e",
+    borderBottomWidth: 1,
+    borderColor: "#333",
     alignSelf: "stretch",
   },
 });

@@ -134,9 +134,6 @@ const styles = StyleSheet.create({
     color: "#FFF",
     textTransform: "capitalize",
   },
-  editableSection: {
-    padding: 10,
-  },
   input: {
     height: 40,
     borderColor: "gray",

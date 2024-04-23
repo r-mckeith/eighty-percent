@@ -1,48 +1,46 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { useAggregatedData } from "../../src/hooks/aggregateData";
 
-export default function ProjectStats() {
-  const { projectsTableData } = useAggregatedData();
-
+export default function ProjectStats({ name, data }: { name: string, data: any }) {
   return (
-    <View style={styles.statsContainer}>
-      <Text style={styles.habitText}></Text>
-      <Text style={styles.statsText}>
-        {projectsTableData.today > 0 && projectsTableData.today}
-      </Text>
-      <Text style={styles.statsText}>
-        {projectsTableData.last7Days > projectsTableData.today &&
-          projectsTableData.last7Days}
-      </Text>
-      <Text style={styles.statsText}>
-        {projectsTableData.last30Days > projectsTableData.last7Days &&
-          projectsTableData.last30Days}
-      </Text>
-      <Text style={styles.statsText}>
-        {projectsTableData.last365Days > projectsTableData.last30Days &&
-          projectsTableData.last365Days}
-      </Text>
+    <View style={styles.rowContent}>
+      <Text style={[styles.name]}>{name}</Text>
+      {data && (
+        <View style={styles.statsContainer}>
+          <Text style={styles.statsText}>{data.day > 0 && data.day}</Text>
+          <Text style={styles.statsText}>{data.week > data.day && data.week}</Text>
+          <Text style={styles.statsText}>
+            {data.month > data.week && data.month}
+          </Text>
+          <Text style={styles.statsText}>{data.year > data.month && data.year}</Text>
+        </View>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  rowContent: {
+    flexDirection: "row",
+    color: "#FFF",
+    flex: 1,
+    justifyContent: "space-between",
+  },
   statsContainer: {
     flexDirection: "row",
+    flex: 3,
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    alignItems: "center",
-    backgroundColor: "#333",
   },
   statsText: {
+    paddingHorizontal: 5,
+    color: "#DDD",
     flex: 1,
     textAlign: "center",
-    color: "#DDD",
   },
-  habitText: {
-    flex: 3.5,
-    color: "transparent",
+  name: {
+    flex: 2.75,
+    fontWeight: "bold",
+    color: "white",
+    textAlign: "left",
   },
 });

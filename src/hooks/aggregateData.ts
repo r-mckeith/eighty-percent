@@ -6,7 +6,7 @@ import { getHabitData } from "../api/SupabaseHabits";
 import { HabitProps, HabitDataProps } from "../types/HabitTypes";
 
 export type HabitsAggregatedData = {
-  tag_name: string;
+  name: string;
   day: number;
   week: number;
   month: number;
@@ -14,10 +14,11 @@ export type HabitsAggregatedData = {
 };
 
 export type ProjectsAggregatedData = {
-  today: number;
-  last7Days: number;
-  last30Days: number;
-  last365Days: number;
+  name: string;
+  day: number;
+  week: number;
+  month: number;
+  year: number;
 };
 
 export function useAggregatedData() {
@@ -26,10 +27,11 @@ export function useAggregatedData() {
   >([]);
   const [projectsTableData, setProjectsTableData] =
     useState<ProjectsAggregatedData>({
-      today: 0,
-      last7Days: 0,
-      last30Days: 0,
-      last365Days: 0,
+      name: 'Total',
+      day: 0,
+      week: 0,
+      month: 0,
+      year: 0,
     });
 
   // right now projects are still habits in the db. Will change at some point
@@ -54,7 +56,7 @@ export function useAggregatedData() {
     };
 
     fetchData();
-  }, [selectedDate, habitData]);
+  }, [selectedDate, habitData, habits]);
 
   function aggregateHabitData(
     yearData: HabitDataProps[],
@@ -81,7 +83,7 @@ export function useAggregatedData() {
 
       if (!habitMap[habit.tag_name]) {
         habitMap[habit.tag_name] = {
-          tag_name: habit.tag_name,
+          name: habit.tag_name,
           day: 0,
           week: 0,
           month: 0,
@@ -122,10 +124,11 @@ export function useAggregatedData() {
     projects: HabitProps[]
   ): ProjectsAggregatedData {
     const aggregatedProjects: ProjectsAggregatedData = {
-      today: 0,
-      last7Days: 0,
-      last30Days: 0,
-      last365Days: 0,
+      name: 'Total',
+      day: 0,
+      week: 0,
+      month: 0,
+      year: 0,
     };
     const startDay = new Date(
       Date.UTC(
@@ -153,16 +156,16 @@ export function useAggregatedData() {
         const completedDate = new Date(project.completed);
 
         if (completedDate >= startDay && completedDate < endDay) {
-          aggregatedProjects.today++;
+          aggregatedProjects.day++;
         }
         if (completedDate >= startWeek && completedDate < endDay) {
-          aggregatedProjects.last7Days++;
+          aggregatedProjects.week++;
         }
         if (completedDate >= startMonth && completedDate < endDay) {
-          aggregatedProjects.last30Days++;
+          aggregatedProjects.month++;
         }
         if (completedDate >= startYear && completedDate < endDay) {
-          aggregatedProjects.last365Days++;
+          aggregatedProjects.year++;
         }
       }
     });

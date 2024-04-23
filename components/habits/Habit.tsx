@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
@@ -8,10 +8,8 @@ import { deleteHabit, selectHabit, markHabitAsComplete } from "../../src/api/Sup
 import { useHabitDataContext } from "../../src/contexts/habitData/UseHabitDataContext";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import RightSwipe from "../shared/RightSwipe";
-import {
-  useAggregatedData,
-  HabitsAggregatedData,
-} from "../../src/hooks/aggregateData";
+import { useAggregatedData, HabitsAggregatedData } from "../../src/hooks/aggregateData";
+import ProjectStats from "../shared/ProjectStats";
 
 type HabitComponent = {
   habit: HabitProps;
@@ -32,7 +30,7 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
   const swipeableRow = useRef<Swipeable | null>(null);
 
   useEffect(() => {
-    const data = habitsTableData.find((data) => data.tag_name === habit.name);
+    const data = habitsTableData.find((data) => data.name === habit.name);
     if (data !== undefined) {
       setHabitData(data);
     } else {
@@ -41,25 +39,13 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
     if (sectionName === "today") {
       setIsSelectedLater(false);
       setIsSelected(false);
-      if (
-        habit.completed &&
-        habit.completed === selectedDate.toISOString().split("T")[0]
-      ) {
+      if (habit.completed && habit.completed === selectedDate.toISOString().split("T")[0]) {
         setIsSelected(true);
-      } else if (
-        habit.completed &&
-        habit.completed > selectedDate.toISOString().split("T")[0]
-      ) {
+      } else if (habit.completed && habit.completed > selectedDate.toISOString().split("T")[0]) {
         setIsSelectedLater(true);
       }
     }
-  }, [
-    selectedDate,
-    isSelected,
-    isSelectedLater,
-    habit.completed,
-    habitsTableData,
-  ]);
+  }, [selectedDate, isSelected, isSelectedLater, habit.completed, habitsTableData]);
 
   async function handleDeleteHabit(id: number) {
     try {
@@ -91,26 +77,30 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
     }
   };
 
-  async function handleToggleCompleted (id: number, selectedDate: Date, dispatch: React.Dispatch<any>) {
-    dispatch({ type: 'TOGGLE_COMPLETED', id: id, selectedDate: selectedDate });
-  
+  async function handleToggleCompleted(
+    id: number,
+    selectedDate: Date,
+    dispatch: React.Dispatch<any>
+  ) {
+    dispatch({ type: "TOGGLE_COMPLETED", id: id, selectedDate: selectedDate });
+
     try {
       const updatedTask = await markHabitAsComplete(id, selectedDate);
-      
+
       if (updatedTask) {
       } else {
-        console.error('Failed to toggle complete');
+        console.error("Failed to toggle complete");
       }
     } catch (error) {
-      console.error('Failed to toggle complete', error);
+      console.error("Failed to toggle complete", error);
     }
-  };
+  }
 
-  const habitStyle = isSelected
-    ? [styles.habit, styles.selectedHabit]
+  const rowStyle = isSelected
+    ? [styles.row, styles.selectedRow]
     : isSelectedLater
-    ? [styles.habit, styles.disabledHabit]
-    : styles.habit;
+    ? [styles.row, styles.disabledRow]
+    : styles.row;
 
   return (
     <Swipeable
@@ -123,55 +113,27 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
           dispatch={habitDispatch}
         />
       )}
-      overshootLeft={false}
-      rightThreshold={20}
     >
       <TouchableOpacity
         activeOpacity={isSelectedLater ? 1 : 0.2}
         onPress={!isSelectedLater ? () => handleSelectHabit(habit) : () => {}}
-        style={habitStyle}
       >
-        <View style={styles.habitText}>
-          <Text
-            style={[
-              styles.habitName,
-              habit.section === "today" && isSelected
-                ? styles.selectedText
-                : isSelectedLater
-                ? styles.selectedLaterText
-                : {},
-            ]}
-          >
-            {habit.name}
-          </Text>
-          {habit.section === "habits" && habitData && (
-            <View style={styles.statsContainer}>
-              <Text style={styles.statsText}>{habitData.day}</Text>
-              <Text style={styles.statsText}>
-                {habitData.week > habitData.day && habitData.week}
-              </Text>
-              <Text style={styles.statsText}>
-                {habitData.month > habitData.week && habitData.month}
-              </Text>
-              <Text style={styles.statsText}>
-                {habitData.year > habitData.month && habitData.year}
-              </Text>
-            </View>
+        <View style={rowStyle}>
+          <ProjectStats name={habit.name} data={habitData} />
+          {habit.section === "today" && isSelected && (
+            <MaterialCommunityIcons name="check" size={16} color="white" />
+          )}
+          {habit.section === "today" && isSelectedLater && (
+            <MaterialCommunityIcons name="arrow-right" size={16} color="white" />
           )}
         </View>
-        {habit.section === "today" && isSelected && (
-          <MaterialCommunityIcons name="check" size={16} color="white" />
-        )}
-        {habit.section === "today" && isSelectedLater && (
-          <MaterialCommunityIcons name="arrow-right" size={16} color="white" />
-        )}
       </TouchableOpacity>
     </Swipeable>
   );
 }
 
 const styles = StyleSheet.create({
-  habit: {
+  row: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 8,
@@ -181,35 +143,24 @@ const styles = StyleSheet.create({
     borderColor: "#333",
     alignSelf: "stretch",
   },
-  selectedHabit: {
+  selectedRow: {
     backgroundColor: "#3a3a3c",
   },
-  disabledHabit: {
+  disabledRow: {
     backgroundColor: "#3a3a3c",
     borderColor: "#505050",
   },
-  habitText: {
+  rowContent: {
     flexDirection: "row",
     color: "#FFF",
     flex: 1,
     justifyContent: "space-between",
   },
-  habitName: {
+  text: {
     flex: 2.75,
     fontWeight: "bold",
     color: "white",
     textAlign: "left",
-  },
-  statsContainer: {
-    flexDirection: "row",
-    flex: 3,
-    justifyContent: "space-between",
-  },
-  statsText: {
-    paddingHorizontal: 5,
-    color: "#DDD",
-    flex: 1,
-    textAlign: "center",
   },
   selectedText: {
     textDecorationLine: "line-through",

@@ -17,6 +17,7 @@ type Project = {
 export default function Project({ project, rootProjectId, setSelected }: Project) {
   const { dispatch: habitDispatch } = useHabitContext();
 
+
   const swipeableRow = useRef<Swipeable | null>(null);
 
   async function handleDeleteProject(
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
   project: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 12,
+    paddingVertical: 8,
     paddingHorizontal: 16,
     backgroundColor: "#2c2c2e",
     borderBottomWidth: 1,
