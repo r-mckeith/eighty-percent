@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { ActivityIndicator, View, StyleSheet, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useHabitContext } from "../src/contexts/habits/UseHabitContext";
