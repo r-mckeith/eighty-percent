@@ -8,6 +8,7 @@ import { HabitProps } from "../src/types/HabitTypes";
 import HabitSection from "../components/habits/HabitSection";
 import AddButton from "../components/shared/AddButton";
 import DateSelector from "../components/habits/DateSelector";
+import ReviewButton from "../components/shared/ReviewButton";
 
 export default function Habits() {
   const { selectedDate, setSelectedDate } = useDateContext();
@@ -88,10 +89,11 @@ export default function Habits() {
           })}
 
           {/* <AddButton
-            type={'group'}
+            type={'review'}
           /> */}
         </View>
       </ScrollView>
+      <ReviewButton />
     </>
   );
 }

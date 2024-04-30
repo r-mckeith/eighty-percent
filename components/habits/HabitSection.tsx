@@ -23,7 +23,7 @@ export default function HabitSection({ habits, sectionName }: SectionProps) {
           <Habit key={index} habit={tag} sectionName={sectionName} />
         ))}
       </View>
-      {sectionName === "today" && projectsTableData && <Row data={projectsTableData} />}
+      {sectionName === "today" && projectsTableData && <Row data={projectsTableData.totals} />}
     </View>
   );
 }

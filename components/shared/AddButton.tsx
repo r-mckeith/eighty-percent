@@ -95,7 +95,6 @@ export default function AddButton({ sectionName, groupId, parentId, depth = 0, t
       <TouchableOpacity onPress={() => setShowModal(true)}>
         <MaterialCommunityIcons name="plus" size={24} color={"white"} />
       </TouchableOpacity>
-
       <AddModal
         visible={showModal}
         onClose={() => setShowModal(false)}

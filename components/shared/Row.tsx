@@ -18,7 +18,6 @@ export default function row({
     : disabledText
     ? [styles.disabledText]
     : {};
-    console.log(data)
 
   return (
     <TouchableOpacity activeOpacity={activeOpacity} onPress={onPress}>
@@ -28,7 +27,7 @@ export default function row({
 
           {data && (
             <View style={styles.statsContainer}>
-              <Text style={styles.statsText}>{data.day > 0 && data.day}</Text>
+              <Text style={styles.statsText}>{data.day > 0 && data.day || data.week && data.day}</Text>
               <Text style={styles.statsText}>{data.week > data.day && data.week}</Text>
               <Text style={styles.statsText}>{data.month > data.week && data.month}</Text>
               <Text style={styles.statsText}>{data.year > data.month && data.year}</Text>
