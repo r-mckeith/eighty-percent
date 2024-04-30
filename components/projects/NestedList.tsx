@@ -26,7 +26,7 @@ export default function NestedList({
   return (
     <View style={styles.section}>
       {rootProject ? (
-        <View style={styles.projectContainer}>
+        <View>
           <Project project={rootProject} rootProjectId={rootProjectId} />
           {renderProjectsRecursively(rootProject.id)}
         </View>
@@ -46,10 +46,6 @@ const styles = StyleSheet.create({
     borderColor: "#333333",
     backgroundColor: "#1c1c1e",
     marginBottom: 20,
-  },
-  projectContainer: {
-    flexDirection: "column",
-    alignSelf: "stretch",
   },
   headerText: {
     color: "white",

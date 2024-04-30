@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { HabitProps } from "../../src/types/HabitTypes";
-import Habit from "./Habit";
+import Habit from "../habits/Habit";
 import StatsHeader from "../shared/StatsHeader";
 import Row from "../shared/Row";
 import { useAggregatedData } from "../../src/hooks/aggregateData";
@@ -9,9 +9,10 @@ import { useAggregatedData } from "../../src/hooks/aggregateData";
 type SectionProps = {
   habits: HabitProps[];
   sectionName: string;
+  setSelected?: () => void;
 };
 
-export default function HabitSection({ habits, sectionName }: SectionProps) {
+export default function HabitSection({ habits, sectionName, setSelected }: SectionProps) {
   const { projectsTableData } = useAggregatedData();
 
   return (
@@ -23,7 +24,7 @@ export default function HabitSection({ habits, sectionName }: SectionProps) {
           <Habit key={index} habit={tag} sectionName={sectionName} />
         ))}
       </View>
-      {sectionName === "today" && projectsTableData && <Row data={projectsTableData.totals} />}
+      {sectionName === "today" && projectsTableData && <Row data={projectsTableData} />}
     </View>
   );
 }

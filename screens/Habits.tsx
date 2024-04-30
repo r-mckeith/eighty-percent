@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { ActivityIndicator, View, StyleSheet, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useHabitContext } from "../src/contexts/habits/UseHabitContext";
@@ -8,6 +8,7 @@ import { HabitProps } from "../src/types/HabitTypes";
 import HabitSection from "../components/habits/HabitSection";
 import AddButton from "../components/shared/AddButton";
 import DateSelector from "../components/habits/DateSelector";
+import ReviewButton from "../components/shared/ReviewButton";
 
 export default function Habits() {
   const { selectedDate, setSelectedDate } = useDateContext();
@@ -88,10 +89,11 @@ export default function Habits() {
           })}
 
           {/* <AddButton
-            type={'group'}
+            type={'review'}
           /> */}
         </View>
       </ScrollView>
+      <ReviewButton />
     </>
   );
 }
@@ -133,9 +135,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#FFF",
     textTransform: "capitalize",
-  },
-  editableSection: {
-    padding: 10,
   },
   input: {
     height: 40,
