@@ -6,13 +6,19 @@ type DateProviderProps = {
   children: ReactNode;
 };
 
+const formatDate = (date: Date) => {
+  return date.toISOString().split('T')[0];
+};
+
 const DateProvider = ({ children }: DateProviderProps) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDateString, setSelectedDateString] = useState(formatDate(new Date()));
 
   useEffect(() => {
     const setToday = () => {
       const today = new Date();
       setSelectedDate(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+      setSelectedDateString(formatDate(today));
     };
 
     setToday();
@@ -31,12 +37,10 @@ const DateProvider = ({ children }: DateProviderProps) => {
   }, []);
 
   return (
-    <DateContext.Provider value={{ selectedDate, setSelectedDate }}>
+    <DateContext.Provider value={{ selectedDate, selectedDateString, setSelectedDate, setSelectedDateString }}>
       {children}
     </DateContext.Provider>
   );
 };
 
 export default DateProvider;
-
-

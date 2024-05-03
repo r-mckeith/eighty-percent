@@ -124,10 +124,10 @@ export default function ReviewModal({ visible, onClose, onAdd }: AddModal) {
             </View>
             <View style={styles.summaryText}>
               <Text style={[styles.buttonText, { marginVertical: 10 }]}>
-                {`Completed Projects: ${projectsTableData && projectsTableData.totals.week}`}
+                {`Completed Projects: ${projectsTableData && projectsTableData.totals && projectsTableData.totals.week}`}
               </Text>
               <Text style={styles.buttonText}>
-                {`Total Pushes: ${projectsTableData && projectsTableData.totals.pushesWeek}`}
+                {`Total Pushes: ${projectsTableData && projectsTableData.totals && projectsTableData.totals.pushesWeek}`}
               </Text>
             </View>
             <View style={styles.grid}>

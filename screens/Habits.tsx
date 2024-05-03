@@ -1,6 +1,7 @@
 import React from "react";
 import { ActivityIndicator, View, StyleSheet, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { format } from 'date-fns';
 import { useHabitContext } from "../src/contexts/habits/UseHabitContext";
 import { useDateContext } from "../src/contexts/date/useDateContext";
 import { useGroupContext } from "../src/contexts/groups/UseGroupContext";
@@ -11,17 +12,13 @@ import DateSelector from "../components/habits/DateSelector";
 import ReviewButton from "../components/shared/ReviewButton";
 
 export default function Habits() {
-  const { selectedDate, setSelectedDate } = useDateContext();
-
+  const { selectedDate, selectedDateString, setSelectedDate, setSelectedDateString } = useDateContext();
   const { habits } = useHabitContext();
   const { groups } = useGroupContext();
-
-  const selectedDateString = selectedDate.toLocaleDateString("en-CA");
 
   function filterHabits(
     groupName: string,
     groupHabits: HabitProps[],
-    selectedDateString: string
   ) {
     if (groupName.toLowerCase() === "today") {
       return groupHabits.filter((tag) => {
@@ -45,6 +42,11 @@ export default function Habits() {
     );
   }
 
+  function handleChangeDate(date: Date) {
+    setSelectedDate(date)
+    setSelectedDateString(format(date, 'yyyy-MM-dd'))
+  }
+
   return (
     <>
       <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="handled">
@@ -56,7 +58,6 @@ export default function Habits() {
             const filteredHabits = filterHabits(
               group.name,
               groupTags,
-              selectedDateString
             );
 
             if (filteredHabits) {
@@ -66,7 +67,7 @@ export default function Habits() {
                     <View style={styles.datePicker}>
                       <DateSelector
                         selectedDate={selectedDate}
-                        onDateChange={setSelectedDate}
+                        onDateChange={handleChangeDate}
                       />
                     </View>
                   )}

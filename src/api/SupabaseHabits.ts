@@ -1,3 +1,4 @@
+import { format, subYears } from 'date-fns';
 import { NewHabitProps, HabitProps, HabitDataProps } from "../types/HabitTypes";
 import { supabase } from "./SupabaseClient";
 
@@ -23,11 +24,7 @@ export async function getHabitData(selectedDate: Date): Promise<HabitDataProps[]
   }
 
   const endDate = new Date(selectedDate);
-  const startDate = new Date(
-    selectedDate.getFullYear(),
-    selectedDate.getMonth(),
-    selectedDate.getDate() - 365
-  );
+  const startDate = subYears(selectedDate, 1);
 
   const { data, error } = await supabase
     .from("tag_data")
@@ -99,7 +96,7 @@ export async function deleteHabit(habitId: number) {
   }
 }
 
-export async function toggleScope(habitId: number, selectedDate: string) {
+export async function toggleScope(habitId: number, selectedDateString: string) {
   const { data, error } = await supabase
     .from("tags")
     .select("inScopeDay")
@@ -111,7 +108,7 @@ export async function toggleScope(habitId: number, selectedDate: string) {
     throw new Error("Failed to fetch task");
   }
 
-  const newScopeDate = data.inScopeDay ? null : selectedDate;
+  const newScopeDate = data.inScopeDay ? null : selectedDateString;
 
   const { data: updateData, error: updateError } = await supabase
     .from("tags")
@@ -131,7 +128,7 @@ export async function toggleScope(habitId: number, selectedDate: string) {
   }
 }
 
-export async function selectHabit(habit: HabitProps, selectedDate: any): Promise<HabitDataProps> {
+export async function selectHabit(habit: HabitProps, selectedDate: Date): Promise<HabitDataProps> {
   const dateFormatted = selectedDate.toISOString().split("T")[0];
 
   const { data, error } = await supabase

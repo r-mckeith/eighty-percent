@@ -21,7 +21,7 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
   const { dispatch: habitDispatch } = useHabitContext();
   const { dispatch: habitDataDispatch } = useHabitDataContext();
   const { habitsTableData } = useAggregatedData();
-  const { selectedDate } = useDateContext();
+  const { selectedDate, selectedDateString } = useDateContext();
 
   const swipeableRow = useRef<Swipeable | null>(null);
 
@@ -33,9 +33,9 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
   useEffect(() => {
       setIsSelectedLater(false);
       setIsSelected(false);
-      if (habit.completed && habit.completed === selectedDate.toISOString().split("T")[0]) {
+      if (habit.completed && habit.completed === selectedDateString) {
         setIsSelected(true);
-      } else if (habit.completed && habit.completed > selectedDate.toISOString().split("T")[0]) {
+      } else if (habit.completed && habit.completed > selectedDateString) {
         setIsSelectedLater(true);
       }
     
@@ -54,7 +54,7 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
   const handleSelectHabit = async () => {
     if (sectionName === "today") {
       setIsSelected(!isSelected);
-      handleToggleCompleted(habit.id, selectedDate, habitDispatch);
+      handleToggleCompleted(habit.id, habitDispatch);
     } else {
       try {
         const updatedTagData = await selectHabit(habit, selectedDate);
@@ -71,7 +71,6 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
 
   async function handleToggleCompleted(
     id: number,
-    selectedDate: Date,
     dispatch: React.Dispatch<any>
   ) {
     dispatch({ type: "TOGGLE_COMPLETED", id: id, selectedDate: selectedDate });

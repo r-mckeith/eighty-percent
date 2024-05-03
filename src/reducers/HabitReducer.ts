@@ -6,7 +6,7 @@ export type Action =
   | { type: 'ADD_HABIT'; payload: HabitProps }
   | { type: 'ADD_LIST_TAG'; payload: any }
   | { type: 'UPDATE_TAG'; payload: HabitProps}
-  | { type: 'TOGGLE_SCOPE'; id: number; selectedDate: string }
+  | { type: 'TOGGLE_SCOPE'; id: number; selectedDateString: string }
   | { type: 'TOGGLE_COMPLETED'; id: number; selectedDate: any }
   | { type: 'SELECT_TAG'; payload: HabitProps}
 
@@ -16,11 +16,11 @@ export const initialState = {
 
 const updateScope = (
   state: HabitProps[],
-  action: { id: number; selectedDate: string }
+  action: { id: number; selectedDateString: string }
 ): HabitProps[] => {
   return state.map(tag => {
     if (tag.id === action.id) {
-      const newScopeDay = (tag.inScopeDay === action.selectedDate) ? null : action.selectedDate;
+      const newScopeDay = (tag.inScopeDay === action.selectedDateString) ? null : action.selectedDateString;
       return { ...tag, inScopeDay: newScopeDay };
     }
     return tag;

@@ -18,11 +18,11 @@ export default function ScopeProject({
 }: ScopeProject) {
   const [inScope, setInScope] = useState<any>();
   const { dispatch } = useHabitContext();
-  const { selectedDate } = useDateContext();
+  const { selectedDateString } = useDateContext();
 
   useEffect(() => {
     setInScope(
-      inScopeDay && inScopeDay <= selectedDate.toISOString().split("T")[0]
+      inScopeDay && inScopeDay <= selectedDateString
     );
   }, [inScopeDay]);
 
@@ -33,13 +33,13 @@ export default function ScopeProject({
     dispatch({
       type: "TOGGLE_SCOPE",
       id: id,
-      selectedDate: selectedDate.toISOString().split("T")[0],
+      selectedDateString: selectedDateString,
     });
 
     try {
       const updatedTask = await toggleScope(
         id,
-        selectedDate.toISOString().split("T")[0]
+        selectedDateString
       );
 
       if (updatedTask) {
