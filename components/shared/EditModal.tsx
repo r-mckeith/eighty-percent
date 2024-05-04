@@ -20,8 +20,8 @@ type EditModal = {
 };
 
 export default function EditModal({ visible, placeholder, id, name, onClose, onSave }: EditModal) {
-  const [newName, setNewName] = useState('');
-
+  const [newName, setNewName] = useState(name);
+  
   function handleEdit() {
     if (newName) {
       onSave(id, newName);
@@ -54,13 +54,13 @@ export default function EditModal({ visible, placeholder, id, name, onClose, onS
               style={[
                 styles.modalButton,
                 styles.rightButton,
-                newName ? {} : styles.disabledButton,
+                newName === name ? styles.disabledButton : {},
               ]}
               onPress={handleEdit}
               disabled={newName === name}
             >
               <Text
-                style={[styles.buttonText, newName ? { color: "blue" } : { color: "grey" }]}
+                style={[styles.buttonText, newName === name ? { color: "grey" } : { color: "blue" }]}
               >
                 Done
               </Text>
