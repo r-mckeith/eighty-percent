@@ -13,18 +13,30 @@ type RightSwipe = {
   dispatch: React.Dispatch<any>;
 };
 
-export default function RightSwipe({ id, name, handleDelete, handleEdit, swipeableRow }: RightSwipe) {
+export default function RightSwipe({
+  id,
+  name,
+  handleDelete,
+  handleEdit,
+  swipeableRow,
+}: RightSwipe) {
   const [showModal, setShowModal] = useState<boolean>(false);
 
   function handleClose() {
     swipeableRow.current?.close();
-    setShowModal(false)
+    setShowModal(false);
   }
 
   return (
     <View style={styles.rightActionContainer}>
       <TouchableOpacity
-        style={[styles.rightSwipeItem, styles.moreButton]}
+        style={[styles.rightSwipeItem, styles.dataEditButton]}
+        onPress={() => setShowModal(true)}
+      >
+        <MaterialCommunityIcons name="table-edit" size={24} color="white" />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.rightSwipeItem, styles.editButton]}
         onPress={() => setShowModal(true)}
       >
         <MaterialCommunityIcons name="square-edit-outline" size={24} color="white" />
@@ -50,14 +62,17 @@ export default function RightSwipe({ id, name, handleDelete, handleEdit, swipeab
 const styles = StyleSheet.create({
   rightActionContainer: {
     flexDirection: "row",
-    width: 70,
+    width: 105,
   },
   rightSwipeItem: {
     justifyContent: "center",
     alignItems: "center",
     width: 35,
   },
-  moreButton: {
+  dataEditButton: {
+    backgroundColor: "grey",
+  },
+  editButton: {
     backgroundColor: "orange",
   },
   deleteButton: {

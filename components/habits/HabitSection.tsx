@@ -3,7 +3,6 @@ import { View, StyleSheet } from "react-native";
 import { HabitProps } from "../../src/types/HabitTypes";
 import Habit from "./Habit";
 import StatsHeader from "../shared/StatsHeader";
-import { useAggregatedData } from "../../src/hooks/aggregateData";
 
 type SectionProps = {
   habits: HabitProps[];
