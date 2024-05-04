@@ -6,7 +6,7 @@ import { getHabitData } from "../api/SupabaseHabits";
 import { HabitProps, HabitDataProps } from "../types/HabitTypes";
 
 export type HabitsAggregatedData = {
-  tag_name: string;
+  tag_id: number;
   day: number;
   week: number;
   month: number;
@@ -79,9 +79,9 @@ export function useAggregatedData() {
     yearData.forEach((habit) => {
       const completedDate = new Date(habit.date);
 
-      if (!habitMap[habit.tag_name]) {
-        habitMap[habit.tag_name] = {
-          tag_name: habit.tag_name,
+      if (!habitMap[habit.tag_id]) {
+        habitMap[habit.tag_id] = {
+          tag_id: habit.tag_id,
           day: 0,
           week: 0,
           month: 0,
@@ -93,25 +93,25 @@ export function useAggregatedData() {
         completedDate >= startDay &&
         completedDate < new Date(startDay.getTime() + 86400000)
       ) {
-        habitMap[habit.tag_name].day += habit.count;
+        habitMap[habit.tag_id].day += habit.count;
       }
       if (
         completedDate >= startWeek &&
         completedDate < new Date(startDay.getTime() + 86400000)
       ) {
-        habitMap[habit.tag_name].week += habit.count;
+        habitMap[habit.tag_id].week += habit.count;
       }
       if (
         completedDate >= startMonth &&
         completedDate < new Date(startDay.getTime() + 86400000)
       ) {
-        habitMap[habit.tag_name].month += habit.count;
+        habitMap[habit.tag_id].month += habit.count;
       }
       if (
         completedDate >= startYear &&
         completedDate < new Date(startDay.getTime() + 86400000)
       ) {
-        habitMap[habit.tag_name].year += habit.count;
+        habitMap[habit.tag_id].year += habit.count;
       }
     });
 
