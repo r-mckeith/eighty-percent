@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   datePicker: {
     alignSelf: "flex-end",
     marginRight: 4,
-    marginBottom: 5,
+    marginBottom: 15,
   },
   activityContainer: {
     flex: 1,
@@ -113,12 +113,10 @@ const styles = StyleSheet.create({
   },
   sectionName: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
     marginBottom: 5,
   },
   addButton: {
-    alignSelf: "flex-end",
+    paddingRight: 5
   },
   scrollView: {
     flex: 1,
