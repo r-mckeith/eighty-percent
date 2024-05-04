@@ -162,12 +162,6 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
               <Text style={styles.statsText}>
                 {habitData.week > habitData.day && habitData.week}
               </Text>
-              <Text style={styles.statsText}>
-                {habitData.month > habitData.week && habitData.month}
-              </Text>
-              <Text style={styles.statsText}>
-                {habitData.year > habitData.month && habitData.year}
-              </Text>
             </View>
           )}
         </View>
@@ -191,7 +185,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#2c2c2e",
     borderBottomWidth: 1,
     borderColor: "#333",
-    alignSelf: "stretch",
   },
   selectedHabit: {
     backgroundColor: "#3a3a3c",
@@ -207,15 +200,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   habitName: {
-    flex: 2.75,
-    fontWeight: "bold",
-    color: "white",
+    flex: 3.5,
     textAlign: "left",
+    color: "white",
+    fontWeight: "bold",
   },
   statsContainer: {
     flexDirection: "row",
-    flex: 3,
-    justifyContent: "space-between",
+    flex: 2,
   },
   statsText: {
     paddingHorizontal: 5,
