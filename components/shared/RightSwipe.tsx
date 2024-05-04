@@ -1,47 +1,66 @@
-import React from 'react';
-import { View } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Swipeable } from 'react-native-gesture-handler';
-import { StyleSheet } from 'react-native';
+import React, { useState } from "react";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { Swipeable } from "react-native-gesture-handler";
+import EditModal from "./EditModal";
 
 type RightSwipe = {
-  handleDelete: (id: number) => Promise<void>;
   id: number;
+  name: string;
+  handleDelete: (id: number) => Promise<void>;
+  handleEdit: (id: number, newName: string) => Promise<void>;
   swipeableRow: React.RefObject<Swipeable | null>;
   dispatch: React.Dispatch<any>;
 };
 
-export default function RightSwipe({id, handleDelete}: RightSwipe) {
+export default function RightSwipe({ id, name, handleDelete, handleEdit, swipeableRow }: RightSwipe) {
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  function handleClose() {
+    swipeableRow.current?.close();
+    setShowModal(false)
+  }
+
   return (
     <View style={styles.rightActionContainer}>
-      <RectButton style={[styles.rightSwipeItem, styles.deleteButton]} onPress={() => handleDelete(id)}>
-        <MaterialCommunityIcons 
-                name="close-circle" 
-                size={24} 
-                color="red"
-              />
-      </RectButton>
+      <TouchableOpacity
+        style={[styles.rightSwipeItem, styles.moreButton]}
+        onPress={() => setShowModal(true)}
+      >
+        <MaterialCommunityIcons name="square-edit-outline" size={24} color="white" />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.rightSwipeItem, styles.deleteButton]}
+        onPress={() => handleDelete(id)}
+      >
+        <MaterialCommunityIcons name="close-circle" size={24} color="white" />
+      </TouchableOpacity>
+      <EditModal
+        visible={showModal}
+        onClose={handleClose}
+        onSave={handleEdit}
+        placeholder={"Edit"}
+        id={id}
+        name={name}
+      />
     </View>
   );
-};
+}
 
-const styles=StyleSheet.create({
+const styles = StyleSheet.create({
   rightActionContainer: {
-    flexDirection: 'row',
-    height: 30,
-    width: 30,
+    flexDirection: "row",
+    width: 70,
   },
   rightSwipeItem: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 0,
-    height: 30,
-    width: 30,
-    marginVertical: 5,
-    backgroundColor: '#EE4B60',
+    justifyContent: "center",
+    alignItems: "center",
+    width: 35,
+  },
+  moreButton: {
+    backgroundColor: "orange",
   },
   deleteButton: {
-    backgroundColor: '#c0c0c0',
+    backgroundColor: "#EE4B60",
   },
 });

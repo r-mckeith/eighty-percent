@@ -80,16 +80,25 @@ export async function addProject(newProject: any): Promise<HabitProps> {
   }
 }
 
-// export async function editTag (noteId: number, updatedFields: Partial<NewNote>) {
-//   const { data, error } = await supabase
-//     .from('notes')
-//     .update(updatedFields)
-//     .eq('id', noteId);
+export async function editHabit(habitId: number, newName: string): Promise<HabitProps> {
+  let { data: habitData, error: habitError } = await supabase
+    .from("tags")
+    .update({ name: newName })
+    .eq('id', habitId)
+    .select();
 
-//   if (error) {
-//     console.error(error);
-//   }
-// };
+  if (habitError) {
+    console.error(habitError);
+    throw new Error("Failed to update habit");
+  }
+
+  if (!habitData) {
+    throw new Error("No data returned after update operation");
+  } else {
+    return habitData[0];
+  }
+}
+
 
 export async function deleteHabit(habitId: number) {
   const { data, error } = await supabase.from("tags").delete().eq("id", habitId);

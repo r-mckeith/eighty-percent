@@ -4,7 +4,7 @@ import { Swipeable } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
 import { HabitProps } from "../../src/types/HabitTypes";
-import { deleteHabit, selectHabit, markHabitAsComplete } from "../../src/api/SupabaseHabits";
+import { deleteHabit, selectHabit, markHabitAsComplete, editHabit } from "../../src/api/SupabaseHabits";
 import { useHabitDataContext } from "../../src/contexts/habitData/UseHabitDataContext";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import RightSwipe from "../shared/RightSwipe";
@@ -71,6 +71,16 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
     }
   }
 
+  async function handleEditHabit(id: number, newName: string) {
+    try {
+      await editHabit(id, newName);
+      swipeableRow.current?.close();
+      habitDispatch({ type: "EDIT_HABIT", id, newName });
+    } catch (error) {
+      console.error("Failed to edit habit:", error);
+    }
+  }
+
   const handleSelectHabit = async (selectedHabit: HabitProps) => {
     if (sectionName === "today") {
       setIsSelected(!isSelected);
@@ -118,7 +128,9 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
       renderRightActions={() => (
         <RightSwipe
           handleDelete={handleDeleteHabit}
+          handleEdit={handleEditHabit}
           id={habit.id}
+          name={habit.name}
           swipeableRow={swipeableRow}
           dispatch={habitDispatch}
         />
