@@ -99,6 +99,27 @@ export async function editHabit(habitId: number, newName: string): Promise<Habit
   }
 }
 
+export async function editHabitData(habitId: number, count: number, selectedDate: Date): Promise<HabitProps> {
+  console.log(selectedDate.toISOString().split("T")[0], habitId)
+  let { data: habitData, error: habitError } = await supabase
+    .from("tag_data")
+    .update({ count: count })
+    .eq('tag_id', habitId)
+    .eq('date', selectedDate.toISOString().split("T")[0])
+    .select();
+
+  if (habitError) {
+    console.error(habitError);
+    throw new Error("Failed to update habit data");
+  }
+
+  if (!habitData) {
+    throw new Error("No data returned after update operation");
+  } else {
+    return habitData[0];
+  }
+}
+
 
 export async function deleteHabit(habitId: number) {
   const { data, error } = await supabase.from("tags").delete().eq("id", habitId);

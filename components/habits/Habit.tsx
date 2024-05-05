@@ -9,6 +9,7 @@ import {
   selectHabit,
   markHabitAsComplete,
   editHabit,
+  editHabitData,
 } from "../../src/api/SupabaseHabits";
 import { useHabitDataContext } from "../../src/contexts/habitData/UseHabitDataContext";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
@@ -71,6 +72,16 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
     }
   }
 
+  async function handleEditHabitData(id: number, count: any) {
+    try {
+      await editHabitData(id, count, selectedDate);
+      swipeableRow.current?.close();
+      // habitDispatch({ type: "EDIT_HABIT", id, count });
+    } catch (error) {
+      console.error("Failed to edit habit:", error);
+    }
+  }
+
   const handleSelectHabit = async (selectedHabit: HabitProps) => {
     if (sectionName === "today") {
       setIsSelected(!isSelected);
@@ -123,6 +134,8 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
         <RightSwipe
           handleDelete={handleDeleteHabit}
           handleEdit={handleEditHabit}
+          handleEditData={handleEditHabitData}
+          habitData={habitData}
           id={habit.id}
           name={habit.name}
           swipeableRow={swipeableRow}
