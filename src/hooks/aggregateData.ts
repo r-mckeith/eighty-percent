@@ -6,7 +6,8 @@ import { getHabitData } from "../api/SupabaseHabits";
 import { HabitProps, HabitDataProps } from "../types/HabitTypes";
 
 export type HabitsAggregatedData = {
-  tag_name: string;
+  id: number;
+  tag_id: number;
   day: number;
   week: number;
   month: number;
@@ -21,22 +22,18 @@ export type ProjectsAggregatedData = {
 };
 
 export function useAggregatedData() {
-  const [habitsTableData, setHabitsTableData] = useState<
-    HabitsAggregatedData[]
-  >([]);
-  const [projectsTableData, setProjectsTableData] =
-    useState<ProjectsAggregatedData>({
-      today: 0,
-      last7Days: 0,
-      last30Days: 0,
-      last365Days: 0,
-    });
+  const [habitsTableData, setHabitsTableData] = useState<HabitsAggregatedData[]>([]);
+  const [projectsTableData, setProjectsTableData] = useState<ProjectsAggregatedData>({
+    today: 0,
+    last7Days: 0,
+    last30Days: 0,
+    last365Days: 0,
+  });
 
   // right now projects are still habits in the db. Will change at some point
   const { selectedDate } = useDateContext();
   const { habitData } = useHabitDataContext();
   const { habits } = useHabitContext();
-
   const projects = habits.filter((tag) => tag.section === "today");
 
   useEffect(() => {
@@ -63,11 +60,7 @@ export function useAggregatedData() {
     const habitMap: Record<string, HabitsAggregatedData> = {};
 
     const startDay = new Date(
-      Date.UTC(
-        selectedDate.getUTCFullYear(),
-        selectedDate.getUTCMonth(),
-        selectedDate.getUTCDate()
-      )
+      Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth(), selectedDate.getUTCDate())
     );
     const startWeek = new Date(startDay);
     startWeek.setUTCDate(startDay.getUTCDate() - 6);
@@ -79,9 +72,10 @@ export function useAggregatedData() {
     yearData.forEach((habit) => {
       const completedDate = new Date(habit.date);
 
-      if (!habitMap[habit.tag_name]) {
-        habitMap[habit.tag_name] = {
-          tag_name: habit.tag_name,
+      if (!habitMap[habit.tag_id]) {
+        habitMap[habit.tag_id] = {
+          id: habit.id,
+          tag_id: habit.tag_id,
           day: 0,
           week: 0,
           month: 0,
@@ -89,38 +83,24 @@ export function useAggregatedData() {
         };
       }
 
-      if (
-        completedDate >= startDay &&
-        completedDate < new Date(startDay.getTime() + 86400000)
-      ) {
-        habitMap[habit.tag_name].day += habit.count;
+      if (completedDate >= startDay && completedDate < new Date(startDay.getTime() + 86400000)) {
+        habitMap[habit.tag_id].day += habit.count;
       }
-      if (
-        completedDate >= startWeek &&
-        completedDate < new Date(startDay.getTime() + 86400000)
-      ) {
-        habitMap[habit.tag_name].week += habit.count;
+      if (completedDate >= startWeek && completedDate < new Date(startDay.getTime() + 86400000)) {
+        habitMap[habit.tag_id].week += habit.count;
       }
-      if (
-        completedDate >= startMonth &&
-        completedDate < new Date(startDay.getTime() + 86400000)
-      ) {
-        habitMap[habit.tag_name].month += habit.count;
+      if (completedDate >= startMonth && completedDate < new Date(startDay.getTime() + 86400000)) {
+        habitMap[habit.tag_id].month += habit.count;
       }
-      if (
-        completedDate >= startYear &&
-        completedDate < new Date(startDay.getTime() + 86400000)
-      ) {
-        habitMap[habit.tag_name].year += habit.count;
+      if (completedDate >= startYear && completedDate < new Date(startDay.getTime() + 86400000)) {
+        habitMap[habit.tag_id].year += habit.count;
       }
     });
 
     return Object.values(habitMap).filter((habit) => habit.month > 0);
   }
 
-  function aggregateProjectsData(
-    projects: HabitProps[]
-  ): ProjectsAggregatedData {
+  function aggregateProjectsData(projects: HabitProps[]): ProjectsAggregatedData {
     const aggregatedProjects: ProjectsAggregatedData = {
       today: 0,
       last7Days: 0,
@@ -128,18 +108,10 @@ export function useAggregatedData() {
       last365Days: 0,
     };
     const startDay = new Date(
-      Date.UTC(
-        selectedDate.getUTCFullYear(),
-        selectedDate.getUTCMonth(),
-        selectedDate.getUTCDate()
-      )
+      Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth(), selectedDate.getUTCDate())
     );
     const endDay = new Date(
-      Date.UTC(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate() + 1
-      )
+      Date.UTC(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() + 1)
     );
     const startWeek = new Date(startDay);
     startWeek.setUTCDate(startDay.getUTCDate() - 6);

@@ -4,14 +4,17 @@ import { Swipeable } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
 import { HabitProps } from "../../src/types/HabitTypes";
-import { deleteHabit, selectHabit, markHabitAsComplete } from "../../src/api/SupabaseHabits";
+import {
+  deleteHabit,
+  selectHabit,
+  markHabitAsComplete,
+  editHabit,
+  editHabitData,
+} from "../../src/api/SupabaseHabits";
 import { useHabitDataContext } from "../../src/contexts/habitData/UseHabitDataContext";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
-import RightSwipe from "../shared/RightSwipe";
-import {
-  useAggregatedData,
-  HabitsAggregatedData,
-} from "../../src/hooks/aggregateData";
+import HabitRightSwipe from "./HabitRightSwipe";
+import { useAggregatedData, HabitsAggregatedData } from "../../src/hooks/aggregateData";
 
 type HabitComponent = {
   habit: HabitProps;
@@ -32,7 +35,7 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
   const swipeableRow = useRef<Swipeable | null>(null);
 
   useEffect(() => {
-    const data = habitsTableData.find((data) => data.tag_name === habit.name);
+    const data = habitsTableData.find((data) => data.tag_id === habit.id);
     if (data !== undefined) {
       setHabitData(data);
     } else {
@@ -41,25 +44,13 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
     if (sectionName === "today") {
       setIsSelectedLater(false);
       setIsSelected(false);
-      if (
-        habit.completed &&
-        habit.completed === selectedDate.toISOString().split("T")[0]
-      ) {
+      if (habit.completed && habit.completed === selectedDate.toISOString().split("T")[0]) {
         setIsSelected(true);
-      } else if (
-        habit.completed &&
-        habit.completed > selectedDate.toISOString().split("T")[0]
-      ) {
+      } else if (habit.completed && habit.completed > selectedDate.toISOString().split("T")[0]) {
         setIsSelectedLater(true);
       }
     }
-  }, [
-    selectedDate,
-    isSelected,
-    isSelectedLater,
-    habit.completed,
-    habitsTableData,
-  ]);
+  }, [selectedDate, isSelected, isSelectedLater, habit.completed, habitsTableData]);
 
   async function handleDeleteHabit(id: number) {
     try {
@@ -71,6 +62,33 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
     }
   }
 
+  async function handleEditHabit(id: number, newName: string) {
+    try {
+      await editHabit(id, newName);
+      swipeableRow.current?.close();
+      habitDispatch({ type: "EDIT_HABIT", id, newName });
+    } catch (error) {
+      console.error("Failed to edit habit:", error);
+    }
+  }
+
+  async function handleEditHabitData(count: number) {
+    if (!habitData) {
+      return;
+    }
+
+    try {
+      const updatedHabitData = await editHabitData(habit, selectedDate, count);
+      swipeableRow.current?.close();
+      habitDataDispatch({
+        type: "UPDATE_HABIT_DATA",
+        payload: updatedHabitData,
+      });
+    } catch (error) {
+      console.error("Failed to edit habit data:", error);
+    }
+  }
+
   const handleSelectHabit = async (selectedHabit: HabitProps) => {
     if (sectionName === "today") {
       setIsSelected(!isSelected);
@@ -78,10 +96,10 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
     } else {
       try {
         setIsSelected(true);
-        const updatedTagData = await selectHabit(selectedHabit, selectedDate);
+        const updatedHabitData = await selectHabit(selectedHabit, selectedDate);
         habitDataDispatch({
           type: "UPDATE_HABIT_DATA",
-          payload: updatedTagData,
+          payload: updatedHabitData,
         });
         setTimeout(() => setIsSelected(false), 1);
       } catch (error) {
@@ -91,20 +109,24 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
     }
   };
 
-  async function handleToggleCompleted (id: number, selectedDate: Date, dispatch: React.Dispatch<any>) {
-    dispatch({ type: 'TOGGLE_COMPLETED', id: id, selectedDate: selectedDate });
-  
+  async function handleToggleCompleted(
+    id: number,
+    selectedDate: Date,
+    dispatch: React.Dispatch<any>
+  ) {
+    dispatch({ type: "TOGGLE_COMPLETED", id: id, selectedDate: selectedDate });
+
     try {
       const updatedTask = await markHabitAsComplete(id, selectedDate);
-      
+
       if (updatedTask) {
       } else {
-        console.error('Failed to toggle complete');
+        console.error("Failed to toggle complete");
       }
     } catch (error) {
-      console.error('Failed to toggle complete', error);
+      console.error("Failed to toggle complete", error);
     }
-  };
+  }
 
   const habitStyle = isSelected
     ? [styles.habit, styles.selectedHabit]
@@ -116,9 +138,12 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
     <Swipeable
       ref={swipeableRow}
       renderRightActions={() => (
-        <RightSwipe
+        <HabitRightSwipe
+          habit={habit}
           handleDelete={handleDeleteHabit}
-          id={habit.id}
+          handleEdit={handleEditHabit}
+          handleEditData={handleEditHabitData}
+          habitData={habitData}
           swipeableRow={swipeableRow}
           dispatch={habitDispatch}
         />
@@ -146,24 +171,29 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
           </Text>
           {habit.section === "habits" && habitData && (
             <View style={styles.statsContainer}>
-              <Text style={styles.statsText}>{habitData.day}</Text>
-              <Text style={styles.statsText}>
-                {habitData.week > habitData.day && habitData.week}
-              </Text>
-              <Text style={styles.statsText}>
-                {habitData.month > habitData.week && habitData.month}
-              </Text>
-              <Text style={styles.statsText}>
-                {habitData.year > habitData.month && habitData.year}
-              </Text>
+              <Text style={styles.statsText}>{habitData.day > 0 ? habitData.day : "-"}</Text>
+              <Text style={styles.statsText}>{habitData.week > 0 ? habitData.week : "-"}</Text>
             </View>
           )}
         </View>
         {habit.section === "today" && isSelected && (
-          <MaterialCommunityIcons name="check" size={16} color="white" />
+          <View style={styles.statsContainer}>
+            <Text style={styles.statsText}></Text>
+            <Text style={styles.statsText}></Text>
+            <MaterialCommunityIcons name="check" size={16} color="white" style={styles.statsText} />
+          </View>
         )}
         {habit.section === "today" && isSelectedLater && (
-          <MaterialCommunityIcons name="arrow-right" size={16} color="white" />
+          <View style={styles.statsContainer}>
+            <Text style={styles.statsText}></Text>
+            <Text style={styles.statsText}></Text>
+            <MaterialCommunityIcons
+              name="arrow-right"
+              size={16}
+              color="white"
+              style={styles.statsText}
+            />
+          </View>
         )}
       </TouchableOpacity>
     </Swipeable>
@@ -174,12 +204,11 @@ const styles = StyleSheet.create({
   habit: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 8,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     backgroundColor: "#2c2c2e",
     borderBottomWidth: 1,
     borderColor: "#333",
-    alignSelf: "stretch",
   },
   selectedHabit: {
     backgroundColor: "#3a3a3c",
@@ -195,15 +224,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   habitName: {
-    flex: 2.75,
-    fontWeight: "bold",
-    color: "white",
+    flex: 3.5,
     textAlign: "left",
+    color: "white",
+    fontWeight: "bold",
   },
   statsContainer: {
     flexDirection: "row",
-    flex: 3,
-    justifyContent: "space-between",
+    flex: 2,
   },
   statsText: {
     paddingHorizontal: 5,

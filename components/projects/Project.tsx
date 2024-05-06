@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
-import { deleteHabit } from "../../src/api/SupabaseHabits";
-import RightSwipe from "../shared/RightSwipe";
+import { deleteHabit, editHabit } from "../../src/api/SupabaseHabits";
+import ProjectRightSwipe from "./ProjectRightSwipe";
 import AddButton from "../shared/AddButton";
 import ScopeTask from "./ScopeProject";
 import { HabitProps } from "../../src/types/HabitTypes";
@@ -19,9 +19,7 @@ export default function Project({ project, rootProjectId, setSelected }: Project
 
   const swipeableRow = useRef<Swipeable | null>(null);
 
-  async function handleDeleteProject(
-    id: number,
-  ) {
+  async function handleDeleteProject(id: number) {
     try {
       // habits and projects are still the same objects in the db for now
       await deleteHabit(id);
@@ -32,14 +30,25 @@ export default function Project({ project, rootProjectId, setSelected }: Project
     }
   }
 
+  async function handleEditProject(id: number, newName: string) {
+    try {
+      await editHabit(id, newName);
+      swipeableRow.current?.close();
+      habitDispatch({ type: "EDIT_HABIT", id, newName });
+    } catch (error) {
+      console.error("Failed to edit habit:", error);
+    }
+  }
+
   return (
     <View>
       <Swipeable
         ref={swipeableRow}
         renderRightActions={() => (
-          <RightSwipe
+          <ProjectRightSwipe
             handleDelete={handleDeleteProject}
-            id={project.id}
+            handleEdit={handleEditProject}
+            project={project}
             dispatch={habitDispatch}
             swipeableRow={swipeableRow}
           />
@@ -60,16 +69,15 @@ export default function Project({ project, rootProjectId, setSelected }: Project
                 completed={project.completed}
               />
             )}
-            <Text
-              style={[
-                styles.projectName,
-                project.completed ? styles.completedProject : null,
-              ]}
-            >
+            <Text style={[styles.projectName, project.completed ? styles.completedProject : null]}>
               {project.name}
             </Text>
             {rootProjectId && !project.completed && (
-              <AddButton parentId={project.id} depth={project.depth ? project.depth : 0} type={'project'} />
+              <AddButton
+                parentId={project.id}
+                depth={project.depth ? project.depth : 0}
+                type={"project"}
+              />
             )}
           </TouchableOpacity>
         </View>

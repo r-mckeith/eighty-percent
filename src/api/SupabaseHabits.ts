@@ -31,7 +31,7 @@ export async function getHabitData(selectedDate: Date): Promise<HabitDataProps[]
 
   const { data, error } = await supabase
     .from("tag_data")
-    .select("created_at, tag_id, count, tag_name, date")
+    .select("id, created_at, tag_id, count, tag_name, date")
     .filter("date", "gte", startDate.toISOString().split("T")[0])
     .filter("date", "lte", endDate.toISOString().split("T")[0])
     .order("created_at", { ascending: true });
@@ -80,16 +80,83 @@ export async function addProject(newProject: any): Promise<HabitProps> {
   }
 }
 
-// export async function editTag (noteId: number, updatedFields: Partial<NewNote>) {
-//   const { data, error } = await supabase
-//     .from('notes')
-//     .update(updatedFields)
-//     .eq('id', noteId);
+export async function editHabit(habitId: number, newName: string): Promise<HabitProps> {
+  let { data: habitData, error: habitError } = await supabase
+    .from("tags")
+    .update({ name: newName })
+    .eq("id", habitId)
+    .select();
 
-//   if (error) {
-//     console.error(error);
-//   }
-// };
+  if (habitError) {
+    console.error(habitError);
+    throw new Error("Failed to update habit");
+  }
+
+  if (!habitData) {
+    throw new Error("No data returned after update operation");
+  } else {
+    return habitData[0];
+  }
+}
+
+export async function editHabitData(
+  habit: HabitProps,
+  selectedDate: Date,
+  updatedCount: number
+): Promise<HabitDataProps> {
+  const dateFormatted = selectedDate.toISOString().split("T")[0];
+
+  const { data, error } = await supabase
+    .from("tag_data")
+    .select("*")
+    .eq("tag_id", habit.id)
+    .gte("date", dateFormatted)
+    .lte("date", dateFormatted);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Failed to select habit data");
+  }
+
+  if (data && data.length > 0) {
+    const { data: updatedData, error: updateError } = await supabase
+      .from("tag_data")
+      .update({ count: updatedCount })
+      .eq("id", data[0].id)
+      .select();
+
+    if (updateError) {
+      console.error(updateError);
+      throw new Error("Failed to update habit data count");
+    }
+
+    if (!updatedData) {
+      throw new Error("Updated data is not available.");
+    }
+
+    return updatedData[0];
+  } else {
+    // Habit data doesn't exist, insert a new row
+    const newData: Partial<HabitDataProps> = {
+      tag_id: habit.id,
+      count: updatedCount,
+      tag_name: habit.name,
+      date: selectedDate,
+    };
+
+    const { data: insertedData, error: insertError } = await supabase
+      .from("tag_data")
+      .insert([newData])
+      .select();
+
+    if (insertError) {
+      console.error(insertError);
+      throw new Error("Failed to insert habit data");
+    }
+
+    return insertedData[0];
+  }
+}
 
 export async function deleteHabit(habitId: number) {
   const { data, error } = await supabase.from("tags").delete().eq("id", habitId);
@@ -131,7 +198,7 @@ export async function toggleScope(habitId: number, selectedDate: string) {
   }
 }
 
-export async function selectHabit(habit: HabitProps, selectedDate: any): Promise<HabitDataProps> {
+export async function selectHabit(habit: HabitProps, selectedDate: Date): Promise<HabitDataProps> {
   const dateFormatted = selectedDate.toISOString().split("T")[0];
 
   const { data, error } = await supabase
