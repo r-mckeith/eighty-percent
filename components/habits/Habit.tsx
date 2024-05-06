@@ -13,7 +13,7 @@ import {
 } from "../../src/api/SupabaseHabits";
 import { useHabitDataContext } from "../../src/contexts/habitData/UseHabitDataContext";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
-import RightSwipe from "../shared/RightSwipe";
+import HabitRightSwipe from "./HabitRightSwipe";
 import { useAggregatedData, HabitsAggregatedData } from "../../src/hooks/aggregateData";
 
 type HabitComponent = {
@@ -72,13 +72,20 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
     }
   }
 
-  async function handleEditHabitData(id: number, count: any) {
+  async function handleEditHabitData(count: number) {
+    if (!habitData) {
+      return;
+    }
+
     try {
-      await editHabitData(id, count, selectedDate);
+      const updatedHabitData = await editHabitData(habit, selectedDate, count);
       swipeableRow.current?.close();
-      // habitDispatch({ type: "EDIT_HABIT", id, count });
+      habitDataDispatch({
+        type: "UPDATE_HABIT_DATA",
+        payload: updatedHabitData,
+      });
     } catch (error) {
-      console.error("Failed to edit habit:", error);
+      console.error("Failed to edit habit data:", error);
     }
   }
 
@@ -89,10 +96,10 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
     } else {
       try {
         setIsSelected(true);
-        const updatedTagData = await selectHabit(selectedHabit, selectedDate);
+        const updatedHabitData = await selectHabit(selectedHabit, selectedDate);
         habitDataDispatch({
           type: "UPDATE_HABIT_DATA",
-          payload: updatedTagData,
+          payload: updatedHabitData,
         });
         setTimeout(() => setIsSelected(false), 1);
       } catch (error) {
@@ -131,13 +138,12 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
     <Swipeable
       ref={swipeableRow}
       renderRightActions={() => (
-        <RightSwipe
+        <HabitRightSwipe
+          habit={habit}
           handleDelete={handleDeleteHabit}
           handleEdit={handleEditHabit}
           handleEditData={handleEditHabitData}
           habitData={habitData}
-          id={habit.id}
-          name={habit.name}
           swipeableRow={swipeableRow}
           dispatch={habitDispatch}
         />
@@ -198,7 +204,7 @@ const styles = StyleSheet.create({
   habit: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 8,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     backgroundColor: "#2c2c2e",
     borderBottomWidth: 1,

@@ -12,24 +12,19 @@ import {
 type EditModal = {
   visible: boolean;
   placeholder: string;
-  id: number;
-  name: string;
   habitData: any,
   onClose: () => void;
-  onSave: (id: number, value: number) => void;
+  onSave: (value: number) => void;
 };
 
 export default function DataEditModal({
   visible,
   placeholder,
-  id,
-  name,
   habitData,
   onClose,
   onSave,
 }: EditModal) {
-  const value = habitData ? habitData.day : 0
-  const [currentValue, setCurrentValue] = useState<number>(value);
+  const [currentValue, setCurrentValue] = useState<number>(habitData);
 
   function incrementValue() {
     setCurrentValue(currentValue + 1);
@@ -40,12 +35,12 @@ export default function DataEditModal({
   }
 
   function handleSave() {
-    onSave(id, currentValue);
+    onSave(currentValue);
     onClose();
   }
 
   function handleCancel() {
-    setCurrentValue(parseInt(name)); // Reset to initial value on cancel
+    setCurrentValue(habitData);
     onClose();
   }
 
@@ -64,7 +59,9 @@ export default function DataEditModal({
               <Text style={[styles.buttonText, { color: "red" }]}>Cancel</Text>
             </TouchableOpacity>
             <Text style={[styles.buttonText, { color: "white" }]}>{placeholder}</Text>
-            <TouchableOpacity style={styles.modalButton} onPress={handleSave}>
+            <TouchableOpacity 
+              style={[styles.modalButton, styles.rightButton]}
+              onPress={handleSave}>
               <Text style={[styles.buttonText, { color: "blue" }]}>Done</Text>
             </TouchableOpacity>
           </View>
@@ -123,6 +120,10 @@ const styles = StyleSheet.create({
   leftButton: {
     alignSelf: "flex-start",
   },
+  rightButton: {
+    alignSelf: "flex-end",
+    marginRight: -70,
+  },
   buttonText: {
     fontWeight: "bold",
   },
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
   numberDisplay: {
     fontSize: 24,
     color: "white",
-    marginHorizontal: 20, // Spacing between buttons and number text
+    marginHorizontal: 20,
   },
   controlButton: {
     padding: 10,

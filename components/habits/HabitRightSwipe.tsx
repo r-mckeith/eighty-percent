@@ -2,23 +2,22 @@ import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Swipeable } from "react-native-gesture-handler";
-import EditModal from "./EditModal";
-import DataEditModal from "./DataEditModal";
+import EditModal from "../shared/EditModal";
+import DataEditModal from "../shared/DataEditModal";
+import { HabitProps } from "../../src/types/HabitTypes";
 
 type RightSwipe = {
-  id: number;
-  name: string;
-  habitData?: any;
+  habit: HabitProps;
+  habitData: any;
   handleDelete: (id: number) => Promise<void>;
   handleEdit: (id: number, newName: string) => Promise<void>;
-  handleEditData?: (id: number, value: number) => Promise<void>;
+  handleEditData?: (value: number) => Promise<void>;
   swipeableRow: React.RefObject<Swipeable | null>;
   dispatch: React.Dispatch<any>;
 };
 
-export default function RightSwipe({
-  id,
-  name,
+export default function HabitRightSwipe({
+  habit,
   habitData,
   handleDelete,
   handleEdit,
@@ -50,7 +49,7 @@ export default function RightSwipe({
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.rightSwipeItem, styles.deleteButton]}
-        onPress={() => handleDelete(id)}
+        onPress={() => handleDelete(habit.id)}
       >
         <MaterialCommunityIcons name="close-circle" size={24} color="white" />
       </TouchableOpacity>
@@ -59,18 +58,16 @@ export default function RightSwipe({
         onClose={handleClose}
         onSave={handleEdit}
         placeholder={"Edit"}
-        id={id}
-        name={name}
+        id={habit.id}
+        name={habit.name}
       />
-      {handleEditData && (
+      {handleEditData && habitData && (
         <DataEditModal
           visible={showEditDataModal}
           onClose={handleClose}
           onSave={handleEditData}
-          placeholder={"Edit"}
-          id={id}
-          name={name}
-          habitData={habitData}
+          placeholder={"Edit Day"}
+          habitData={habitData ? habitData && habitData.day : 0}
         />
       )}
     </View>

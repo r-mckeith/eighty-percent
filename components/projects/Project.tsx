@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { deleteHabit, editHabit } from "../../src/api/SupabaseHabits";
-import RightSwipe from "../shared/RightSwipe";
+import ProjectRightSwipe from "./ProjectRightSwipe";
 import AddButton from "../shared/AddButton";
 import ScopeTask from "./ScopeProject";
 import { HabitProps } from "../../src/types/HabitTypes";
@@ -45,11 +45,10 @@ export default function Project({ project, rootProjectId, setSelected }: Project
       <Swipeable
         ref={swipeableRow}
         renderRightActions={() => (
-          <RightSwipe
+          <ProjectRightSwipe
             handleDelete={handleDeleteProject}
             handleEdit={handleEditProject}
-            id={project.id}
-            name={project.name}
+            project={project}
             dispatch={habitDispatch}
             swipeableRow={swipeableRow}
           />
