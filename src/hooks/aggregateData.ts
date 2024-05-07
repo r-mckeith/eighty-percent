@@ -182,7 +182,7 @@ export function useAggregatedData() {
             let status = "";
             let icon = "";
 
-            if (isPushed) {
+            if (isPushed || isIncomplete) {
               status = "P";
               icon = "→";
             } else if (isCompleted) {

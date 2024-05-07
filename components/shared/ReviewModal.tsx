@@ -20,7 +20,7 @@ type ReviewModal = {
 };
 
 export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
-  const [answer, setAnswer] = useState("");
+  const [answer, setAnswer] = useState<{good: string, bad: string, improve: string}>({good: '', bad: '', improve: ''});
 
   const { selectedDate } = useDateContext();
   const { habitGridData, projectTableData } = useAggregatedData();
@@ -34,17 +34,24 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
   }
 
   function handleAdd() {
-    if (answer) {
-      onAdd(answer);
-      setAnswer("");
+    console.log(answer)
+    // if (answer) {
+    //   onAdd(answer);
+      setAnswer({good: '', bad: '', improve: ''});
       onClose();
-    }
+    // }
   }
 
   function handlePressCancel() {
-    setAnswer("");
     onClose();
   }
+
+  const handleChange = (key: string, value: string) => {
+    setAnswer(prev => ({
+        ...prev,
+        [key]: value
+    }));
+};
 
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
@@ -134,7 +141,7 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
                             styles.gridCell,
                             {
                               color:
-                                day > 0 ? "green" : "red",
+                                day > 0 ? "green" : "orange",
                             },
                           ]}
                         >
@@ -145,12 +152,38 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
                 ))}
             </View>
             <View style={styles.reviewContainer}>
-              <Text style={styles.buttonText}>How did you do?</Text>
+              <Text style={styles.buttonText}>What went well this week?</Text>
               <TextInput
                 style={styles.textInput}
                 placeholderTextColor="white"
-                value={answer}
-                onChangeText={setAnswer}
+                value={answer.good}
+                onChangeText={e => handleChange('good', e)}
+                autoFocus={true}
+                returnKeyType="done"
+                multiline={true}
+                numberOfLines={4}
+              />
+            </View>
+            <View style={styles.reviewContainer}>
+              <Text style={styles.buttonText}>What didn't go well?</Text>
+              <TextInput
+                style={styles.textInput}
+                placeholderTextColor="white"
+                value={answer.bad}
+                onChangeText={e => handleChange('bad', e)}
+                autoFocus={true}
+                returnKeyType="done"
+                multiline={true}
+                numberOfLines={4}
+              />
+            </View>
+            <View style={styles.reviewContainer}>
+              <Text style={styles.buttonText}>What's your plan to improve?</Text>
+              <TextInput
+                style={styles.textInput}
+                placeholderTextColor="white"
+                value={answer.improve}
+                onChangeText={e => handleChange('improve', e)}
                 autoFocus={true}
                 returnKeyType="done"
                 multiline={true}
@@ -203,7 +236,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     flexGrow: 1,
     borderRadius: 10,
-    marginVertical: 10,
+    // marginVertical: 10,
     borderWidth: 2,
     borderColor: "#333333",
     backgroundColor: "#1c1c1e",
@@ -225,12 +258,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderBottomWidth: 1,
     borderBottomColor: "#555",
-    // flexDirection: "row",
     alignItems: "center",
     paddingVertical: 12,
     paddingHorizontal: 16,
     backgroundColor: "#2c2c2e",
-    // borderBottomWidth: 1,
     borderColor: "#333",
     alignSelf: "stretch",
   },
@@ -262,7 +293,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     paddingHorizontal: 10,
-    marginBottom: 30,
   },
   modalButton: {
     padding: 10,
