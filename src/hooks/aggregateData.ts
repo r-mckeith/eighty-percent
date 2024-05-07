@@ -110,7 +110,7 @@ export function useAggregatedData() {
   
     const startDay = new Date(selectedDate);
     startDay.setHours(0, 0, 0, 0); 
-    startDay.setDate(startDay.getDate() - 6);
+    startDay.setDate(startDay.getDate() - 7);
   
     const dates = Array.from({ length: 7 }).map((_, index) => {
       const date = new Date(startDay);

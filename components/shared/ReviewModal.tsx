@@ -82,7 +82,7 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
             </View>
             <View style={styles.grid}>
               <View style={styles.gridHeader}>
-                <Text style={styles.headerCell}></Text>
+                <Text style={styles.headerCell}>Projects</Text>
                 {generateDayHeaders().map((header, index) => (
                   <Text key={index} style={styles.gridCell}>
                     {header}
@@ -111,7 +111,16 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
                       ))}
                   </View>
                 ))}
-
+            </View>
+            <View style={styles.grid}>
+              <View style={styles.gridHeader}>
+                <Text style={styles.headerCell}>Habits</Text>
+                {generateDayHeaders().map((header, index) => (
+                  <Text key={index} style={styles.gridCell}>
+                    {header}
+                  </Text>
+                ))}
+              </View>
               {habitGridData &&
                 habitGridData.map((data: any, index: number) => (
                   <View key={index} style={styles.gridRow}>
@@ -190,7 +199,15 @@ const styles = StyleSheet.create({
   },
   grid: {
     flexDirection: "column",
-    width: "100%",
+    marginBottom: 20,
+    flexShrink: 1,
+    flexGrow: 1,
+    borderRadius: 10,
+    marginVertical: 10,
+    borderWidth: 2,
+    borderColor: "#333333",
+    backgroundColor: "#1c1c1e",
+    // marginBottom: 20,
   },
   gridHeader: {
     flexDirection: "row",
@@ -207,17 +224,24 @@ const styles = StyleSheet.create({
   gridRow: {
     flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: "#555", // Slightly lighter border for rows
+    borderBottomColor: "#555",
+    // flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: "#2c2c2e",
+    // borderBottomWidth: 1,
+    borderColor: "#333",
+    alignSelf: "stretch",
   },
   projectName: {
     flex: 4,
-    color: "white",
-    textAlign: "center",
+    color: "#FFF",
   },
   gridCell: {
     flex: 1,
     textAlign: "center",
-    color: "white", // Ensure text is white
+    color: "white",
   },
   closeButton: {
     marginTop: 20,
@@ -254,14 +278,13 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   textInput: {
-    marginTop: 20,
     alignSelf: "stretch",
     height: 30,
     color: "white",
     borderWidth: 1,
     borderRadius: 10,
     borderColor: "#bbb",
-    paddingHorizontal: 15, // Increase horizontal padding for more space
+    paddingHorizontal: 15,
     paddingVertical: 15,
     width: "100%",
   },
