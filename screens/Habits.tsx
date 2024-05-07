@@ -7,6 +7,7 @@ import { useGroupContext } from "../src/contexts/groups/UseGroupContext";
 import { HabitProps } from "../src/types/HabitTypes";
 import HabitSection from "../components/habits/HabitSection";
 import AddButton from "../components/shared/AddButton";
+import ReviewButton from "../components/shared/ReviewButton";
 import DateSelector from "../components/habits/DateSelector";
 
 export default function Habits() {
@@ -92,6 +93,7 @@ export default function Habits() {
           /> */}
         </View>
       </ScrollView>
+      <ReviewButton />
     </>
   );
 }

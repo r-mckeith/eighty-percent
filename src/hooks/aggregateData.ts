@@ -6,7 +6,6 @@ import { getHabitData } from "../api/SupabaseHabits";
 import { HabitProps, HabitDataProps } from "../types/HabitTypes";
 
 export type HabitsAggregatedData = {
-  id: number;
   tag_id: number;
   day: number;
   week: number;
@@ -15,33 +14,38 @@ export type HabitsAggregatedData = {
 };
 
 export type ProjectsAggregatedData = {
-  today: number;
-  last7Days: number;
-  last30Days: number;
-  last365Days: number;
+  details: [
+    {
+      name: string;
+      completedDay: string;
+      inScopeDay: string;
+      daysPushed: number;
+      completed: boolean;
+    }
+  ];
+  totals: {
+    totalPushesWeek: number;
+    totalCompletionsWeek: number;
+    totalCompletionsDay: number;
+    totalCompletionsMonth: number;
+    totalCompletionsYear: number;
+  };
 };
 
 export function useAggregatedData() {
   const [habitsTableData, setHabitsTableData] = useState<HabitsAggregatedData[]>([]);
-  const [projectsTableData, setProjectsTableData] = useState<ProjectsAggregatedData>({
-    today: 0,
-    last7Days: 0,
-    last30Days: 0,
-    last365Days: 0,
-  });
+  const [projectsTableData, setProjectsTableData] = useState<any>([]);
 
-  // right now projects are still habits in the db. Will change at some point
   const { selectedDate } = useDateContext();
-  const { habitData } = useHabitDataContext();
   const { habits } = useHabitContext();
-  const projects = habits.filter((tag) => tag.section === "today");
+  const { habitData } = useHabitDataContext();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const yearData = await getHabitData(selectedDate);
-        const aggregatedHabits = aggregateHabitData(yearData, selectedDate);
-        const aggregatedProjects = aggregateProjectsData(projects);
+        const aggregatedHabits = aggregateHabitData(habitData);
+        const aggregatedProjects = aggregateProjectsData(habits);
 
         setHabitsTableData(aggregatedHabits);
         setProjectsTableData(aggregatedProjects);
@@ -51,12 +55,9 @@ export function useAggregatedData() {
     };
 
     fetchData();
-  }, [selectedDate, habitData]);
+  }, [selectedDate, habits, habitData]);
 
-  function aggregateHabitData(
-    yearData: HabitDataProps[],
-    selectedDate: Date
-  ): HabitsAggregatedData[] {
+  function aggregateHabitData(yearData: HabitDataProps[]): HabitsAggregatedData[] {
     const habitMap: Record<string, HabitsAggregatedData> = {};
 
     const startDay = new Date(
@@ -74,7 +75,6 @@ export function useAggregatedData() {
 
       if (!habitMap[habit.tag_id]) {
         habitMap[habit.tag_id] = {
-          id: habit.id,
           tag_id: habit.tag_id,
           day: 0,
           week: 0,
@@ -100,46 +100,28 @@ export function useAggregatedData() {
     return Object.values(habitMap).filter((habit) => habit.month > 0);
   }
 
-  function aggregateProjectsData(projects: HabitProps[]): ProjectsAggregatedData {
-    const aggregatedProjects: ProjectsAggregatedData = {
-      today: 0,
-      last7Days: 0,
-      last30Days: 0,
-      last365Days: 0,
-    };
-    const startDay = new Date(
-      Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth(), selectedDate.getUTCDate())
-    );
-    const endDay = new Date(
-      Date.UTC(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() + 1)
-    );
-    const startWeek = new Date(startDay);
-    startWeek.setUTCDate(startDay.getUTCDate() - 6);
-    const startMonth = new Date(startDay);
-    startMonth.setUTCDate(startDay.getUTCDate() - 29);
-    const startYear = new Date(startDay);
-    startYear.setUTCDate(startDay.getUTCDate() - 364);
+  function aggregateProjectsData(projects: HabitProps[]) {
+    const startDay = new Date(selectedDate);
+    startDay.setHours(0, 0, 0, 0);
+    startDay.setDate(startDay.getDate() - 6);
 
-    projects.forEach((project) => {
-      if (project.completed) {
-        const completedDate = new Date(project.completed);
-
-        if (completedDate >= startDay && completedDate < endDay) {
-          aggregatedProjects.today++;
-        }
-        if (completedDate >= startWeek && completedDate < endDay) {
-          aggregatedProjects.last7Days++;
-        }
-        if (completedDate >= startMonth && completedDate < endDay) {
-          aggregatedProjects.last30Days++;
-        }
-        if (completedDate >= startYear && completedDate < endDay) {
-          aggregatedProjects.last365Days++;
-        }
-      }
-    });
-
-    return aggregatedProjects;
+    return projects
+      .map((project) => ({
+        name: project.name,
+        completedDay: project.completed ? new Date(project.completed) : null,
+        inScopeDay: project.inScopeDay ? new Date(project.inScopeDay) : null,
+        completed: !!project.completed,
+      }))
+      .filter((project) => {
+        return (
+          (project.inScopeDay &&
+            project.inScopeDay >= startDay &&
+            project.inScopeDay <= new Date(selectedDate)) ||
+          (project.completedDay &&
+            project.completedDay >= startDay &&
+            project.completedDay <= new Date(selectedDate))
+        );
+      });
   }
 
   return { habitsTableData, projectsTableData };
