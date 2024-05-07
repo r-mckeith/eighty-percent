@@ -34,7 +34,8 @@ export type ProjectsAggregatedData = {
 
 export function useAggregatedData() {
   const [habitsTableData, setHabitsTableData] = useState<HabitsAggregatedData[]>([]);
-  const [projectsTableData, setProjectsTableData] = useState<any>([]);
+  const [habitGridData, setHabitGridData] = useState<any>([]);
+  const [projectTableData, setProjectTableData] = useState<any>([]);
 
   const { selectedDate } = useDateContext();
   const { habits } = useHabitContext();
@@ -43,12 +44,15 @@ export function useAggregatedData() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const yearData = await getHabitData(selectedDate);
-        const aggregatedHabits = aggregateHabitData(habitData);
+        const habitRowData = await getHabitData(selectedDate);
+        const habitGridData = await getHabitData(selectedDate);
+        const aggregatedHabits = aggregateHabitData(habitRowData);
+        const aggregatedGridData = aggregateHabitGridData(habitGridData)
         const aggregatedProjects = aggregateProjectsData(habits);
 
         setHabitsTableData(aggregatedHabits);
-        setProjectsTableData(aggregatedProjects);
+        setHabitGridData(aggregatedGridData)
+        setProjectTableData(aggregatedProjects);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
@@ -99,11 +103,49 @@ export function useAggregatedData() {
 
     return Object.values(habitMap).filter((habit) => habit.month > 0);
   }
+  
+
+  function aggregateHabitGridData(gridData: HabitDataProps[]) {
+    const habitGridMap: any = {};
+  
+    const startDay = new Date(selectedDate);
+    startDay.setHours(0, 0, 0, 0); 
+    startDay.setDate(startDay.getDate() - 6);
+  
+    const dates = Array.from({ length: 7 }).map((_, index) => {
+      const date = new Date(startDay);
+      date.setDate(date.getDate() + index);
+      return date;
+    });
+  
+    gridData.forEach(habit => {
+      const completedDate = new Date(habit.date);
+  
+      if (!habitGridMap[habit.tag_id]) {
+        habitGridMap[habit.tag_id] = {
+          name: habit.tag_name,
+          dayCounts: Array(7).fill(0),
+        };
+      }
+  
+      dates.forEach((date, index) => {
+        if (completedDate.toDateString() === date.toDateString()) {
+          habitGridMap[habit.tag_id].dayCounts[index] += habit.count;
+        }
+      });
+    });
+  
+    return Object.values(habitGridMap);
+  }
+  
 
   function aggregateProjectsData(projects: HabitProps[]) {
     const startDay = new Date(selectedDate);
     startDay.setHours(0, 0, 0, 0);
     startDay.setDate(startDay.getDate() - 6);
+
+    const endDay = new Date(selectedDate);
+    endDay.setHours(23, 59, 59, 999);
 
     return projects
       .map((project) => ({
@@ -112,17 +154,54 @@ export function useAggregatedData() {
         inScopeDay: project.inScopeDay ? new Date(project.inScopeDay) : null,
         completed: !!project.completed,
       }))
-      .filter((project) => {
-        return (
-          (project.inScopeDay &&
-            project.inScopeDay >= startDay &&
-            project.inScopeDay <= new Date(selectedDate)) ||
+      .filter(
+        (project) =>
+          (project.inScopeDay && project.inScopeDay >= startDay && project.inScopeDay <= endDay) ||
           (project.completedDay &&
             project.completedDay >= startDay &&
-            project.completedDay <= new Date(selectedDate))
-        );
+            project.completedDay <= endDay)
+      )
+      .map((project) => {
+        const inScopeDate = project.inScopeDay;
+        const completedDate = project.completedDay;
+
+        return {
+          name: project.name,
+          days: Array.from({ length: 7 }, (_, dayIndex) => {
+            const day = new Date(startDay);
+            day.setDate(startDay.getDate() + dayIndex);
+
+            const dayStr = day.toISOString().split("T")[0];
+            const completedDayStr = completedDate ? completedDate.toISOString().split("T")[0] : "";
+
+            const isCompleted = completedDate && dayStr === completedDayStr;
+            const isInScope = inScopeDate ? day.getTime() >= inScopeDate.getTime() : false;
+            const isPushed = !isCompleted && isInScope && completedDate && completedDate > day;
+            const isIncomplete = isInScope && !completedDate;
+
+            let status = "";
+            let icon = "";
+
+            if (isPushed) {
+              status = "P";
+              icon = "→";
+            } else if (isCompleted) {
+              status = "C";
+              icon = "✓";
+            } else if (isIncomplete) {
+              status = "I";
+              icon = "✗";
+            }
+
+            return {
+              day: day.toDateString(),
+              status: status,
+              icon: icon,
+            };
+          }),
+        };
       });
   }
 
-  return { habitsTableData, projectsTableData };
+  return { habitsTableData, habitGridData, projectTableData };
 }

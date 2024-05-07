@@ -12,28 +12,24 @@ import {
 } from "react-native";
 import { useAggregatedData } from "../../src/hooks/aggregateData";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
-import { HabitProps } from "../../src/types/HabitTypes";
 
-type AddModal = {
+type ReviewModal = {
   visible: boolean;
   onClose: () => void;
   onAdd: (name: string) => void;
 };
 
-export default function ReviewModal({ visible, onClose, onAdd }: AddModal) {
+export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
   const [answer, setAnswer] = useState("");
 
   const { selectedDate } = useDateContext();
-  const { habitsTableData, projectsTableData } = useAggregatedData();
+  const { habitGridData, projectTableData } = useAggregatedData();
+
   function generateDayHeaders() {
     const fullWeek = ["Tu", "We", "Th", "Fr", "Sa", "Su", "Mo"];
-
     const date = new Date(selectedDate);
-
     const selectedDayOfWeek = date.getDay();
-
     const adjustedIndex = selectedDayOfWeek === 0 ? 6 : selectedDayOfWeek - 1;
-
     return [...fullWeek.slice(adjustedIndex), ...fullWeek.slice(0, adjustedIndex)];
   }
 
@@ -48,59 +44,6 @@ export default function ReviewModal({ visible, onClose, onAdd }: AddModal) {
   function handlePressCancel() {
     setAnswer("");
     onClose();
-  }
-
-  function prepareGridData() {
-    if (!projectsTableData) {
-      return [];
-    }
-
-    const sevenDaysAgo = new Date(selectedDate);
-    sevenDaysAgo.setDate(selectedDate.getDate() - 6);
-
-    return projectsTableData.map((project: any) => {
-      const inScopeDate = new Date(project.inScopeDay);
-      const completedDate = project.completedDay ? new Date(project.completedDay) : null;
-
-      return {
-        name: project.name,
-        days: Array.from({ length: 7 }, (_, dayIndex) => {
-          const day = new Date(
-            sevenDaysAgo.getFullYear(),
-            sevenDaysAgo.getMonth(),
-            sevenDaysAgo.getDate() + dayIndex
-          );
-
-          const dayStr = day.toISOString().split("T")[0];
-          const completedDayStr = completedDate ? completedDate.toISOString().split("T")[0] : "";
-
-          const isCompleted = completedDate && dayStr === completedDayStr;
-          const isInScope = day.getTime() >= inScopeDate.getTime();
-          const isPushed = !isCompleted && isInScope && completedDate && completedDate > day;
-          const isIncomplete = isInScope && !completedDate;
-
-          let status = "";
-          let icon = "";
-
-          if (isPushed) {
-            status = "P";
-            icon = "→";
-          } else if (isCompleted) {
-            status = "C";
-            icon = "✓";
-          } else if (isIncomplete) {
-            status = "I";
-            icon = "✗";
-          }
-
-          return {
-            day: day.toDateString(),
-            status: status,
-            icon: icon,
-          };
-        }),
-      };
-    });
   }
 
   return (
@@ -134,12 +77,8 @@ export default function ReviewModal({ visible, onClose, onAdd }: AddModal) {
               </TouchableOpacity>
             </View>
             <View style={styles.summaryText}>
-              <Text style={[styles.buttonText, { marginVertical: 10 }]}>
-                {/* {`Completed Projects: ${projectsTableData && projectsTableData.totals.week}`} */}
-              </Text>
-              <Text style={styles.buttonText}>
-                {/* {`Total Pushes: ${projectsTableData && projectsTableData.totals.pushesWeek}`} */}
-              </Text>
+              <Text style={[styles.buttonText, { marginVertical: 10 }]}></Text>
+              <Text style={styles.buttonText}></Text>
             </View>
             <View style={styles.grid}>
               <View style={styles.gridHeader}>
@@ -150,8 +89,8 @@ export default function ReviewModal({ visible, onClose, onAdd }: AddModal) {
                   </Text>
                 ))}
               </View>
-              {projectsTableData &&
-                prepareGridData().map((data: any, index: number) => (
+              {projectTableData &&
+                projectTableData.map((data: any, index: number) => (
                   <View key={index} style={styles.gridRow}>
                     <Text style={styles.projectName}>{data.name}</Text>
                     {data &&
@@ -163,11 +102,34 @@ export default function ReviewModal({ visible, onClose, onAdd }: AddModal) {
                             styles.gridCell,
                             {
                               color:
-                                day.status === "P" ? "orange" : day.status === "C" ? "blue" : "red",
+                                day.status === "P" ? "orange" : day.status === "C" ? "green" : "red",
                             },
                           ]}
                         >
                           {day.icon}
+                        </Text>
+                      ))}
+                  </View>
+                ))}
+
+              {habitGridData &&
+                habitGridData.map((data: any, index: number) => (
+                  <View key={index} style={styles.gridRow}>
+                    <Text style={styles.projectName}>{data.name}</Text>
+                    {data &&
+                      data &&
+                      data.dayCounts.map((day: any, idx: number) => (
+                        <Text
+                          key={idx}
+                          style={[
+                            styles.gridCell,
+                            {
+                              color:
+                                day > 0 ? "green" : "red",
+                            },
+                          ]}
+                        >
+                          {day === 0 ? '-' : day}
                         </Text>
                       ))}
                   </View>
@@ -193,44 +155,6 @@ export default function ReviewModal({ visible, onClose, onAdd }: AddModal) {
         </View>
       </KeyboardAvoidingView>
     </Modal>
-
-    //       <View style={styles.modalHeader}>
-    //         <TouchableOpacity
-    //           style={[styles.modalButton, styles.leftButton]}
-    //           onPress={handlePressCancel}
-    //         >
-    //           <Text style={[styles.buttonText, { color: "red" }]}>Cancel</Text>
-    //         </TouchableOpacity>
-    //         <Text style={[styles.buttonText, { color: "white" }]}>Weekly Review</Text>
-    //         <TouchableOpacity
-    //           style={[
-    //             styles.modalButton,
-    //             styles.rightButton,
-    //             answer ? {} : styles.disabledButton,
-    //           ]}
-    //           onPress={handleAdd}
-    //           disabled={!answer}
-    //         >
-    //           <Text
-    //             style={[styles.buttonText, answer ? { color: "blue" } : { color: "grey" }]}
-    //           >
-    //             Done
-    //           </Text>
-    //         </TouchableOpacity>
-    //       </View>
-    //       <Text style={{color: 'white'}}>You completed projects</Text>
-    //       <TextInput
-    //         style={styles.textInput}
-    //         placeholder={'...'}
-    //         placeholderTextColor="white"
-    //         value={answer}
-    //         onChangeText={setAnswer}
-    //         autoFocus={true}
-    //         returnKeyType="done"
-    //       />
-    //     </View>
-    //   </KeyboardAvoidingView>
-    // </Modal>
   );
 }
 
@@ -270,7 +194,7 @@ const styles = StyleSheet.create({
   },
   gridHeader: {
     flexDirection: "row",
-    backgroundColor: "#333", // Dark background for header
+    backgroundColor: "#333",
     padding: 10,
     borderRadius: 10,
   },
