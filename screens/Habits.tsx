@@ -93,7 +93,7 @@ export default function Habits() {
           /> */}
         </View>
       </ScrollView>
-      <ReviewButton />
+      <ReviewButton/>
     </>
   );
 }

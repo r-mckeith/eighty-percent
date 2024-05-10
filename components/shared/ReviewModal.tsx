@@ -32,6 +32,7 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
   const { habitGridData, projectTableData } = useAggregatedData();
   const { reviews, dispatch } = useReviewContext();
   const lastReview = reviews[0].response;
+  const isAnswered = answer.good !== '' || answer.bad !== '' || answer.improve !== ''
 
   function generateDayHeaders() {
     const fullWeek = ["Tu", "We", "Th", "Fr", "Sa", "Su", "Mo"];
@@ -61,6 +62,8 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
     }));
   };
 
+  console.log('reviews', reviews[0])
+
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <KeyboardAvoidingView
@@ -81,12 +84,12 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
                 style={[
                   styles.modalButton,
                   styles.rightButton,
-                  answer ? {} : styles.disabledButton,
+                  isAnswered ? {} : styles.disabledButton,
                 ]}
                 onPress={handleAdd}
                 disabled={!answer}
               >
-                <Text style={[styles.buttonText, answer ? { color: "blue" } : { color: "grey" }]}>
+                <Text style={[styles.buttonText, isAnswered ? { color: "blue" } : { color: "grey" }]}>
                   Done
                 </Text>
               </TouchableOpacity>
@@ -96,10 +99,10 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
               <Text style={styles.buttonText}></Text>
             </View>
             <View style={styles.summarySection}>
-              <Text style={styles.summaryHeader}>Last Week's Review</Text>
-              <Text style={styles.reviewSummaryText}>{lastReview.good}</Text>
-              <Text style={styles.reviewSummaryText}>{lastReview.bad}</Text>
-              <Text style={styles.reviewSummaryText}>{lastReview.improve}</Text>
+              <Text style={styles.summaryHeader}>Last Week</Text>
+              <Text style={styles.reviewSummaryText}>{`Good: ${lastReview.good}`}</Text>
+              <Text style={styles.reviewSummaryText}>{`Bad: ${lastReview.bad}`}</Text>
+              <Text style={styles.reviewSummaryText}>{`Improve: ${lastReview.improve}`}</Text>
             </View>
 
             <View style={styles.grid}>
@@ -244,7 +247,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   summaryText: {
-    marginTop: 60,
+    marginTop: 40,
     marginBottom: 15,
     flexDirection: "column",
   },
@@ -320,7 +323,6 @@ const styles = StyleSheet.create({
   },
   rightButton: {
     alignSelf: "flex-end",
-    // marginRight: -70,
   },
   disabledButton: {
     opacity: 0.5,
@@ -337,13 +339,12 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   summarySection: {
-    backgroundColor: '#282c34',
+    backgroundColor: '#2c2c2e',
     padding: 20,
     borderRadius: 10,
     marginVertical: 10,
     width: '100%',
   },
-  
   summaryHeader: {
     color: 'white',
     fontSize: 18,
@@ -351,7 +352,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   reviewSummaryText: {
-    color: '#ddd',
+    color: 'white',
     fontSize: 16,
     lineHeight: 24,
   },
