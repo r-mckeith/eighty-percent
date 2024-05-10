@@ -10,8 +10,10 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
+import { addReview } from "../../src/api/SupabaseReviews";
 import { useAggregatedData } from "../../src/hooks/aggregateData";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
+import { useReviewContext } from "../../src/contexts/reviews/UseReviewContext";
 
 type ReviewModal = {
   visible: boolean;
@@ -20,10 +22,16 @@ type ReviewModal = {
 };
 
 export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
-  const [answer, setAnswer] = useState<{good: string, bad: string, improve: string}>({good: '', bad: '', improve: ''});
+  const [answer, setAnswer] = useState<{ good: string; bad: string; improve: string }>({
+    good: "",
+    bad: "",
+    improve: "",
+  });
 
   const { selectedDate } = useDateContext();
   const { habitGridData, projectTableData } = useAggregatedData();
+  const { reviews, dispatch } = useReviewContext();
+  const lastReview = reviews[0].response;
 
   function generateDayHeaders() {
     const fullWeek = ["Tu", "We", "Th", "Fr", "Sa", "Su", "Mo"];
@@ -34,12 +42,12 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
   }
 
   function handleAdd() {
-    console.log(answer)
-    // if (answer) {
-    //   onAdd(answer);
-      setAnswer({good: '', bad: '', improve: ''});
+    console.log(answer);
+    if (answer) {
+      addReview(answer, selectedDate.toISOString().split("T")[0]);
+      setAnswer({ good: "", bad: "", improve: "" });
       onClose();
-    // }
+    }
   }
 
   function handlePressCancel() {
@@ -47,11 +55,11 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
   }
 
   const handleChange = (key: string, value: string) => {
-    setAnswer(prev => ({
-        ...prev,
-        [key]: value
+    setAnswer((prev) => ({
+      ...prev,
+      [key]: value,
     }));
-};
+  };
 
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
@@ -87,6 +95,13 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
               <Text style={[styles.buttonText, { marginVertical: 10 }]}></Text>
               <Text style={styles.buttonText}></Text>
             </View>
+            <View style={styles.summarySection}>
+              <Text style={styles.summaryHeader}>Last Week's Review</Text>
+              <Text style={styles.reviewSummaryText}>{lastReview.good}</Text>
+              <Text style={styles.reviewSummaryText}>{lastReview.bad}</Text>
+              <Text style={styles.reviewSummaryText}>{lastReview.improve}</Text>
+            </View>
+
             <View style={styles.grid}>
               <View style={styles.gridHeader}>
                 <Text style={styles.headerCell}>Projects</Text>
@@ -109,7 +124,11 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
                             styles.gridCell,
                             {
                               color:
-                                day.status === "P" ? "orange" : day.status === "C" ? "green" : "red",
+                                day.status === "P"
+                                  ? "orange"
+                                  : day.status === "C"
+                                  ? "green"
+                                  : "red",
                             },
                           ]}
                         >
@@ -140,12 +159,11 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
                           style={[
                             styles.gridCell,
                             {
-                              color:
-                                day > 0 ? "green" : "orange",
+                              color: day > 0 ? "green" : "orange",
                             },
                           ]}
                         >
-                          {day === 0 ? '-' : day}
+                          {day === 0 ? "-" : day}
                         </Text>
                       ))}
                   </View>
@@ -157,7 +175,7 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
                 style={styles.textInput}
                 placeholderTextColor="white"
                 value={answer.good}
-                onChangeText={e => handleChange('good', e)}
+                onChangeText={(e) => handleChange("good", e)}
                 autoFocus={true}
                 returnKeyType="done"
                 multiline={true}
@@ -170,7 +188,7 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
                 style={styles.textInput}
                 placeholderTextColor="white"
                 value={answer.bad}
-                onChangeText={e => handleChange('bad', e)}
+                onChangeText={(e) => handleChange("bad", e)}
                 autoFocus={true}
                 returnKeyType="done"
                 multiline={true}
@@ -183,7 +201,7 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
                 style={styles.textInput}
                 placeholderTextColor="white"
                 value={answer.improve}
-                onChangeText={e => handleChange('improve', e)}
+                onChangeText={(e) => handleChange("improve", e)}
                 autoFocus={true}
                 returnKeyType="done"
                 multiline={true}
@@ -317,5 +335,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 15,
     width: "100%",
+  },
+  summarySection: {
+    backgroundColor: '#282c34',
+    padding: 20,
+    borderRadius: 10,
+    marginVertical: 10,
+    width: '100%',
+  },
+  
+  summaryHeader: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  reviewSummaryText: {
+    color: '#ddd',
+    fontSize: 16,
+    lineHeight: 24,
   },
 });
