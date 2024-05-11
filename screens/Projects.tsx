@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, Switch, TouchableOpacity } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { View, StyleSheet } from "react-native";
 import { useHabitContext as useProjectContext } from "../src/contexts/habits/UseHabitContext";
 import AddButton from "../components/shared/AddButton";
 import { HabitProps as ProjectProps } from "../src/types/HabitTypes";
 import ProjectSection from "../components/projects/ProjectSection";
 import NestedList from "../components/projects/NestedList";
+import { SectionTitle, Scroll } from "../components/layout";
+import ToggleAndBack from "../components/projects/ToggleAndBack";
 
 export default function Projects() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
@@ -32,98 +32,40 @@ export default function Projects() {
   }
 
   return (
-    <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="handled">
+    <Scroll>
       {selected && (
-        <View style={styles.toggleAndBackContainer}>
-          <TouchableOpacity onPress={() => {}}>
-            <MaterialCommunityIcons
-              name="chevron-left"
-              size={30}
-              color={"white"}
-              onPress={handlePressBack}
-            />
-          </TouchableOpacity>
-          <View style={styles.toggleContainer}>
-            <Text style={styles.toggleLabel}>Show Completed</Text>
-            <Switch
-              value={showCompleted}
-              onValueChange={setShowCompleted}
-              ios_backgroundColor={"#FFF"}
-              trackColor={{ true: "#3a3a3c" }}
-            />
-          </View>
+        <View>
+          <ToggleAndBack
+            onPressBack={handlePressBack}
+            onToggle={setShowCompleted}
+            showCompleted={showCompleted}
+          />
+          <NestedList projects={filteredProjects} rootProjectId={selected} />
         </View>
       )}
 
-      <View style={styles.container}>
-        <View style={styles.sectionsContainer}>
-          {!selected && (
-            <View style={styles.addButton}>
-              <AddButton parentId={0} depth={0} type={'project'} />
-            </View>
-          )}
-          {!selected && (
-            <View style={styles.sectionName}>
-              <Text style={styles.sectionTitle}>Recent</Text>
-            </View>
-          )}
-
-          {!selected && (
-            <ProjectSection projects={projectRoots} setSelected={setSelected} />
-          )}
-          {selected && (
-            <NestedList projects={filteredProjects} rootProjectId={selected} />
-          )}
+      {!selected && (
+        <View>
+          <View style={styles.addButton}>
+            <AddButton parentId={0} depth={0} type={"project"} />
+          </View>
+          <SectionTitle title="Recent" />
+          <ProjectSection projects={projectRoots} setSelected={setSelected} />
         </View>
-      </View>
-    </ScrollView>
+      )}
+    </Scroll>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#000",
-  },
   scrollView: {
     flex: 1,
     backgroundColor: "#000",
+    padding: 16,
   },
   addButton: {
     alignSelf: "flex-end",
     marginRight: 4,
     marginBottom: 5,
-  },
-  sectionsContainer: {
-    padding: 16,
-  },
-  sectionName: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 5,
-  },
-  sectionTitle: {
-    flex: 1,
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#FFF",
-    textTransform: "capitalize",
-  },
-  toggleAndBackContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#000",
-    padding: 10,
-    paddingTop: 20,
-  },
-  toggleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  toggleLabel: {
-    marginRight: 8,
-    color: "#FFF",
   },
 });

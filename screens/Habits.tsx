@@ -48,7 +48,6 @@ export default function Habits() {
   return (
     <>
       <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="handled">
-        <View style={styles.sectionsContainer}>
           {groups.map((group) => {
             const groupTags = habits.filter(
               (habit) => habit.section === group.name
@@ -91,7 +90,6 @@ export default function Habits() {
           {/* <AddButton
             type={'group'}
           /> */}
-        </View>
       </ScrollView>
       <ReviewButton/>
     </>
@@ -123,8 +121,6 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
     backgroundColor: "#000",
-  },
-  sectionsContainer: {
     padding: 16,
   },
   sectionTitle: {
