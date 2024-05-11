@@ -2,35 +2,74 @@ import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Swipeable } from "react-native-gesture-handler";
+import {
+  deleteHabit,
+  editHabit,
+  editHabitData,
+  markHabitAsComplete,
+} from "../../src/api/SupabaseHabits";
 import EditModal from "../shared/EditModal";
 import DataEditModal from "../shared/DataEditModal";
 import { HabitProps } from "../../src/types/HabitTypes";
+import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
+import { useHabitDataContext } from "../../src/contexts/habitData/UseHabitDataContext";
+import { useDateContext } from "../../src/contexts/date/useDateContext";
 
 type RightSwipe = {
   habit: HabitProps;
   habitData: any;
-  handleDelete: (id: number) => Promise<void>;
-  handleEdit: (id: number, newName: string) => Promise<void>;
-  handleEditData?: (value: number) => Promise<void>;
   swipeableRow: React.RefObject<Swipeable | null>;
-  dispatch: React.Dispatch<any>;
 };
 
-export default function HabitRightSwipe({
-  habit,
-  habitData,
-  handleDelete,
-  handleEdit,
-  handleEditData,
-  swipeableRow,
-}: RightSwipe) {
+export default function HabitRightSwipe({ habit, habitData, swipeableRow }: RightSwipe) {
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [showEditDataModal, setShowEditDataModal] = useState<boolean>(false);
+
+  const { dispatch } = useHabitContext();
+  const { dispatch: habitDataDispatch } = useHabitDataContext();
+  const { selectedDate } = useDateContext();
 
   function handleClose() {
     swipeableRow.current?.close();
     setShowEditModal(false);
     setShowEditDataModal(false);
+  }
+
+  async function handleDeleteHabit(id: number) {
+    try {
+      await deleteHabit(id);
+      swipeableRow.current?.close();
+      dispatch({ type: "DELETE_HABIT", id });
+    } catch (error) {
+      console.error("Failed to delete habit:", error);
+    }
+  }
+
+  async function handleEditHabit(id: number, newName: string) {
+    try {
+      await editHabit(id, newName);
+      swipeableRow.current?.close();
+      dispatch({ type: "EDIT_HABIT", id, newName });
+    } catch (error) {
+      console.error("Failed to edit habit:", error);
+    }
+  }
+
+  async function handleEditHabitData(count: number) {
+    if (!habitData) {
+      return;
+    }
+
+    try {
+      const updatedHabitData = await editHabitData(habit, selectedDate, count);
+      swipeableRow.current?.close();
+      habitDataDispatch({
+        type: "UPDATE_HABIT_DATA",
+        payload: updatedHabitData,
+      });
+    } catch (error) {
+      console.error("Failed to edit habit data:", error);
+    }
   }
 
   return (
@@ -49,23 +88,23 @@ export default function HabitRightSwipe({
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.rightSwipeItem, styles.deleteButton]}
-        onPress={() => handleDelete(habit.id)}
+        onPress={() => handleDeleteHabit(habit.id)}
       >
         <MaterialCommunityIcons name="close-circle" size={24} color="white" />
       </TouchableOpacity>
       <EditModal
         visible={showEditModal}
         onClose={handleClose}
-        onSave={handleEdit}
+        onSave={handleEditHabit}
         placeholder={"Edit"}
         id={habit.id}
         name={habit.name}
       />
-      {handleEditData && habitData && (
+      {handleEditHabitData && habitData && (
         <DataEditModal
           visible={showEditDataModal}
           onClose={handleClose}
-          onSave={handleEditData}
+          onSave={handleEditHabitData}
           placeholder={"Edit Day"}
           habitData={habitData ? habitData && habitData.day : 0}
         />

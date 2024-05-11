@@ -1,28 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
 import { HabitProps } from "../../src/types/HabitTypes";
-import {
-  deleteHabit,
-  selectHabit,
-  markHabitAsComplete,
-  editHabit,
-  editHabitData,
-} from "../../src/api/SupabaseHabits";
+import { selectHabit, markHabitAsComplete } from "../../src/api/SupabaseHabits";
 import { useHabitDataContext } from "../../src/contexts/habitData/UseHabitDataContext";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import HabitRightSwipe from "./HabitRightSwipe";
 import { useAggregatedData, HabitsAggregatedData } from "../../src/hooks/aggregateData";
+import { Row, RowText, Swipe, Icon } from "../layout";
 
-type HabitComponent = {
+type Habit = {
   habit: HabitProps;
   sectionName: string;
   isEditMode: boolean;
 };
 
-export default function Habit({ habit, sectionName }: HabitComponent) {
+export default function Habit({ habit, sectionName }: Habit) {
   const [isSelected, setIsSelected] = useState(false);
   const [isSelectedLater, setIsSelectedLater] = useState(false);
   const [habitData, setHabitData] = useState<HabitsAggregatedData | null>(null);
@@ -51,43 +45,6 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
       }
     }
   }, [selectedDate, isSelected, isSelectedLater, habit.completed, habitsTableData]);
-
-  async function handleDeleteHabit(id: number) {
-    try {
-      await deleteHabit(id);
-      swipeableRow.current?.close();
-      habitDispatch({ type: "DELETE_HABIT", id });
-    } catch (error) {
-      console.error("Failed to delete habit:", error);
-    }
-  }
-
-  async function handleEditHabit(id: number, newName: string) {
-    try {
-      await editHabit(id, newName);
-      swipeableRow.current?.close();
-      habitDispatch({ type: "EDIT_HABIT", id, newName });
-    } catch (error) {
-      console.error("Failed to edit habit:", error);
-    }
-  }
-
-  async function handleEditHabitData(count: number) {
-    if (!habitData) {
-      return;
-    }
-
-    try {
-      const updatedHabitData = await editHabitData(habit, selectedDate, count);
-      swipeableRow.current?.close();
-      habitDataDispatch({
-        type: "UPDATE_HABIT_DATA",
-        payload: updatedHabitData,
-      });
-    } catch (error) {
-      console.error("Failed to edit habit data:", error);
-    }
-  }
 
   const handleSelectHabit = async (selectedHabit: HabitProps) => {
     if (sectionName === "today") {
@@ -128,47 +85,33 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
     }
   }
 
-  const habitStyle = isSelected
-    ? [styles.habit, styles.selectedHabit]
+  const rowStyle = isSelected
+    ? styles.selectedRow
     : isSelectedLater
-    ? [styles.habit, styles.disabledHabit]
-    : styles.habit;
+    ? styles.disabledRow
+    : {};
+
+  const habitTextStyle =
+    habit.section === "today" && isSelected
+      ? styles.disabledText
+      : isSelectedLater
+      ? styles.strikethroughText
+      : {}
 
   return (
-    <Swipeable
-      ref={swipeableRow}
+    <Swipe
+      key={habit.id}
       renderRightActions={() => (
-        <HabitRightSwipe
-          habit={habit}
-          handleDelete={handleDeleteHabit}
-          handleEdit={handleEditHabit}
-          handleEditData={handleEditHabitData}
-          habitData={habitData}
-          swipeableRow={swipeableRow}
-          dispatch={habitDispatch}
-        />
+        <HabitRightSwipe habit={habit} habitData={habitData} swipeableRow={swipeableRow} />
       )}
-      overshootLeft={false}
-      rightThreshold={20}
     >
-      <TouchableOpacity
-        activeOpacity={isSelectedLater ? 1 : 0.2}
+      <Row
+        opacity={isSelectedLater ? 1 : 0.2}
         onPress={!isSelectedLater ? () => handleSelectHabit(habit) : () => {}}
-        style={habitStyle}
+        style={rowStyle}
       >
-        <View style={styles.habitText}>
-          <Text
-            style={[
-              styles.habitName,
-              habit.section === "today" && isSelected
-                ? styles.selectedText
-                : isSelectedLater
-                ? styles.selectedLaterText
-                : {},
-            ]}
-          >
-            {habit.name}
-          </Text>
+        <View style={styles.dataLayout}>
+        <RowText text={habit.name} style={habitTextStyle} />
           {habit.section === "habits" && habitData && (
             <View style={styles.statsContainer}>
               <Text style={styles.statsText}>{habitData.day > 0 ? habitData.day : "-"}</Text>
@@ -180,54 +123,41 @@ export default function Habit({ habit, sectionName }: HabitComponent) {
           <View style={styles.statsContainer}>
             <Text style={styles.statsText}></Text>
             <Text style={styles.statsText}></Text>
-            <MaterialCommunityIcons name="check" size={16} color="white" style={styles.statsText} />
+            <Icon name="check" style={styles.statsText} />
           </View>
         )}
         {habit.section === "today" && isSelectedLater && (
           <View style={styles.statsContainer}>
             <Text style={styles.statsText}></Text>
             <Text style={styles.statsText}></Text>
-            <MaterialCommunityIcons
-              name="arrow-right"
-              size={16}
-              color="white"
-              style={styles.statsText}
-            />
+            <Icon name="arrow-right" style={styles.statsText} />
           </View>
         )}
-      </TouchableOpacity>
-    </Swipeable>
+      </Row>
+    </Swipe>
   );
 }
 
 const styles = StyleSheet.create({
-  habit: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    backgroundColor: "#2c2c2e",
-    borderBottomWidth: 1,
-    borderColor: "#333",
-  },
-  selectedHabit: {
-    backgroundColor: "#3a3a3c",
-  },
-  disabledHabit: {
-    backgroundColor: "#3a3a3c",
-    borderColor: "#505050",
-  },
-  habitText: {
+  dataLayout: {
     flexDirection: "row",
     color: "#FFF",
     flex: 1,
     justifyContent: "space-between",
   },
-  habitName: {
-    flex: 3.5,
-    textAlign: "left",
-    color: "white",
-    fontWeight: "bold",
+  selectedRow: {
+    backgroundColor: "#3a3a3c",
+  },
+  disabledRow: {
+    backgroundColor: "#3a3a3c",
+    borderColor: "#505050",
+  },
+  disabledText: {
+    textDecorationLine: "line-through",
+    color: "#b1b1b3",
+  },
+  strikethroughText: {
+    color: "#b1b1b3",
   },
   statsContainer: {
     flexDirection: "row",
@@ -239,11 +169,5 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: "center",
   },
-  selectedText: {
-    textDecorationLine: "line-through",
-    color: "#b1b1b3",
-  },
-  selectedLaterText: {
-    color: "#b1b1b3",
-  },
+
 });

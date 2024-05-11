@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Project from "./Project";
 import { HabitProps as ProjectProps } from "../../src/types/HabitTypes";
+import { Section, RowText } from "../layout";
 
 export default function NestedList({
   projects,
@@ -24,33 +25,22 @@ export default function NestedList({
   };
 
   return (
-    <View style={styles.section}>
+    <Section>
       {rootProject ? (
-        <View style={styles.projectContainer}>
+        <View>
           <Project project={rootProject} rootProjectId={rootProjectId} />
           {renderProjectsRecursively(rootProject.id)}
         </View>
       ) : (
-        <Text style={styles.headerText}>No task found</Text>
+        <RowText text='No task found' />
       )}
-    </View>
+    </Section>
   );
 }
 
 const styles = StyleSheet.create({
-  section: {
-    flexShrink: 1,
-    flexGrow: 1,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: "#333333",
-    backgroundColor: "#1c1c1e",
-    marginBottom: 20,
-  },
-  projectContainer: {
-    flexDirection: "column",
-    alignSelf: "stretch",
-  },
+
+
   headerText: {
     color: "white",
   },
