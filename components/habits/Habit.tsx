@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
 import { HabitProps } from "../../src/types/HabitTypes";
@@ -8,7 +8,7 @@ import { useHabitDataContext } from "../../src/contexts/habitData/UseHabitDataCo
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import HabitRightSwipe from "./HabitRightSwipe";
 import { useAggregatedData, HabitsAggregatedData } from "../../src/hooks/aggregateData";
-import { Row, RowText, Swipe, Icon } from "../layout";
+import { Row, RowText, Swipe, Icon, StatsText } from "../layout";
 
 type Habit = {
   habit: HabitProps;
@@ -46,6 +46,7 @@ export default function Habit({ habit, sectionName }: Habit) {
     }
   }, [selectedDate, isSelected, isSelectedLater, habit.completed, habitsTableData]);
 
+  // right now this is handling projects, which need to be completed, and habits, which update habit data
   const handleSelectHabit = async (selectedHabit: HabitProps) => {
     if (sectionName === "today") {
       setIsSelected(!isSelected);
@@ -85,18 +86,14 @@ export default function Habit({ habit, sectionName }: Habit) {
     }
   }
 
-  const rowStyle = isSelected
-    ? styles.selectedRow
-    : isSelectedLater
-    ? styles.disabledRow
-    : {};
+  const rowStyle = isSelected ? styles.selectedRow : isSelectedLater ? styles.disabledRow : {};
 
   const habitTextStyle =
     habit.section === "today" && isSelected
       ? styles.disabledText
       : isSelectedLater
       ? styles.strikethroughText
-      : {}
+      : {};
 
   return (
     <Swipe
@@ -110,28 +107,21 @@ export default function Habit({ habit, sectionName }: Habit) {
         onPress={!isSelectedLater ? () => handleSelectHabit(habit) : () => {}}
         style={rowStyle}
       >
-        <View style={styles.dataLayout}>
-        <RowText text={habit.name} style={habitTextStyle} />
+        <View style={styles.rowLayout}>
+          <RowText text={habit.name} style={habitTextStyle} />
           {habit.section === "habits" && habitData && (
-            <View style={styles.statsContainer}>
-              <Text style={styles.statsText}>{habitData.day > 0 ? habitData.day : "-"}</Text>
-              <Text style={styles.statsText}>{habitData.week > 0 ? habitData.week : "-"}</Text>
-            </View>
+            <StatsText
+              day={habitData.day > 0 ? habitData.day : "-"}
+              week={habitData.week > 0 ? habitData.week : "-"}
+            />
           )}
         </View>
-        {habit.section === "today" && isSelected && (
-          <View style={styles.statsContainer}>
-            <Text style={styles.statsText}></Text>
-            <Text style={styles.statsText}></Text>
-            <Icon name="check" style={styles.statsText} />
-          </View>
-        )}
-        {habit.section === "today" && isSelectedLater && (
-          <View style={styles.statsContainer}>
-            <Text style={styles.statsText}></Text>
-            <Text style={styles.statsText}></Text>
-            <Icon name="arrow-right" style={styles.statsText} />
-          </View>
+        {habit.section === "today" && (
+          <StatsText
+            day={""}
+            week={""}
+            children={<Icon name={isSelected ? "check" : "arrow-right"} />}
+          />
         )}
       </Row>
     </Swipe>
@@ -139,7 +129,7 @@ export default function Habit({ habit, sectionName }: Habit) {
 }
 
 const styles = StyleSheet.create({
-  dataLayout: {
+  rowLayout: {
     flexDirection: "row",
     color: "#FFF",
     flex: 1,
@@ -159,15 +149,4 @@ const styles = StyleSheet.create({
   strikethroughText: {
     color: "#b1b1b3",
   },
-  statsContainer: {
-    flexDirection: "row",
-    flex: 2,
-  },
-  statsText: {
-    paddingHorizontal: 5,
-    color: "#DDD",
-    flex: 1,
-    textAlign: "center",
-  },
-
 });

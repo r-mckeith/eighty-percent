@@ -3,12 +3,16 @@ import { View, StyleSheet, Text } from "react-native";
 
 type SectionTitle = {
   title: string;
+  children?: any;
 };
 
-export default function SectionTitle({ title }: SectionTitle) {
+export default function SectionTitle({ title, children }: SectionTitle) {
   return (
     <View style={styles.sectionName}>
       <Text style={styles.sectionTitle}>{title}</Text>
+      <View style={styles.children}>
+        {children}
+      </View>
     </View>
   );
 }
@@ -16,8 +20,6 @@ export default function SectionTitle({ title }: SectionTitle) {
 const styles = StyleSheet.create({
   sectionName: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
     marginBottom: 5,
   },
   sectionTitle: {
@@ -27,4 +29,7 @@ const styles = StyleSheet.create({
     color: "#FFF",
     textTransform: "capitalize",
   },
+  children: {
+    paddingRight: 5
+  }
 });

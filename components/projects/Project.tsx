@@ -5,7 +5,7 @@ import ProjectRightSwipe from "./ProjectRightSwipe";
 import AddButton from "../shared/AddButton";
 import ScopeTask from "./ScopeProject";
 import { HabitProps } from "../../src/types/HabitTypes";
-import { Row, RowText, Section, Swipe } from "../layout";
+import { Row, RowText, Swipe } from "../layout";
 
 type Project = {
   project: HabitProps;
@@ -43,13 +43,6 @@ export default function Project({ project, rootProjectId, setSelected }: Project
 }
 
 const styles = StyleSheet.create({
-  projectName: {
-    marginLeft: 7,
-    color: "#FFF",
-    fontWeight: "bold",
-    fontSize: 18,
-    flex: 1,
-  },
   completedProject: {
     textDecorationLine: "line-through",
     color: "#b1b1b3",

@@ -12,7 +12,7 @@ export default function Projects() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
   const [projectRoots, setProjectRoots] = useState<ProjectProps[]>([]);
   const [filteredProjects, setFilteredProjects] = useState<ProjectProps[]>([]);
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selectedProject, setSelectedProject] = useState<number | null>(null);
 
   const { habits: projects } = useProjectContext();
 
@@ -24,33 +24,33 @@ export default function Projects() {
 
     const projectRoots = filteredProjects.filter((tag) => tag.parentId === 0);
     setProjectRoots(projectRoots);
-  }, [showCompleted, projects, selected]);
+  }, [showCompleted, projects, selectedProject]);
 
   function handlePressBack() {
-    setSelected(null);
+    setSelectedProject(null);
     setShowCompleted(false);
   }
 
   return (
     <Scroll>
-      {selected && (
+      {selectedProject && (
         <View>
           <ToggleAndBack
             onPressBack={handlePressBack}
             onToggle={setShowCompleted}
             showCompleted={showCompleted}
           />
-          <NestedList projects={filteredProjects} rootProjectId={selected} />
+          <NestedList projects={filteredProjects} rootProjectId={selectedProject} />
         </View>
       )}
 
-      {!selected && (
+      {!selectedProject && (
         <View>
           <View style={styles.addButton}>
             <AddButton parentId={0} depth={0} type={"project"} />
           </View>
           <SectionTitle title="Recent" />
-          <ProjectSection projects={projectRoots} setSelected={setSelected} />
+          <ProjectSection projects={projectRoots} setSelected={setSelectedProject} />
         </View>
       )}
     </Scroll>

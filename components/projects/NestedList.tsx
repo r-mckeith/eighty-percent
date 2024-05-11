@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Project from "./Project";
 import { HabitProps as ProjectProps } from "../../src/types/HabitTypes";
 import { Section, RowText } from "../layout";
@@ -39,11 +39,6 @@ export default function NestedList({
 }
 
 const styles = StyleSheet.create({
-
-
-  headerText: {
-    color: "white",
-  },
   childProject: {
     paddingLeft: 20,
     backgroundColor: "#2c2c2e",

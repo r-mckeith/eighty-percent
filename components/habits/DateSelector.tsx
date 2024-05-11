@@ -47,23 +47,26 @@ export default function DateSelector({ selectedDate, onDateChange }: DateSelecto
   const dayDisplay = formatDateRelative(selectedDate);
 
   return (
-    <View style={styles.datePickerContainer}>
-      <TouchableOpacity onPress={decrementDate} style={styles.iconButton}>
-        <MaterialCommunityIcons name="chevron-left" size={24} color={"white"} />
-      </TouchableOpacity>
-      <Text style={styles.headerText}>{dayDisplay}</Text>
-      <TouchableOpacity onPress={incrementDate} style={styles.iconButton}>
-        <MaterialCommunityIcons
-          name="chevron-right"
-          size={24}
-          color={"white"}
-        />
-      </TouchableOpacity>
+    <View style={styles.datePicker}>
+      <View style={styles.datePickerContainer}>
+        <TouchableOpacity onPress={decrementDate} style={styles.iconButton}>
+          <MaterialCommunityIcons name="chevron-left" size={24} color={"white"} />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>{dayDisplay}</Text>
+        <TouchableOpacity onPress={incrementDate} style={styles.iconButton}>
+          <MaterialCommunityIcons name="chevron-right" size={24} color={"white"} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  datePicker: {
+    alignSelf: "flex-end",
+    marginRight: 4,
+    marginBottom: 15,
+  },
   headerText: {
     textTransform: "capitalize",
     color: "white",
