@@ -60,7 +60,6 @@ export default function ProjectRightSwipe({ project, swipeableRow }: RightSwipe)
         visible={showEditModal}
         onClose={handleClose}
         onSave={handleEditProject}
-        placeholder={"Edit"}
         id={project.id}
         name={project.name}
       />

@@ -6,10 +6,9 @@ import {
   deleteHabit,
   editHabit,
   editHabitData,
-  markHabitAsComplete,
 } from "../../src/api/SupabaseHabits";
 import EditModal from "../shared/EditModal";
-import DataEditModal from "../shared/DataEditModal";
+import DataEditModal from "../shared/DataModal";
 import { HabitProps } from "../../src/types/HabitTypes";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
 import { useHabitDataContext } from "../../src/contexts/habitData/UseHabitDataContext";
@@ -96,7 +95,6 @@ export default function HabitRightSwipe({ habit, habitData, swipeableRow }: Righ
         visible={showEditModal}
         onClose={handleClose}
         onSave={handleEditHabit}
-        placeholder={"Edit"}
         id={habit.id}
         name={habit.name}
       />
