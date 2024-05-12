@@ -120,7 +120,7 @@ export default function Habit({ habit, sectionName }: Habit) {
           <StatsText
             day={""}
             week={""}
-            children={<Icon name={isSelected ? "check" : "arrow-right"} />}
+            children={<Icon name={isSelected ? "check" : isSelectedLater ? "arrow-right" : ''} />}
           />
         )}
       </Row>

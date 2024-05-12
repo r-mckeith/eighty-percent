@@ -8,7 +8,7 @@ import HabitSection from "../components/habits/HabitSection";
 import AddButton from "../components/shared/AddButton";
 import ReviewButton from "../components/shared/ReviewButton";
 import DateSelector from "../components/habits/DateSelector";
-import { Scroll, SectionTitle } from "../components/layout";
+import { Scroll } from "../components/layout";
 
 export default function Habits() {
   const { selectedDate, setSelectedDate } = useDateContext();
@@ -53,12 +53,7 @@ export default function Habits() {
                 {group.name === "today" && (
                   <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
                 )}
-                <SectionTitle title={group.name === "today" ? "projects" : group.name}>
-                  {group.name !== "today" && (
-                    <AddButton sectionName={group.name} groupId={group.id} type={"habit"} />
-                  )}
-                </SectionTitle>
-                <HabitSection habits={filteredHabits} sectionName={group.name} />
+                <HabitSection habits={filteredHabits} sectionName={group.name} groupId={group.id} />
               </View>
             );
           }
@@ -66,9 +61,9 @@ export default function Habits() {
           return null;
         })}
 
-        {/* <AddButton
+        <AddButton
             type={'group'}
-          /> */}
+          />
       </Scroll>
       <ReviewButton />
     </>
