@@ -1,7 +1,7 @@
 import React from "react";
 import { HabitProps } from "../../src/types/HabitTypes";
 import Project from "./Project";
-import { Section } from "../layout";
+import { Section } from "../shared";
 
 type ProjectSection = {
   projects: HabitProps[];

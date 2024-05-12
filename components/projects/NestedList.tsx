@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import Project from "./Project";
 import { HabitProps as ProjectProps } from "../../src/types/HabitTypes";
-import { Section, RowText } from "../layout";
+import { Section, RowText } from "../shared";
 
 export default function NestedList({
   projects,

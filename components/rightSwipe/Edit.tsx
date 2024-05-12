@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { editHabit } from "../../src/api/SupabaseHabits";
-import EditModal from "../shared/EditModal";
+import EditModal from "../modals/EditModal";
 import { HabitProps } from "../../src/types/HabitTypes";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
-import { Icon } from "../layout";
+import { Icon } from "../shared";
 
 type Edit = {
   item: HabitProps;

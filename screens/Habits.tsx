@@ -8,7 +8,7 @@ import HabitSection from "../components/habits/HabitSection";
 import AddButton from "../components/shared/AddButton";
 import ReviewButton from "../components/reviews/ReviewButton";
 import DateSelector from "../components/habits/DateSelector";
-import { Scroll } from "../components/layout";
+import { Scroll } from "../components/shared";
 
 export default function Habits() {
   const { selectedDate, setSelectedDate } = useDateContext();

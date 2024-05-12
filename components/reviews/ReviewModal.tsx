@@ -6,8 +6,8 @@ import { useReviewContext } from "../../src/contexts/reviews/UseReviewContext";
 import Grid from "./Grid";
 import TextBox from "./TextBox";
 import Summary from "./Summary";
-import Modal from "../shared/Modal";
-import { Section } from "../layout";
+import Modal from "../modals/Modal";
+import { Section } from "../shared";
 
 type ReviewModal = {
   visible: boolean;

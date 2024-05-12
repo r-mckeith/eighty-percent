@@ -1,6 +1,6 @@
 import React from "react";
 import { View, TextInput, StyleSheet } from "react-native";
-import { RowText } from "../layout";
+import { RowText } from "../shared";
 
 type TextBox = {
   value: string;

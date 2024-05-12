@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { HabitProps } from "../../src/types/HabitTypes";
 import Habit from "./Habit";
 import StatsHeader from "./StatsHeader";
-import { Section, SectionTitle } from "../layout";
+import { Section, SectionTitle } from "../shared";
 import AddButton from "../shared/AddButton";
 
 type SectionProps = {

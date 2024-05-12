@@ -4,7 +4,7 @@ import { Swipeable } from "react-native-gesture-handler";
 import AddButton from "../shared/AddButton";
 import Scope from "./Scope";
 import { HabitProps } from "../../src/types/HabitTypes";
-import { Row, RowText, Swipe } from "../layout";
+import { Row, RowText, Swipe } from "../shared";
 import RightSwipe from "../rightSwipe/RightSwipe";
 
 type Project = {

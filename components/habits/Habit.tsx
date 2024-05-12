@@ -7,7 +7,7 @@ import { selectHabit, markHabitAsComplete } from "../../src/api/SupabaseHabits";
 import { useHabitDataContext } from "../../src/contexts/habitData/UseHabitDataContext";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import { useAggregatedData, HabitsAggregatedData } from "../../src/hooks/aggregateData";
-import { Row, RowText, Swipe, Icon, StatsText } from "../layout";
+import { Row, RowText, Swipe, Icon, StatsText } from "../shared";
 import RightSwipe from "../rightSwipe/RightSwipe";
 
 type Habit = {
@@ -110,7 +110,7 @@ export default function Habit({ habit, sectionName }: Habit) {
       >
         <View style={styles.rowLayout}>
           <RowText text={habit.name} style={habitTextStyle} />
-          {habit.section === "habits" && habitData && (
+          {habit.section !== 'today' && habitData && (
             <StatsText
               day={habitData.day > 0 ? habitData.day : "-"}
               week={habitData.week > 0 ? habitData.week : "-"}

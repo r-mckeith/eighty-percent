@@ -4,7 +4,7 @@ import { Swipeable } from "react-native-gesture-handler";
 import { deleteHabit } from "../../src/api/SupabaseHabits";
 import { HabitProps } from "../../src/types/HabitTypes";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
-import { Icon } from "../layout";
+import { Icon } from "../shared";
 
 type Delete = {
   item: HabitProps;

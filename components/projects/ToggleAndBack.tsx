@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Icon, Toggle } from "../layout";
+import { Icon, Toggle } from "../shared";
 
 type ToggleAndBack = {
   onPressBack: () => void;

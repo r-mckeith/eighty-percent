@@ -5,8 +5,9 @@ import AddButton from "../components/shared/AddButton";
 import { HabitProps as ProjectProps } from "../src/types/HabitTypes";
 import ProjectSection from "../components/projects/ProjectSection";
 import NestedList from "../components/projects/NestedList";
-import { SectionTitle, Scroll } from "../components/layout";
+import { SectionTitle, Scroll } from "../components/shared";
 import ToggleAndBack from "../components/projects/ToggleAndBack";
+import { Toggle } from "../components/shared";
 
 export default function Projects() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
@@ -45,27 +46,19 @@ export default function Projects() {
       )}
 
       {!selectedProject && (
-        <View>
-          <View style={styles.addButton}>
+        <>
+          <Toggle
+            onToggle={setShowCompleted}
+            value={showCompleted}
+            label={'Show Completed'}
+            style={{justifyContent: 'flex-end', paddingBottom: 30}}
+          />
+          <SectionTitle title="Recent">
             <AddButton parentId={0} depth={0} type={"project"} />
-          </View>
-          <SectionTitle title="Recent" />
+          </SectionTitle>
           <ProjectSection projects={projectRoots} setSelected={setSelectedProject} />
-        </View>
+        </>
       )}
     </Scroll>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-    backgroundColor: "#000",
-    padding: 16,
-  },
-  addButton: {
-    alignSelf: "flex-end",
-    marginRight: 4,
-    marginBottom: 5,
-  },
-});

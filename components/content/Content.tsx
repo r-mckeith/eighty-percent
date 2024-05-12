@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Row, RowText, Icon } from "../layout";
+import { Row, RowText, Icon } from "../shared";
 
 const Content = ({
   name,

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Section, Row, RowText } from "../layout";
+import { Section, Row, RowText } from "../shared";
 
 type Grid = {
   data: any;

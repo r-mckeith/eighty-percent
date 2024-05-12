@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
 import { toggleScope } from "../../src/api/SupabaseHabits";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
-import { Icon } from "../layout";
+import { Icon } from "../shared";
 
 type Scope = {
   id: number;

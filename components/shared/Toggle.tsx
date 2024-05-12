@@ -5,11 +5,12 @@ type Toggle = {
   onToggle: any;
   value: boolean;
   label: string;
+  style?: any;
 };
 
-export default function Toggle({ onToggle, value, label }: Toggle) {
+export default function Toggle({ onToggle, value, label, style }: Toggle) {
   return (
-    <View style={styles.toggleContainer}>
+    <View style={[styles.toggleContainer, style ? style : {}]}>
       <Text style={styles.toggleLabel}>{label}</Text>
       <Switch
         value={value}

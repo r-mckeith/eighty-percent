@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, StyleSheet, View } from "react-native";
-import { RowText, Section } from "../layout";
+import { RowText, Section } from "../shared";
 
 export default function Summary({ lastReview }: any) {
   return (
