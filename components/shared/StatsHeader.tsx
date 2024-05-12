@@ -4,7 +4,7 @@ import { View, StyleSheet, Text } from "react-native";
 export default function StatsHeader() {
   return (
     <View style={styles.statsHeader}>
-      <Text style={styles.headerCellHabitName}></Text>
+      <Text style={styles.headerCellName}></Text>
       <Text style={styles.headerCell}>Day</Text>
       <Text style={styles.headerCell}>Week</Text>
     </View>
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 12,
   },
-  headerCellHabitName: {
+  headerCellName: {
     flex: 3.5,
     textAlign: "left",
     color: "white",

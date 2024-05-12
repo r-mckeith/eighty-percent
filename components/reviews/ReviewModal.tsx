@@ -3,9 +3,9 @@ import { addReview } from "../../src/api/SupabaseReviews";
 import { useAggregatedData } from "../../src/hooks/aggregateData";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import { useReviewContext } from "../../src/contexts/reviews/UseReviewContext";
-import Grid from "../reviews/Grid";
-import TextBox from "../reviews/TextBox";
-import Summary from "../reviews/Summary";
+import Grid from "./Grid";
+import TextBox from "./TextBox";
+import Summary from "./Summary";
 import Modal from "../shared/Modal";
 
 type ReviewModal = {
@@ -28,7 +28,6 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
   const isAnswered = answer.good !== "" || answer.bad !== "" || answer.improve !== "";
 
   function handleSave() {
-    console.log(answer);
     if (answer) {
       addReview(answer, selectedDate.toISOString().split("T")[0]);
       setAnswer({ good: "", bad: "", improve: "" });
@@ -54,6 +53,7 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
       onClose={handleCancel}
       onSave={handleSave}
       size={"large"}
+      disabled={!isAnswered}
     >
       {lastReview && <Summary lastReview={lastReview} />}
 

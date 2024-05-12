@@ -25,12 +25,15 @@ export default function AddModal({ visible, displayName, onClose, onAdd }: AddMo
     onClose();
   }
 
+  const disabled = newName === ''
+
   return (
     <Modal
       placeholder={`New ${displayName}`}
       visible={visible}
       onClose={handleCancel}
       onSave={handleSave}
+      disabled={disabled}
     >
       <TextInput
         style={styles.textInput}

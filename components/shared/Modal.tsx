@@ -8,6 +8,7 @@ type SmallModal = {
   placeholder: string;
   visible: boolean;
   size?: string;
+  disabled: boolean;
   onClose: () => void;
   onSave: () => void;
 };
@@ -17,6 +18,7 @@ export default function SmallModal({
   placeholder,
   visible,
   size,
+  disabled,
   onClose,
   onSave,
 }: SmallModal) {
@@ -29,7 +31,7 @@ export default function SmallModal({
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <View style={[styles.modalView, modalSize]}>
-          <ModalHeader placeholder={placeholder} onSave={onSave} onClose={onClose} />
+          <ModalHeader placeholder={placeholder} onSave={onSave} onClose={onClose} disabled={disabled} />
 
           <ScrollView style={{ width: "100%", marginTop: 30 }}>{children}</ScrollView>
         </View>

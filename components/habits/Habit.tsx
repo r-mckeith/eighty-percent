@@ -98,6 +98,7 @@ export default function Habit({ habit, sectionName }: Habit) {
   return (
     <Swipe
       key={habit.id}
+      swipeableRow={swipeableRow}
       renderRightActions={() => (
         <HabitRightSwipe habit={habit} habitData={habitData} swipeableRow={swipeableRow} />
       )}

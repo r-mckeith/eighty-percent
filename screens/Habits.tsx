@@ -6,7 +6,7 @@ import { useGroupContext } from "../src/contexts/groups/UseGroupContext";
 import { HabitProps } from "../src/types/HabitTypes";
 import HabitSection from "../components/habits/HabitSection";
 import AddButton from "../components/shared/AddButton";
-import ReviewButton from "../components/shared/ReviewButton";
+import ReviewButton from "../components/reviews/ReviewButton";
 import DateSelector from "../components/habits/DateSelector";
 import { Scroll } from "../components/layout";
 

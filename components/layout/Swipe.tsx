@@ -3,11 +3,11 @@ import { Swipeable } from "react-native-gesture-handler";
 
 type SwipeProps = {
   children: React.ReactNode;
+  swipeableRow: any
   renderRightActions: (progress: any, dragX: any) => React.ReactNode;
 };
 
-export default function Swipe({ children, renderRightActions }: SwipeProps) {
-  const swipeableRow = useRef<Swipeable | null>(null);
+export default function Swipe({ children, swipeableRow, renderRightActions }: SwipeProps) {
 
   return (
     <Swipeable

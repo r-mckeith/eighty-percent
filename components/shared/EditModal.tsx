@@ -26,12 +26,15 @@ export default function EditModal({ visible, id, name, onClose, onSave }: EditMo
     onClose();
   }
 
+  const disabled = newName === name
+
   return (
     <Modal
       placeholder={`Edit ${name}`}
       visible={visible}
       onClose={handleCancel}
       onSave={handleSave}
+      disabled={disabled}
     >
       <TextInput
         style={styles.textInput}

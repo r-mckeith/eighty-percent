@@ -37,8 +37,10 @@ export default function DataEditModal({
     onClose();
   }
 
+  const disabled = currentValue === habitData
+
   return (
-    <Modal placeholder={placeholder} visible={visible} onClose={handleCancel} onSave={handleSave}>
+    <Modal placeholder={placeholder} visible={visible} onClose={handleCancel} onSave={handleSave} disabled={disabled}>
       <View style={styles.numberInputContainer}>
         <TouchableOpacity onPress={decrementValue} style={styles.controlButton}>
           <Text style={styles.controlButtonText}>-</Text>
