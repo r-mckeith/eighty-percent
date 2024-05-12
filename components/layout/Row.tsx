@@ -5,7 +5,7 @@ type Row = {
   children: any;
   style?: any;
   opacity: number;
-  onPress: () => void;
+  onPress?: () => void;
 };
 
 export default function Row({ children, style, opacity, onPress }: Row) {

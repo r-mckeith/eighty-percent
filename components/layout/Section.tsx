@@ -2,12 +2,13 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 
 type Section = {
-  children: any
+  children: any;
+  style?: any;
 };
 
-export default function Section({ children }: Section) {
+export default function Section({ children, style }: Section) {
   return (
-    <View style={styles.section}>
+    <View style={[styles.section, style]}>
       <View style={styles.column}>
         {children}
       </View>

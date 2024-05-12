@@ -1,6 +1,7 @@
 import React from "react";
-import { Modal, StyleSheet, KeyboardAvoidingView, Platform, View, ScrollView } from "react-native";
+import { Modal, StyleSheet, KeyboardAvoidingView, Platform, View } from "react-native";
 import ModalHeader from "./ModalHeader";
+import { ScrollView } from "react-native-gesture-handler";
 
 type SmallModal = {
   children: any;
@@ -28,8 +29,9 @@ export default function SmallModal({
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <View style={[styles.modalView, modalSize]}>
-            <ModalHeader placeholder={placeholder} onSave={onSave} onClose={onClose} />
-            {children}
+          <ModalHeader placeholder={placeholder} onSave={onSave} onClose={onClose} />
+
+          <ScrollView style={{ width: "100%", marginTop: 30 }}>{children}</ScrollView>
         </View>
       </KeyboardAvoidingView>
     </Modal>
@@ -39,7 +41,6 @@ export default function SmallModal({
 const styles = StyleSheet.create({
   modalView: {
     marginHorizontal: 20,
-    width: "90%",
     backgroundColor: "#000",
     borderRadius: 20,
     padding: 35,
@@ -55,14 +56,14 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   small: {
-    width: "90%",
+    width: "80%",
   },
   large: {
     width: "100%",
     height: "100%",
   },
   largeScroll: {
-    width: '100%'
+    width: "100%",
   },
   centeredView: {
     flex: 1,

@@ -38,12 +38,7 @@ export default function DataEditModal({
   }
 
   return (
-    <Modal
-      placeholder={placeholder}
-      visible={visible}
-      onClose={handleCancel}
-      onSave={handleSave}
-    >
+    <Modal placeholder={placeholder} visible={visible} onClose={handleCancel} onSave={handleSave}>
       <View style={styles.numberInputContainer}>
         <TouchableOpacity onPress={decrementValue} style={styles.controlButton}>
           <Text style={styles.controlButtonText}>-</Text>
@@ -61,6 +56,7 @@ const styles = StyleSheet.create({
   numberInputContainer: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: 'center',
     marginTop: 30,
   },
   numberDisplay: {

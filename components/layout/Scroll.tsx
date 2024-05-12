@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, Switch, TouchableOpacity } from "react-native";
+import React from "react";
+import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 

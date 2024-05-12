@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackgroundComponent } from "react-native";
 
 type ModalHeader = {
   placeholder: string;
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    paddingHorizontal: 10,
+    paddingHorizontal: 30,
   },
   modalButton: {
     padding: 10,
