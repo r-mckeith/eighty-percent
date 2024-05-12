@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet } from "react-native";
+import { RowText } from "../layout";
 
 type TextBox = {
   value: string;
@@ -11,7 +12,7 @@ type TextBox = {
 export default function TextBox({ value, question, category, handleChange }: TextBox) {
   return (
     <View style={styles.reviewContainer}>
-      <Text style={styles.buttonText}>{question}</Text>
+      <RowText text={question} style={{marginLeft: 10}} />
       <TextInput
         style={styles.textInput}
         placeholderTextColor="white"
@@ -27,10 +28,6 @@ export default function TextBox({ value, question, category, handleChange }: Tex
 }
 
 const styles = StyleSheet.create({
-  buttonText: {
-    fontWeight: "bold",
-    color: "white",
-  },
   reviewContainer: {
     marginTop: 30,
   },
@@ -43,6 +40,7 @@ const styles = StyleSheet.create({
     borderColor: "#bbb",
     paddingHorizontal: 15,
     paddingVertical: 15,
-    width: "100%",
+    width: "90%",
+    marginLeft: 10
   },
 });

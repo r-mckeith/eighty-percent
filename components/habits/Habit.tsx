@@ -6,9 +6,9 @@ import { HabitProps } from "../../src/types/HabitTypes";
 import { selectHabit, markHabitAsComplete } from "../../src/api/SupabaseHabits";
 import { useHabitDataContext } from "../../src/contexts/habitData/UseHabitDataContext";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
-import HabitRightSwipe from "./HabitRightSwipe";
 import { useAggregatedData, HabitsAggregatedData } from "../../src/hooks/aggregateData";
 import { Row, RowText, Swipe, Icon, StatsText } from "../layout";
+import RightSwipe from "../rightSwipe/RightSwipe";
 
 type Habit = {
   habit: HabitProps;
@@ -100,7 +100,7 @@ export default function Habit({ habit, sectionName }: Habit) {
       key={habit.id}
       swipeableRow={swipeableRow}
       renderRightActions={() => (
-        <HabitRightSwipe habit={habit} habitData={habitData} swipeableRow={swipeableRow} />
+        <RightSwipe item={habit} habitData={habitData} showData={true} swipeableRow={swipeableRow} />
       )}
     >
       <Row

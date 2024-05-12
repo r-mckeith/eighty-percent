@@ -1,4 +1,5 @@
 import React from "react";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 type Icon = {
@@ -6,15 +7,23 @@ type Icon = {
   size?: number;
   color?: string;
   style?: any;
+  opacity?: number;
+  opacityStyle?: any;
+  onPress?: () => void;
 };
 
-export default function Icon({ name, size = 16, color = "white", style }: Icon) {
+export default function Icon({
+  name,
+  size = 16,
+  color = "white",
+  style,
+  opacity = 1,
+  opacityStyle = {},
+  onPress,
+}: Icon) {
   return (
-    <MaterialCommunityIcons
-      name={name}
-      size={size}
-      color={color}
-      style={style}
-    />
+    <TouchableOpacity activeOpacity={opacity} style={opacityStyle} onPress={onPress}>
+      <MaterialCommunityIcons name={name} size={size} color={color} style={style} />
+    </TouchableOpacity>
   );
 }

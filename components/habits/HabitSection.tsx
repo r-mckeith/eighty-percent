@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import { HabitProps } from "../../src/types/HabitTypes";
 import Habit from "./Habit";
-import StatsHeader from "../shared/StatsHeader";
+import StatsHeader from "./StatsHeader";
 import { Section, SectionTitle } from "../layout";
 import AddButton from "../shared/AddButton";
 

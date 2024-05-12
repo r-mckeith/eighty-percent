@@ -7,6 +7,7 @@ import Grid from "./Grid";
 import TextBox from "./TextBox";
 import Summary from "./Summary";
 import Modal from "../shared/Modal";
+import { Section } from "../layout";
 
 type ReviewModal = {
   visible: boolean;
@@ -64,24 +65,26 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
       {projectTableData && (
         <Grid data={habitGridData} name={"Habits"} selectedDate={selectedDate} />
       )}
-      <TextBox
-        value={answer.good}
-        question={"What went well last week?"}
-        handleChange={handleChange}
-        category={"good"}
-      />
-      <TextBox
-        value={answer.bad}
-        question={"What did not go well last week?"}
-        handleChange={handleChange}
-        category={"bad"}
-      />
-      <TextBox
-        value={answer.improve}
-        question={"What is your plan to improve this week?"}
-        handleChange={handleChange}
-        category={"improve"}
-      />
+      <Section>
+        <TextBox
+          value={answer.good}
+          question={"What went well last week?"}
+          handleChange={handleChange}
+          category={"good"}
+        />
+        <TextBox
+          value={answer.bad}
+          question={"What did not go well last week?"}
+          handleChange={handleChange}
+          category={"bad"}
+        />
+        <TextBox
+          value={answer.improve}
+          question={"What is your plan to improve this week?"}
+          handleChange={handleChange}
+          category={"improve"}
+        />
+      </Section>
     </Modal>
   );
 }

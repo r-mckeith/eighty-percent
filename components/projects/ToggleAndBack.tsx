@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Icon, Toggle } from "../layout";
 
 type ToggleAndBack = {
@@ -11,9 +11,7 @@ type ToggleAndBack = {
 export default function ToggleAndBack({ onPressBack, onToggle, showCompleted }: ToggleAndBack) {
   return (
     <View style={styles.toggleAndBackContainer}>
-      <TouchableOpacity onPress={onPressBack}>
-        <Icon name="chevron-left" size={30} />
-      </TouchableOpacity>
+        <Icon name="chevron-left" size={30} opacity={0.2} onPress={onPressBack} />
       <Toggle onToggle={onToggle} value={showCompleted} label={"Show completed"} />
     </View>
   );

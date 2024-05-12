@@ -1,11 +1,11 @@
 import React, { useRef } from "react";
 import { StyleSheet } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
-import ProjectRightSwipe from "./ProjectRightSwipe";
 import AddButton from "../shared/AddButton";
-import ScopeTask from "./ScopeProject";
+import Scope from "./Scope";
 import { HabitProps } from "../../src/types/HabitTypes";
 import { Row, RowText, Swipe } from "../layout";
+import RightSwipe from "../rightSwipe/RightSwipe";
 
 type Project = {
   project: HabitProps;
@@ -19,11 +19,12 @@ export default function Project({ project, rootProjectId, setSelected }: Project
   return (
     <Swipe
       key={project.id}
-      renderRightActions={() => <ProjectRightSwipe project={project} swipeableRow={swipeableRow} />}
+      swipeableRow={swipeableRow}
+      renderRightActions={() => <RightSwipe item={project} swipeableRow={swipeableRow} />}
     >
       <Row opacity={rootProjectId ? 1 : 0.2} onPress={() => setSelected && setSelected(project.id)}>
         {rootProjectId && (
-          <ScopeTask
+          <Scope
             id={project.id}
             inScopeDay={project.inScopeDay ? project.inScopeDay : null}
             completed={project.completed}

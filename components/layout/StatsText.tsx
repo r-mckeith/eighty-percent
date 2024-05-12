@@ -5,13 +5,14 @@ type StatsText = {
   day: string | number;
   week: string | number;
   children?: any;
+  style?: any;
 };
 
-export default function StatsText({ day, week, children }: StatsText) {
+export default function StatsText({ day, week, children, style }: StatsText) {
   return (
     <View style={styles.statsContainer}>
-      <Text style={styles.statsText}>{day}</Text>
-      <Text style={styles.statsText}>{week}</Text>
+      <Text style={[styles.statsText, style]}>{day}</Text>
+      <Text style={[styles.statsText, style]}>{week}</Text>
       {children && <View style={styles.statsText}>{children}</View>}
     </View>
   );
