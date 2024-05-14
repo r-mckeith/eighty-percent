@@ -17,8 +17,8 @@ export function MyTabs() {
         },
       }}
     >
-      <Tab.Screen name="Habits" component={Habits} options={{ headerShown: false }}/>
-      <Tab.Screen name="Projects" component={Projects} options={{ headerShown: false }}/>
+      <Tab.Screen name="Actions" component={Habits} options={{ headerShown: false }}/>
+      <Tab.Screen name="Plans" component={Projects} options={{ headerShown: false }}/>
       <Tab.Screen name="Content" component={ContentSection} options={{ headerShown: false }}/>
       <Tab.Screen name="Settings" component={Settings} options={{ headerShown: false }}/>
     </Tab.Navigator>

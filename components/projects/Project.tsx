@@ -1,12 +1,11 @@
 import React, { useRef } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
-import { deleteHabit, editHabit } from "../../src/api/SupabaseHabits";
-import ProjectRightSwipe from "./ProjectRightSwipe";
 import AddButton from "../shared/AddButton";
-import ScopeTask from "./ScopeProject";
+import Scope from "./Scope";
 import { HabitProps } from "../../src/types/HabitTypes";
-import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
+import { Row, RowText, Swipe } from "../shared";
+import RightSwipe from "../rightSwipe/RightSwipe";
 
 type Project = {
   project: HabitProps;
@@ -15,95 +14,36 @@ type Project = {
 };
 
 export default function Project({ project, rootProjectId, setSelected }: Project) {
-  const { dispatch: habitDispatch } = useHabitContext();
-
   const swipeableRow = useRef<Swipeable | null>(null);
 
-  async function handleDeleteProject(id: number) {
-    try {
-      // habits and projects are still the same objects in the db for now
-      await deleteHabit(id);
-      swipeableRow.current?.close();
-      habitDispatch({ type: "DELETE_HABIT", id });
-    } catch (error) {
-      console.error("Failed to delete project:", error);
-    }
-  }
-
-  async function handleEditProject(id: number, newName: string) {
-    try {
-      await editHabit(id, newName);
-      swipeableRow.current?.close();
-      habitDispatch({ type: "EDIT_HABIT", id, newName });
-    } catch (error) {
-      console.error("Failed to edit habit:", error);
-    }
-  }
-
   return (
-    <View>
-      <Swipeable
-        ref={swipeableRow}
-        renderRightActions={() => (
-          <ProjectRightSwipe
-            handleDelete={handleDeleteProject}
-            handleEdit={handleEditProject}
-            project={project}
-            dispatch={habitDispatch}
-            swipeableRow={swipeableRow}
+    <Swipe
+      key={project.id}
+      swipeableRow={swipeableRow}
+      renderRightActions={() => <RightSwipe item={project} swipeableRow={swipeableRow} />}
+    >
+      <Row opacity={rootProjectId ? 1 : 0.2} onPress={() => setSelected && setSelected(project.id)}>
+        {rootProjectId && (
+          <Scope
+            id={project.id}
+            inScopeDay={project.inScopeDay ? project.inScopeDay : null}
+            completed={project.completed}
           />
         )}
-        overshootLeft={false}
-        rightThreshold={120}
-      >
-        <View>
-          <TouchableOpacity
-            activeOpacity={rootProjectId ? 1 : 0.2}
-            style={styles.project}
-            onPress={() => setSelected && setSelected(project.id)}
-          >
-            {rootProjectId && (
-              <ScopeTask
-                id={project.id}
-                inScopeDay={project.inScopeDay ? project.inScopeDay : null}
-                completed={project.completed}
-              />
-            )}
-            <Text style={[styles.projectName, project.completed ? styles.completedProject : null]}>
-              {project.name}
-            </Text>
-            {rootProjectId && !project.completed && (
-              <AddButton
-                parentId={project.id}
-                depth={project.depth ? project.depth : 0}
-                type={"project"}
-              />
-            )}
-          </TouchableOpacity>
-        </View>
-      </Swipeable>
-    </View>
+        <RowText text={project.name} style={project.completed ? styles.completedProject : null} />
+        {rootProjectId && !project.completed && (
+          <AddButton
+            parentId={project.id}
+            depth={project.depth ? project.depth : 0}
+            type={"project"}
+          />
+        )}
+      </Row>
+    </Swipe>
   );
 }
 
 const styles = StyleSheet.create({
-  project: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    backgroundColor: "#2c2c2e",
-    borderBottomWidth: 1,
-    borderColor: "#333",
-    alignSelf: "stretch",
-  },
-  projectName: {
-    marginLeft: 7,
-    color: "#FFF",
-    fontWeight: "bold",
-    fontSize: 18,
-    flex: 1,
-  },
   completedProject: {
     textDecorationLine: "line-through",
     color: "#b1b1b3",

@@ -1,49 +1,32 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import { HabitProps } from "../../src/types/HabitTypes";
 import Habit from "./Habit";
-import StatsHeader from "../shared/StatsHeader";
+import StatsHeader from "./StatsHeader";
+import { Section, SectionTitle } from "../shared";
+import AddButton from "../shared/AddButton";
 
 type SectionProps = {
   habits: HabitProps[];
   sectionName: string;
+  groupId: number;
 };
 
-export default function HabitSection({ habits, sectionName }: SectionProps) {
+export default function HabitSection({ habits, sectionName, groupId }: SectionProps) {
   return (
-    <View style={styles.section}>
-      <View style={styles.habitContainer}>
-        {sectionName !== 'today' &&
-          <StatsHeader />
-        }
+    <>
+      <SectionTitle title={sectionName === "today" ? "plans" : sectionName}>
+        <AddButton sectionName={sectionName} groupId={groupId} type={"habit"} />
+      </SectionTitle>
+      {habits.length > 0 ? (
+        <Section>
+          {sectionName !== "today" && <StatsHeader />}
 
-        {habits.map((tag, index) => (
-          <Habit
-            key={index}
-            habit={tag}
-            sectionName={sectionName}
-            isEditMode={false}
-          />
-        ))}
-      </View>
-    </View>
+          {habits.map((tag, index) => (
+            <Habit key={index} habit={tag} sectionName={sectionName} isEditMode={false} />
+          ))}
+        </Section>
+      ) : <View style={{ marginBottom: 30}} />}
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  section: {
-    flexShrink: 1,
-    flexGrow: 1,
-    borderRadius: 10,
-    marginVertical: 10,
-    minHeight: 60,
-    borderWidth: 2,
-    borderColor: "#333333",
-    backgroundColor: "#1c1c1e",
-    marginBottom: 20,
-  },
-  habitContainer: {
-    flexDirection: "column",
-    alignSelf: "stretch",
-  },
-});

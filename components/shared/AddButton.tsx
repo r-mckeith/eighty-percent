@@ -6,7 +6,7 @@ import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
 import { useGroupContext } from "../../src/contexts/groups/UseGroupContext";
 import { addHabit, addProject } from "../../src/api/SupabaseHabits";
 import { addGroup } from "../../src/api/SupabaseGroups";
-import AddModal from "./AddModal";
+import AddModal from "../modals/AddModal";
 
 type AddButton = {
   type: string;
@@ -43,11 +43,11 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
   }
 
   async function handleAddProject(name: string): Promise<void> {
-    if (depth) {
+    if (name) {
       const newProject: any = {
         name: name,
         parentId: parentId,
-        depth: depth + 1,
+        depth: depth && depth + 1,
         section: "today",
       };
 

@@ -63,6 +63,7 @@ export async function addHabit(newHabit: NewHabitProps): Promise<HabitProps> {
 }
 
 export async function addProject(newProject: any): Promise<HabitProps> {
+  console.log(newProject)
   let { data: habitData, error: habitError } = await supabase
     .from("tags")
     .insert([newProject])

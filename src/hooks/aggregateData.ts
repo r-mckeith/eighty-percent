@@ -47,11 +47,11 @@ export function useAggregatedData() {
         const habitRowData = await getHabitData(selectedDate);
         const habitGridData = await getHabitData(selectedDate);
         const aggregatedHabits = aggregateHabitData(habitRowData);
-        const aggregatedGridData = aggregateHabitGridData(habitGridData)
+        const aggregatedGridData = aggregateHabitGridData(habitGridData);
         const aggregatedProjects = aggregateProjectsData(habits);
 
         setHabitsTableData(aggregatedHabits);
-        setHabitGridData(aggregatedGridData)
+        setHabitGridData(aggregatedGridData);
         setProjectTableData(aggregatedProjects);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -103,41 +103,45 @@ export function useAggregatedData() {
 
     return Object.values(habitMap).filter((habit) => habit.month > 0);
   }
-  
 
   function aggregateHabitGridData(gridData: HabitDataProps[]) {
     const habitGridMap: any = {};
-  
+
     const startDay = new Date(selectedDate);
-    startDay.setHours(0, 0, 0, 0); 
+    startDay.setHours(0, 0, 0, 0);
     startDay.setDate(startDay.getDate() - 7);
-  
+
     const dates = Array.from({ length: 7 }).map((_, index) => {
       const date = new Date(startDay);
       date.setDate(date.getDate() + index);
       return date;
     });
-  
-    gridData.forEach(habit => {
+
+    gridData.forEach((habit) => {
       const completedDate = new Date(habit.date);
-  
+
       if (!habitGridMap[habit.tag_id]) {
         habitGridMap[habit.tag_id] = {
           name: habit.tag_name,
-          dayCounts: Array(7).fill(0),
+          days: dates.map((date) => ({
+            day: date.toDateString(),
+            icon: "-",
+            color: "orange",
+          })),
         };
       }
-  
+
       dates.forEach((date, index) => {
         if (completedDate.toDateString() === date.toDateString()) {
-          habitGridMap[habit.tag_id].dayCounts[index] += habit.count;
+          const dayData = habitGridMap[habit.tag_id].days[index];
+          dayData.icon = habit.count;
+          dayData.color = "green";
         }
       });
     });
-  
+
     return Object.values(habitGridMap);
   }
-  
 
   function aggregateProjectsData(projects: HabitProps[]) {
     const startDay = new Date(selectedDate);
@@ -181,22 +185,27 @@ export function useAggregatedData() {
 
             let status = "";
             let icon = "";
+            let color = "red";
 
             if (isPushed || isIncomplete) {
               status = "P";
               icon = "→";
+              color = "orange";
             } else if (isCompleted) {
               status = "C";
               icon = "✓";
+              color = "green";
             } else if (isIncomplete) {
               status = "I";
               icon = "✗";
+              color = "red";
             }
 
             return {
               day: day.toDateString(),
               status: status,
               icon: icon,
+              color: color,
             };
           }),
         };
