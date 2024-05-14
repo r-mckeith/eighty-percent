@@ -1,7 +1,7 @@
-import React from "react";
-import { HabitProps } from "../../src/types/HabitTypes";
-import Project from "./Project";
-import { Section } from "../shared";
+import React from 'react';
+import { HabitProps } from '../../src/types/HabitTypes';
+import Project from './Project';
+import { Section } from '../shared';
 
 type ProjectSection = {
   projects: HabitProps[];
@@ -12,7 +12,13 @@ export default function ProjectSection({ projects, setSelected }: ProjectSection
   return (
     <Section>
       {projects.map((project, index) => (
-        <Project key={index} project={project} setSelected={setSelected} />
+        <Project
+          key={index}
+          project={project}
+          setSelected={setSelected}
+          first={index === 0}
+          last={index === projects.length - 1}
+        />
       ))}
     </Section>
   );

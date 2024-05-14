@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, useColorScheme } from "react-native";
+import { getColors } from "../../src/colors";
 
 type StatsText = {
   day: string | number;
@@ -9,10 +10,13 @@ type StatsText = {
 };
 
 export default function StatsText({ day, week, children, style }: StatsText) {
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
+
   return (
     <View style={styles.statsContainer}>
-      <Text style={[styles.statsText, style]}>{day}</Text>
-      <Text style={[styles.statsText, style]}>{week}</Text>
+      <Text style={[styles.statsText, colors.accentText, style]}>{day}</Text>
+      <Text style={[styles.statsText, colors.accentText, style]}>{week}</Text>
       {children && <View style={styles.statsText}>{children}</View>}
     </View>
   );
@@ -25,7 +29,6 @@ const styles = StyleSheet.create({
   },
   statsText: {
     paddingHorizontal: 5,
-    color: "#DDD",
     flex: 1,
     textAlign: "center",
   },

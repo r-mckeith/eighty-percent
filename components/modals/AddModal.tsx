@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { TextInput, StyleSheet } from "react-native";
+import { TextInput, StyleSheet, useColorScheme } from "react-native";
 import Modal from "./Modal";
+import { getColors } from "../../src/colors";
 
 type AddModal = {
   visible: boolean;
@@ -11,6 +12,9 @@ type AddModal = {
 
 export default function AddModal({ visible, displayName, onClose, onAdd }: AddModal) {
   const [newName, setNewName] = useState("");
+
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
 
   function handleSave() {
     if (newName) {
@@ -36,7 +40,7 @@ export default function AddModal({ visible, displayName, onClose, onAdd }: AddMo
       disabled={disabled}
     >
       <TextInput
-        style={styles.textInput}
+        style={[styles.textInput, colors.background, colors.border]}
         placeholder={`${displayName}...`}
         placeholderTextColor="white"
         value={newName}
@@ -51,13 +55,11 @@ export default function AddModal({ visible, displayName, onClose, onAdd }: AddMo
 const styles = StyleSheet.create({
   textInput: {
     marginTop: 30,
+    paddingLeft: 10,
+    paddingBottom: 5,
     alignSelf: "stretch",
-    height: 40,
-    color: "white",
+    height: 30,
+    borderRadius: 10,
     borderBottomWidth: 1,
-    borderColor: "#bbb",
-    paddingHorizontal: 0,
-    paddingVertical: 10,
-    width: "100%",
   },
 });

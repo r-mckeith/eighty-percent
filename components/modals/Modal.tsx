@@ -1,7 +1,8 @@
 import React from "react";
-import { Modal, StyleSheet, KeyboardAvoidingView, Platform, View } from "react-native";
+import { Modal, StyleSheet, KeyboardAvoidingView, Platform, View, useColorScheme } from "react-native";
 import ModalHeader from "./ModalHeader";
 import { ScrollView } from "react-native-gesture-handler";
+import { getColors } from "../../src/colors";
 
 type SmallModal = {
   children: any;
@@ -22,6 +23,9 @@ export default function SmallModal({
   onClose,
   onSave,
 }: SmallModal) {
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
+
   const modalSize = size === "large" ? styles.large : styles.small;
 
   return (
@@ -30,7 +34,7 @@ export default function SmallModal({
         style={styles.centeredView}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <View style={[styles.modalView, modalSize]}>
+        <View style={[styles.modalView, modalSize, colors.modal, colors.shadow]}>
           <ModalHeader placeholder={placeholder} onSave={onSave} onClose={onClose} disabled={disabled} />
 
           <ScrollView style={{ width: "100%", marginTop: 30 }}>{children}</ScrollView>
@@ -43,11 +47,9 @@ export default function SmallModal({
 const styles = StyleSheet.create({
   modalView: {
     marginHorizontal: 20,
-    backgroundColor: "#000",
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
-    shadowColor: "white",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -55,10 +57,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    position: "relative",
   },
   small: {
-    width: "80%",
+    width: "100%",
+    height: '60%',
+    position: "absolute",
   },
   large: {
     width: "100%",

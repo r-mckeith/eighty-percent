@@ -1,11 +1,15 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useColorScheme } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { getColors } from "../../src/colors";
 
 
 export default function Scroll({ children }: any) {
+  const scheme = useColorScheme();
+  const colors = getColors(scheme)
+
   return (
-    <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="handled">
+    <ScrollView style={[styles.scrollView, colors.background]} keyboardShouldPersistTaps="handled">
       {children}
     </ScrollView>
   );
@@ -14,7 +18,6 @@ export default function Scroll({ children }: any) {
 const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
-    backgroundColor: "#000",
     padding: 16,
   },
 });

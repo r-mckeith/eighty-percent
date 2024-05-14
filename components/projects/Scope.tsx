@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View } from "react-native";
+import { View, useColorScheme } from "react-native";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
 import { toggleScope } from "../../src/api/SupabaseHabits";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import { Icon } from "../shared";
+import { getColors } from "../../src/colors";
 
 type Scope = {
   id: number;
@@ -15,6 +16,9 @@ export default function Scope({ id, inScopeDay, completed }: Scope) {
   const [inScope, setInScope] = useState<any>();
   const { dispatch } = useHabitContext();
   const { selectedDate } = useDateContext();
+
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
 
   useEffect(() => {
     setInScope(inScopeDay && inScopeDay <= selectedDate.toISOString().split("T")[0]);
@@ -48,8 +52,8 @@ export default function Scope({ id, inScopeDay, completed }: Scope) {
         opacity={completed ? 1 : 0.2}
         name={inScope ? "radiobox-marked" : "radiobox-blank"}
         size={24}
-        style={{ paddingLeft: 8 }}
-        color={completed ? "grey" : "white"}
+        style={{ marginRight: 7 }}
+        color={completed ? "grey" : colors.text.color}
         onPress={handleToggleScope}
       />
     </View>

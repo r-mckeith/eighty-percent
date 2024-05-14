@@ -1,8 +1,9 @@
 import React from "react";
-import { View, TouchableOpacity, Text } from "react-native";
+import { View, TouchableOpacity, Text, useColorScheme } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { addDays } from "date-fns";
 import { StyleSheet } from "react-native";
+import { getColors } from "../../src/colors";
 
 type DateSelector = {
   selectedDate: Date;
@@ -10,6 +11,9 @@ type DateSelector = {
 };
 
 export default function DateSelector({ selectedDate, onDateChange }: DateSelector) {
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
+
   const decrementDate = () => {
     const previousDay = addDays(selectedDate, -1);
     onDateChange(previousDay);
@@ -50,11 +54,11 @@ export default function DateSelector({ selectedDate, onDateChange }: DateSelecto
     <View style={styles.datePicker}>
       <View style={styles.datePickerContainer}>
         <TouchableOpacity onPress={decrementDate} style={styles.iconButton}>
-          <MaterialCommunityIcons name="chevron-left" size={24} color={"white"} />
+          <MaterialCommunityIcons name="chevron-left" size={24} color={colors.text.color} />
         </TouchableOpacity>
-        <Text style={styles.headerText}>{dayDisplay}</Text>
+        <Text style={[styles.headerText, colors.text]}>{dayDisplay}</Text>
         <TouchableOpacity onPress={incrementDate} style={styles.iconButton}>
-          <MaterialCommunityIcons name="chevron-right" size={24} color={"white"} />
+          <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.color} />
         </TouchableOpacity>
       </View>
     </View>
@@ -69,7 +73,6 @@ const styles = StyleSheet.create({
   },
   headerText: {
     textTransform: "capitalize",
-    color: "white",
   },
   datePickerContainer: {
     flexDirection: "row",

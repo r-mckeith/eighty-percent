@@ -1,12 +1,16 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, useColorScheme } from "react-native";
+import { getColors } from "../../src/colors";
 
 export default function StatsHeader() {
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
+
   return (
-    <View style={styles.statsHeader}>
-      <Text style={styles.headerCellHabitName}></Text>
-      <Text style={styles.headerCell}>Day</Text>
-      <Text style={styles.headerCell}>Week</Text>
+    <View style={[styles.statsHeader, colors.background, colors.border]}>
+      <Text style={[styles.headerCellHabitName, colors.text]}></Text>
+      <Text style={[styles.headerCell, colors.text]}>Day</Text>
+      <Text style={[styles.headerCell, colors.text]}>Week</Text>
     </View>
   );
 }
@@ -14,24 +18,23 @@ export default function StatsHeader() {
 const styles = StyleSheet.create({
   statsHeader: {
     flexDirection: "row",
-    backgroundColor: "#333",
     paddingHorizontal: 16,
     paddingVertical: 8,
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderColor: "#404040",
+    borderWidth: 1,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    borderBottomWidth: 0,
   },
   headerCell: {
     flex: 1,
     textAlign: "center",
-    color: "white",
     fontWeight: "bold",
     fontSize: 12,
   },
   headerCellHabitName: {
     flex: 3.5,
     textAlign: "left",
-    color: "white",
     fontWeight: "bold",
   },
 });
