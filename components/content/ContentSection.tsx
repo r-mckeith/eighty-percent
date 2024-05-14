@@ -3,7 +3,7 @@ import Content from './Content';
 import HowToUse from './HowToUse';
 import { Scroll, Section, SectionTitle } from '../shared';
 
-const videos = ['How to use the app', 'Habits', 'Projects'];
+const videos = ['How to use the app', 'Habits', 'Plans'];
 const templates = ['Set up app', 'Start a business', 'Buy a house'];
 const lockedSections = ['Get in shape', 'Start a business'];
 
