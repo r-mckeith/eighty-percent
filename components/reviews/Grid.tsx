@@ -12,6 +12,7 @@ type Grid = {
 export default function Grid({ data, selectedDate, name }: Grid) {
   const scheme = useColorScheme();
   const colors = getColors(scheme);
+  
   const dataLength = data.length;
 
   function generateDayHeaders() {

@@ -58,11 +58,11 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
     >
       {lastReview && <Summary lastReview={lastReview} />}
 
-      {projectTableData && (
+      {projectTableData.length > 0 && (
         <Grid data={projectTableData} name={"Projects"} selectedDate={selectedDate} />
       )}
 
-      {projectTableData && (
+      {habitGridData.length > 0 && (
         <Grid data={habitGridData} name={"Habits"} selectedDate={selectedDate} />
       )}
       <Section>

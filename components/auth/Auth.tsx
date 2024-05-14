@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
-import { Alert, StyleSheet, View } from 'react-native'
+import { Alert, StyleSheet, View, useColorScheme } from 'react-native'
 import { supabase } from '../../src/api/SupabaseClient'
 import { Button, Input } from 'react-native-elements'
+import { getColors } from '../../src/colors'
 
 export default function Auth() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
 
   async function signInWithEmail() {
     setLoading(true)
@@ -35,8 +39,9 @@ export default function Auth() {
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
+          style={colors.text}
           label="Email"
-          leftIcon={{ type: 'font-awesome', name: 'envelope' }}
+          leftIcon={{ type: 'font-awesome', name: 'envelope', color: colors.text.color }}
           onChangeText={(text) => setEmail(text)}
           value={email}
           placeholder="email@address.com"
@@ -45,8 +50,9 @@ export default function Auth() {
       </View>
       <View style={styles.verticallySpaced}>
         <Input
+          style={colors.text}
           label="Password"
-          leftIcon={{ type: 'font-awesome', name: 'lock' }}
+          leftIcon={{ type: 'font-awesome', name: 'lock', color: colors.text.color }}
           onChangeText={(text) => setPassword(text)}
           value={password}
           secureTextEntry={true}

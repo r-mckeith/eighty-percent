@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, useColorScheme } from "react-native";
 import Modal from "./Modal";
 import { getColors } from "../../src/colors";
@@ -18,10 +18,14 @@ export default function DataEditModal({
   onClose,
   onSave,
 }: EditModal) {
-  const [currentValue, setCurrentValue] = useState<number>(habitData);
+  const [currentValue, setCurrentValue] = useState<number>(habitData?.day ? habitData.day : 0);
 
   const scheme = useColorScheme();
   const colors = getColors(scheme);
+
+  useEffect(() => {
+   setCurrentValue(habitData?.day)
+  }, [habitData?.day]);
 
   function incrementValue() {
     setCurrentValue(currentValue + 1);
