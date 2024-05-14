@@ -1,37 +1,24 @@
-import React from "react";
-import { StyleSheet } from "react-native";
-import { Row, RowText, Icon } from "../shared";
+import React from 'react';
+import { Row, RowText, Icon } from '../shared';
 
-const Content = ({
-  name,
-  isLocked = false,
-  setSelected,
-}: {
+type Content = {
   name: string;
   isLocked?: boolean;
+  first: boolean;
+  last: boolean;
   setSelected: (arg0: string) => void;
-}) => {
+};
+
+export default function Content({ name, isLocked = false, first, last, setSelected }: Content) {
   return (
     <Row
       opacity={isLocked ? 1 : 0.2}
       onPress={() => (isLocked ? () => {} : setSelected(name))}
-      style={isLocked ? styles.lockedContent : {}}
-    >
-      <RowText text={name} style={isLocked ? styles.lockedText : {}} />
-
-      {isLocked && <Icon name="lock" size={20} color="grey" />}
+      first={first}
+      last={last}
+      disabled={isLocked}>
+      <RowText text={name} disabled={isLocked} />
+      {isLocked && <Icon name='lock' size={20} color='grey' />}
     </Row>
   );
-};
-
-const styles = StyleSheet.create({
-  lockedContent: {
-    backgroundColor: "#333",
-    borderColor: "#505050",
-  },
-  lockedText: {
-    color: "grey",
-  },
-});
-
-export default Content;
+}

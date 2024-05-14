@@ -1,5 +1,6 @@
 import React from "react";
-import { View, StyleSheet, Text, Switch } from "react-native";
+import { View, StyleSheet, Text, Switch, useColorScheme } from "react-native";
+import { getColors } from "../../src/colors";
 
 type Toggle = {
   onToggle: any;
@@ -9,13 +10,16 @@ type Toggle = {
 };
 
 export default function Toggle({ onToggle, value, label, style }: Toggle) {
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
+
   return (
     <View style={[styles.toggleContainer, style ? style : {}]}>
-      <Text style={styles.toggleLabel}>{label}</Text>
+      <Text style={[styles.toggleLabel, colors.text]}>{label}</Text>
       <Switch
         value={value}
         onValueChange={onToggle}
-        ios_backgroundColor={"#FFF"}
+        ios_backgroundColor={colors.background.backgroundColor}
         trackColor={{ true: "#3a3a3c" }}
       />
     </View>
@@ -29,6 +33,5 @@ const styles = StyleSheet.create({
   },
   toggleLabel: {
     marginRight: 8,
-    color: "#FFF",
   },
 });

@@ -1,5 +1,6 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, useColorScheme } from "react-native";
+import { getColors } from "../../src/colors";
 
 type SectionTitle = {
   title: string;
@@ -7,9 +8,12 @@ type SectionTitle = {
 };
 
 export default function SectionTitle({ title, children }: SectionTitle) {
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
+
   return (
     <View style={styles.sectionName}>
-      <Text style={styles.sectionTitle}>{title}</Text>
+      <Text style={[styles.sectionTitle, colors.text]}>{title}</Text>
       <View style={styles.children}>
         {children}
       </View>
@@ -26,7 +30,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 20,
     fontWeight: "bold",
-    color: "#FFF",
     textTransform: "capitalize",
   },
   children: {

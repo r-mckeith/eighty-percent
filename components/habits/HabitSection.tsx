@@ -1,10 +1,10 @@
-import React from "react";
-import { View } from "react-native";
-import { HabitProps } from "../../src/types/HabitTypes";
-import Habit from "./Habit";
-import StatsHeader from "./StatsHeader";
-import { Section, SectionTitle } from "../shared";
-import AddButton from "../shared/AddButton";
+import React from 'react';
+import { View } from 'react-native';
+import { HabitProps } from '../../src/types/HabitTypes';
+import Habit from './Habit';
+import StatsHeader from './StatsHeader';
+import { Section, SectionTitle } from '../shared';
+import AddButton from '../shared/AddButton';
 
 type SectionProps = {
   habits: HabitProps[];
@@ -15,18 +15,27 @@ type SectionProps = {
 export default function HabitSection({ habits, sectionName, groupId }: SectionProps) {
   return (
     <>
-      <SectionTitle title={sectionName === "today" ? "plans" : sectionName}>
-        <AddButton sectionName={sectionName} groupId={groupId} type={"habit"} />
+      <SectionTitle title={sectionName === 'today' ? 'plans' : sectionName}>
+        {sectionName !== 'today' && <AddButton sectionName={sectionName} groupId={groupId} type={'habit'} />}
       </SectionTitle>
       {habits.length > 0 ? (
         <Section>
-          {sectionName !== "today" && <StatsHeader />}
+          {sectionName !== 'today' && <StatsHeader />}
 
           {habits.map((tag, index) => (
-            <Habit key={index} habit={tag} sectionName={sectionName} isEditMode={false} />
+            <Habit
+              key={index}
+              habit={tag}
+              sectionName={sectionName}
+              isEditMode={false}
+              first={sectionName === 'today' && index === 0}
+              last={index === habits.length - 1 || habits.length === 1}
+            />
           ))}
         </Section>
-      ) : <View style={{ marginBottom: 30}} />}
+      ) : (
+        <View style={{ marginBottom: 30 }} />
+      )}
     </>
   );
 }

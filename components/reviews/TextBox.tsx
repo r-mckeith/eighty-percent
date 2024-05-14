@@ -1,6 +1,7 @@
-import React from "react";
-import { View, TextInput, StyleSheet } from "react-native";
-import { RowText } from "../shared";
+import React from 'react';
+import { View, TextInput, StyleSheet, useColorScheme } from 'react-native';
+import { RowText } from '../shared';
+import { getColors } from '../../src/colors';
 
 type TextBox = {
   value: string;
@@ -10,16 +11,19 @@ type TextBox = {
 };
 
 export default function TextBox({ value, question, category, handleChange }: TextBox) {
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
+
   return (
     <View style={styles.reviewContainer}>
-      <RowText text={question} style={{marginLeft: 10}} />
+      <RowText text={question} style={{ marginLeft: 10, marginBottom: 10 }} />
       <TextInput
-        style={styles.textInput}
-        placeholderTextColor="white"
+        style={[styles.textInput, colors.text, colors.border]}
+        placeholderTextColor='white'
         value={value}
-        onChangeText={(e) => handleChange(category, e)}
+        onChangeText={e => handleChange(category, e)}
         autoFocus={true}
-        returnKeyType="done"
+        returnKeyType='done'
         multiline={true}
         numberOfLines={4}
       />
@@ -32,15 +36,10 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   textInput: {
+    paddingLeft: 10,
     alignSelf: "stretch",
     height: 30,
-    color: "white",
-    borderWidth: 1,
     borderRadius: 10,
-    borderColor: "#bbb",
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    width: "90%",
-    marginLeft: 10
+    borderBottomWidth: 1,
   },
 });

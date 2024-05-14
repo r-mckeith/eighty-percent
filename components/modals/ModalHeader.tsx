@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, useColorScheme } from "react-native";
+import { getColors } from "../../src/colors";
 
 type ModalHeader = {
   placeholder: string;
@@ -9,12 +10,15 @@ type ModalHeader = {
 };
 
 export default function ModalHeader({ placeholder, disabled, onSave, onClose }: ModalHeader) {
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
+
   return (
     <View style={styles.modalHeader}>
       <TouchableOpacity style={[styles.modalButton, styles.leftButton]} onPress={onClose}>
         <Text style={[styles.buttonText, { color: "red" }]}>Cancel</Text>
       </TouchableOpacity>
-      <Text style={[styles.buttonText, { color: "white" }]}>{placeholder}</Text>
+      <Text style={[styles.buttonText, colors.text]}>{placeholder}</Text>
       <TouchableOpacity style={[styles.modalButton, styles.rightButton, disabled ? styles.disabledButton : {}]} onPress={onSave} disabled={disabled}>
         <Text style={[styles.buttonText, disabled ? { color: "grey" } : { color: "blue" }]}>Done</Text>
       </TouchableOpacity>

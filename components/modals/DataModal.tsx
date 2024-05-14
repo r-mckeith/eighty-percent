@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, useColorScheme } from "react-native";
 import Modal from "./Modal";
+import { getColors } from "../../src/colors";
 
 type EditModal = {
   visible: boolean;
@@ -18,6 +19,9 @@ export default function DataEditModal({
   onSave,
 }: EditModal) {
   const [currentValue, setCurrentValue] = useState<number>(habitData);
+
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
 
   function incrementValue() {
     setCurrentValue(currentValue + 1);
@@ -42,12 +46,12 @@ export default function DataEditModal({
   return (
     <Modal placeholder={placeholder} visible={visible} onClose={handleCancel} onSave={handleSave} disabled={disabled}>
       <View style={styles.numberInputContainer}>
-        <TouchableOpacity onPress={decrementValue} style={styles.controlButton}>
+        <TouchableOpacity onPress={decrementValue} style={[styles.controlButton, colors.border]}>
           <Text style={styles.controlButtonText}>-</Text>
         </TouchableOpacity>
-        <Text style={styles.numberDisplay}>{currentValue}</Text>
+        <Text style={[styles.numberDisplay, colors.text]}>{currentValue}</Text>
         <TouchableOpacity onPress={incrementValue} style={styles.controlButton}>
-          <Text style={styles.controlButtonText}>+</Text>
+          <Text style={[styles.controlButtonText, colors.text]}>+</Text>
         </TouchableOpacity>
       </View>
     </Modal>
@@ -63,16 +67,13 @@ const styles = StyleSheet.create({
   },
   numberDisplay: {
     fontSize: 24,
-    color: "white",
     marginHorizontal: 20,
   },
   controlButton: {
     padding: 10,
-    backgroundColor: "#333",
     borderRadius: 5,
   },
   controlButtonText: {
-    color: "white",
     fontSize: 24,
   },
 });

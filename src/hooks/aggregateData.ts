@@ -126,7 +126,7 @@ export function useAggregatedData() {
           days: dates.map((date) => ({
             day: date.toDateString(),
             icon: "-",
-            color: "orange",
+            color: "#FF0000",
           })),
         };
       }
@@ -135,7 +135,7 @@ export function useAggregatedData() {
         if (completedDate.toDateString() === date.toDateString()) {
           const dayData = habitGridMap[habit.tag_id].days[index];
           dayData.icon = habit.count;
-          dayData.color = "green";
+          dayData.color = "blue";
         }
       });
     });
@@ -190,11 +190,11 @@ export function useAggregatedData() {
             if (isPushed || isIncomplete) {
               status = "P";
               icon = "→";
-              color = "orange";
+              color = "#FF0000";
             } else if (isCompleted) {
               status = "C";
               icon = "✓";
-              color = "green";
+              color = "blue";
             } else if (isIncomplete) {
               status = "I";
               icon = "✗";
