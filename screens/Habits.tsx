@@ -43,7 +43,7 @@ export default function Habits() {
   return (
     <>
       <Scroll>
-        {groups.map((group, index) => {
+        {groups.map((group) => {
           const groupTags = habits.filter((habit) => habit.section === group.name);
           const filteredHabits = filterHabits(group.name, groupTags, selectedDateString);
 

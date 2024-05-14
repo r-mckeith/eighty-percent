@@ -24,7 +24,7 @@ export const getColors = (scheme: any) =>
       color: '#b1b1b3',
     },
     modal: {
-      backgroundColor: scheme === 'dark' ? '#232b2b' : '#white',
+      backgroundColor: scheme === 'dark' ? '#232b2b' : 'white',
     },
     border: {
       borderColor: scheme === 'dark' ? 'white' : 'black',

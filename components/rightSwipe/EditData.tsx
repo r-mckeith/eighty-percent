@@ -57,7 +57,7 @@ export default function EditData({ item, habitData, swipeableRow }: EditData) {
         onClose={handleClose}
         onSave={handleEditHabitData}
         placeholder={"Edit Day"}
-        habitData={habitData ? habitData && habitData.day : 0}
+        habitData={habitData}
       />
     </>
   );

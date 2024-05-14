@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet, useColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
@@ -13,9 +13,12 @@ import GroupContextProvider from "./src/contexts/groups/GroupContextProvider";
 import ReviewContextProvider from "./src/contexts/reviews/ReviewContextProvider";
 import { MyTabs } from "./screens/TabNavigator";
 import { useSession } from "./src/contexts/sessions/UseSessionHook";
+import { getColors } from "./src/colors";
 
 export default function App() {
   const session = useSession();
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
 
   return (
     <DateProvider>
@@ -23,7 +26,7 @@ export default function App() {
         <TagContextProvider>
           <TagDataContextProvider>
             <ReviewContextProvider>
-              <SafeAreaView style={styles.container}>
+              <SafeAreaView style={[styles.container, colors.background]}>
                 <StatusBar style="light" />
                 <MenuProvider>
                   <GestureHandlerRootView style={{ flex: 1 }}>
