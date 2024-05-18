@@ -41,3 +41,19 @@ export type NewTaskProps = {
   parentId?: number;
   depth?: number;
 };
+
+export type PlanProps = {
+  id: number;
+  name: string;
+  user_id: number;
+  inScopeDay?: string | null;
+  completed?: string | null;
+  depth?: number;
+  parentId?: number;
+};
+
+export type NewPlanProps = {
+  name: string;
+  parentId?: number;
+  depth?: number;
+};

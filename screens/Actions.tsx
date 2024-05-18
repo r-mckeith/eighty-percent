@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, View, StyleSheet, useColorScheme } from 'react-native';
-import { useDateContext, useHabitContext, useGroupContext, useTaskContext } from '../src/contexts';
-import { TaskProps } from '../src/types/HabitTypes';
+import { useDateContext, useHabitContext, useGroupContext, usePlanContext, useTaskContext } from '../src/contexts';
+import { PlanProps, TaskProps } from '../src/types/HabitTypes';
 import ActionSection from '../components/actions/ActionSection';
 import AddButton from '../components/shared/AddButton';
 import ReviewButton from '../components/reviews/ReviewButton';
@@ -12,23 +12,22 @@ import { getColors } from '../src/colors';
 export default function Habits() {
   const { selectedDate, setSelectedDate } = useDateContext();
 
-  const { habits } = useHabitContext();
   const { groups } = useGroupContext();
+  const { habits } = useHabitContext();
+  const { plans } = usePlanContext();
   const { tasks } = useTaskContext();
 
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
-  console.log(tasks);
-
   const selectedDateString = selectedDate.toLocaleDateString('en-CA');
-  const filteredTasks = filterTasks(tasks, selectedDateString);
+  const planSection = filterPlans(plans, selectedDateString);
 
-  function filterTasks(tasks: TaskProps[], selectedDateString: string) {
-    return tasks.filter(task => {
+  function filterPlans(plans: any, selectedDateString: string) {
+    return plans.filter((plan: any) => {
       const isInScopeForTodayOrFuture =
-        task.inScopeDay === selectedDateString || (task.inScopeDay && task.inScopeDay < selectedDateString);
-      const isIncompleteOrCompletedAfter = !task.completed || (task.completed && task.completed >= selectedDateString);
+        plan.inScopeDay === selectedDateString || (plan.inScopeDay && plan.inScopeDay < selectedDateString);
+      const isIncompleteOrCompletedAfter = !plan.completed || (plan.completed && plan.completed >= selectedDateString);
       return isInScopeForTodayOrFuture && isIncompleteOrCompletedAfter;
     });
   }
@@ -48,15 +47,25 @@ export default function Habits() {
       </View>
 
       <Scroll>
+        <View>
+          <SectionTitle title={'Plans'}>{<AddButton sectionName={'Plans'} groupId={0} type={'plan'} />}</SectionTitle>
+          {/* need to filter plans after testing */}
+          <ActionSection items={plans} sectionName={'Plans'} />
+        </View>
+
         {groups.map(group => {
           const habitSection = habits.filter(habit => habit.section === group.name);
 
+          if (group.name === 'today') {
+            return;
+          }
+
           return (
             <View key={group.id}>
-              <SectionTitle title={group.name === 'today' ? 'plans' : group.name}>
-                {group.name !== 'today' && <AddButton sectionName={group.name} groupId={group.id} type={'habit'} />}
+              <SectionTitle title={group.name}>
+                {<AddButton sectionName={group.name} groupId={group.id} type={'habit'} />}
               </SectionTitle>
-              <ActionSection habits={habitSection} sectionName={group.name} groupId={group.id} />
+              <ActionSection items={habitSection} sectionName={group.name} />
             </View>
           );
         })}

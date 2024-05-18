@@ -1,32 +1,45 @@
 import React from 'react';
 import { View } from 'react-native';
-import { HabitProps } from '../../src/types/HabitTypes';
-import Action from './Action';
+import { HabitProps, PlanProps } from '../../src/types/HabitTypes';
+import Habit from './HabitRow';
 import StatsHeader from './StatsHeader';
 import { Section } from '../shared';
+import PlanRow from './PlanRow';
 
 type ActionSection = {
-  habits: HabitProps[];
+  items: HabitProps[] | PlanProps[];
   sectionName: string;
-  groupId: number;
 };
 
-export default function ActionSection({ habits, sectionName }: ActionSection) {
+export default function ActionSection({ items, sectionName }: ActionSection) {
   return (
     <>
+      {sectionName === 'Plans' && items.length > 0 ? (
+        <Section>
+          {items.map((item, index) => (
+            <PlanRow
+              key={index}
+              plan={item as PlanProps}
+              first={index === 0}
+              last={index === items.length - 1 || items.length === 1}
+            />
+          ))}
+        </Section>
+      ) : (
+        <View style={{ marginBottom: 30 }} />
+      )}
 
-      {habits.length > 0 ? (
+      {sectionName !== 'Plans' && items.length > 0 ? (
         <Section>
           {sectionName !== 'today' && <StatsHeader />}
 
-          {habits.map((tag, index) => (
-            <Action
+          {items.map((item, index) => (
+            <Habit
               key={index}
-              habit={tag}
+              habit={item as HabitProps}
               sectionName={sectionName}
-              isEditMode={false}
               first={sectionName === 'today' && index === 0}
-              last={index === habits.length - 1 || habits.length === 1}
+              last={index === items.length - 1 || items.length === 1}
             />
           ))}
         </Section>

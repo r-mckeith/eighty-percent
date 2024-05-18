@@ -57,6 +57,5 @@ export function taskReducer(state: TaskProps[], action: Action): TaskProps[] {
       return updateScope(state, action);
     case "TOGGLE_COMPLETED":
       return toggleCompleted(state, action);
-      return state;
   }
 }
