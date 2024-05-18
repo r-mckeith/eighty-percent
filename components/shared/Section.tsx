@@ -2,9 +2,10 @@ import React from 'react';
 import { View, StyleSheet, useColorScheme } from 'react-native';
 import { getColors } from '../../src/colors';
 import SectionTitle from './SectionTitle';
+import AddButton from './AddButton';
 
 type Section = {
-  title: string;
+  title?: string;
   children: any;
   style?: any;
 };
@@ -15,7 +16,7 @@ export default function Section({ title, children, style }: Section) {
 
   return (
     <>
-      <SectionTitle title={title} />
+      {title && <SectionTitle title={title} />}
       <View style={[styles.section, colors.border, style]}>{children}</View>
     </>
   );

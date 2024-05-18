@@ -1,11 +1,11 @@
 import React from 'react';
 import { ActivityIndicator, View, StyleSheet, useColorScheme } from 'react-native';
 import { useDateContext, useHabitContext, useGroupContext, usePlanContext, useTaskContext } from '../src/contexts';
-import { PlanProps, TaskProps } from '../src/types/HabitTypes';
+import { HabitProps, PlanProps, TaskProps } from '../src/types/HabitTypes';
 import AddButton from '../components/shared/AddButton';
 import ReviewButton from '../components/reviews/ReviewButton';
 import DateSelector from '../components/actions/DateSelector';
-import { Scroll, SectionTitle } from '../components/shared';
+import { Scroll } from '../components/shared';
 import { getColors } from '../src/colors';
 import PlanSection from '../components/actions/PlanSection';
 import HabitSection from '../components/actions/HabitSection';
@@ -22,6 +22,7 @@ export default function Habits() {
   const colors = getColors(scheme);
 
   const selectedDateString = selectedDate.toLocaleDateString('en-CA');
+
   // will be implemented after plans tab is updated to use plans table
   const planSection = filterPlans(plans, selectedDateString);
 
@@ -44,15 +45,12 @@ export default function Habits() {
 
   return (
     <>
-      <View style={colors.background}>
-        <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
-      </View>
-
       <Scroll>
-        <View>
-          {/* <SectionTitle title={'Plans'}>{<AddButton sectionName={'Plans'} groupId={0} type={'plan'} />}</SectionTitle> */}
-          <PlanSection plans={plans} />
+        <View style={colors.background}>
+          <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
         </View>
+
+        <PlanSection plans={plans} />
 
         {groups.map(group => {
           const habitSection = habits.filter(habit => habit.section === group.name);
@@ -62,14 +60,7 @@ export default function Habits() {
             return;
           }
 
-          return (
-            <View key={group.id}>
-              {/* <SectionTitle title={group.name}> */}
-                {/* {<AddButton sectionName={group.name} groupId={group.id} type={'habit'} />} */}
-              {/* </SectionTitle> */}
-              <HabitSection habits={habitSection} sectionName={group.name} />
-            </View>
-          );
+          return <HabitSection habits={habitSection} sectionName={group.name} groupId={group.id} />;
         })}
 
         <AddButton type={'group'} />

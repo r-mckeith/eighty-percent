@@ -9,13 +9,16 @@ import { useAggregatedData, HabitsAggregatedData } from '../../src/hooks/aggrega
 import { Row, RowText, Swipe, StatsText, Section } from '../shared';
 import RightSwipe from '../rightSwipe/RightSwipe';
 import StatsHeader from './StatsHeader';
+import { SectionTitle } from '../shared';
+import AddButton from '../shared/AddButton';
 
 type Habits = {
   habits: HabitProps[];
   sectionName: string;
+  groupId: number;
 };
 
-export default function Habits({ habits, sectionName }: Habits) {
+export default function Habits({ habits, sectionName, groupId }: Habits) {
   const { dispatch: habitDataDispatch } = useHabitDataContext();
   const { habitsTableData } = useAggregatedData();
   const { selectedDate } = useDateContext();
@@ -35,10 +38,13 @@ export default function Habits({ habits, sectionName }: Habits) {
   };
 
   return (
-    <Section title={sectionName}>
+    <Section>
+      <SectionTitle title={sectionName}>
+        {<AddButton sectionName={sectionName} type={'habit'} groupId={groupId} />}
+      </SectionTitle>
       <StatsHeader />
       {habits.map((habit, index) => {
-        const habitData = habitsTableData.find(data => data.tag_id === habit.id)
+        const habitData = habitsTableData.find(data => data.tag_id === habit.id);
         return (
           <Swipe
             key={habit.id}
@@ -51,7 +57,7 @@ export default function Habits({ habits, sectionName }: Habits) {
               opacity={0.2}
               onPress={() => handleSelectHabit(habit)}
               first={false}
-              last={index === habits.length -1 || habits.length === 1}>
+              last={index === habits.length - 1 || habits.length === 1}>
               <View style={styles.rowLayout}>
                 <RowText text={habit.name} />
                 {habitData && (
