@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
-import { deleteHabit } from "../../src/api/SupabaseHabits";
+import { deleteHabit } from "../../src/api/Habits";
 import { HabitProps } from "../../src/types/HabitTypes";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
 import { Icon } from "../shared";

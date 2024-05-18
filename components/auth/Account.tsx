@@ -1,4 +1,4 @@
-import { supabase } from "../../src/api/SupabaseClient";
+import { supabase } from "../../src/api/Client";
 import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-elements";
 import { Scroll } from "../shared";

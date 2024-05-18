@@ -1,5 +1,5 @@
 import { GroupProps } from '../types/GroupTypes';
-import { supabase } from './SupabaseClient'
+import { supabase } from './Client'
 
 export async function getGroups () {
   const { data, error } = await supabase

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
-import { editHabit } from "../../src/api/SupabaseHabits";
+import { editHabit } from "../../src/api/Habits";
 import EditModal from "../modals/EditModal";
 import { HabitProps } from "../../src/types/HabitTypes";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";

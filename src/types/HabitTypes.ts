@@ -25,3 +25,19 @@ export type HabitProps = {
   depth?: number;
   parentId?: number;
 };
+
+export type TaskProps = {
+  id: number;
+  name: string;
+  user_id: number;
+  inScopeDay?: string | null;
+  completed?: string | null;
+  depth?: number;
+  parentId?: number;
+};
+
+export type NewTaskProps = {
+  name: string;
+  parentId?: number;
+  depth?: number;
+};

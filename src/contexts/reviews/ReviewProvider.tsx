@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, ReactNode } from 'react';
-import { getReviews } from '../../api/SupabaseReviews';
+import { getReviews } from '../../api/Reviews';
 import { ReviewContext } from './ReviewContext';
 import { reviewReducer } from '../../reducers/ReviewReducer';
 

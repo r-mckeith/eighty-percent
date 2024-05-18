@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { addReview } from "../../src/api/SupabaseReviews";
+import { addReview } from "../../src/api/Reviews";
 import { useAggregatedData } from "../../src/hooks/aggregateData";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import { useReviewContext } from "../../src/contexts/reviews/UseReviewContext";

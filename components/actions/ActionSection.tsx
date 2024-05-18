@@ -1,29 +1,26 @@
 import React from 'react';
 import { View } from 'react-native';
 import { HabitProps } from '../../src/types/HabitTypes';
-import Habit from './Habit';
+import Action from './Action';
 import StatsHeader from './StatsHeader';
-import { Section, SectionTitle } from '../shared';
-import AddButton from '../shared/AddButton';
+import { Section } from '../shared';
 
-type SectionProps = {
+type ActionSection = {
   habits: HabitProps[];
   sectionName: string;
   groupId: number;
 };
 
-export default function HabitSection({ habits, sectionName, groupId }: SectionProps) {
+export default function ActionSection({ habits, sectionName }: ActionSection) {
   return (
     <>
-      <SectionTitle title={sectionName === 'today' ? 'plans' : sectionName}>
-        {sectionName !== 'today' && <AddButton sectionName={sectionName} groupId={groupId} type={'habit'} />}
-      </SectionTitle>
+
       {habits.length > 0 ? (
         <Section>
           {sectionName !== 'today' && <StatsHeader />}
 
           {habits.map((tag, index) => (
-            <Habit
+            <Action
               key={index}
               habit={tag}
               sectionName={sectionName}

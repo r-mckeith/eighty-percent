@@ -4,8 +4,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { NewHabitProps } from '../../src/types/HabitTypes';
 import { useHabitContext } from '../../src/contexts/habits/UseHabitContext';
 import { useGroupContext } from '../../src/contexts/groups/UseGroupContext';
-import { addHabit, addProject } from '../../src/api/SupabaseHabits';
-import { addGroup } from '../../src/api/SupabaseGroups';
+import { addHabit, addProject } from '../../src/api/Habits';
+import { addGroup } from '../../src/api/Groups';
 import AddModal from '../modals/AddModal';
 import Icon from './Icon';
 

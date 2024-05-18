@@ -6,7 +6,7 @@ import { getColors } from "../../src/colors";
 
 export default function Scroll({ children }: any) {
   const scheme = useColorScheme();
-  const colors = getColors(scheme)
+  const colors = getColors(scheme);
 
   return (
     <ScrollView style={[styles.scrollView, colors.background]} keyboardShouldPersistTaps="handled">

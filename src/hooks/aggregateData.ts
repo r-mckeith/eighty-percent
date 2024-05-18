@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useDateContext } from "../contexts/date/useDateContext";
 import { useHabitContext } from "../contexts/habits/UseHabitContext";
 import { useHabitDataContext } from "../contexts/habitData/UseHabitDataContext";
-import { getHabitData } from "../api/SupabaseHabits";
+import { getHabitData } from "../api/Habits";
 import { HabitProps, HabitDataProps } from "../types/HabitTypes";
 
 export type HabitsAggregatedData = {

@@ -3,14 +3,14 @@ import { View, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { useHabitContext } from '../../src/contexts/habits/UseHabitContext';
 import { HabitProps } from '../../src/types/HabitTypes';
-import { selectHabit, markHabitAsComplete } from '../../src/api/SupabaseHabits';
+import { selectHabit, markHabitAsComplete } from '../../src/api/Habits';
 import { useHabitDataContext } from '../../src/contexts/habitData/UseHabitDataContext';
 import { useDateContext } from '../../src/contexts/date/useDateContext';
 import { useAggregatedData, HabitsAggregatedData } from '../../src/hooks/aggregateData';
 import { Row, RowText, Swipe, Icon, StatsText } from '../shared';
 import RightSwipe from '../rightSwipe/RightSwipe';
 
-type Habit = {
+type Action = {
   habit: HabitProps;
   sectionName: string;
   isEditMode: boolean;
@@ -18,7 +18,7 @@ type Habit = {
   last: boolean;
 };
 
-export default function Habit({ habit, sectionName, first, last }: Habit) {
+export default function Habit({ habit, sectionName, first, last }: Action) {
   const [isSelected, setIsSelected] = useState(false);
   const [isSelectedLater, setIsSelectedLater] = useState(false);
   const [habitData, setHabitData] = useState<HabitsAggregatedData | null>(null);

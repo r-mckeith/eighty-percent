@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, useColorScheme } from "react-native";
 import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
-import { toggleScope } from "../../src/api/SupabaseHabits";
+import { toggleScope } from "../../src/api/Habits";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import { Icon } from "../shared";
 import { getColors } from "../../src/colors";

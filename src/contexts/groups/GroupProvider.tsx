@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, ReactNode } from 'react';
-import { getGroups } from '../../api/SupabaseGroups';
+import { getGroups } from '../../api/Groups';
 import { GroupContext } from './GroupContext';
 import { groupReducer } from '../../reducers/GroupReducer';
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Alert, StyleSheet, View, useColorScheme } from 'react-native'
-import { supabase } from '../../src/api/SupabaseClient'
+import { supabase } from '../../src/api/Client'
 import { Button, Input } from 'react-native-elements'
 import { getColors } from '../../src/colors'
 

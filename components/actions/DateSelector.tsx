@@ -51,7 +51,7 @@ export default function DateSelector({ selectedDate, onDateChange }: DateSelecto
   const dayDisplay = formatDateRelative(selectedDate);
 
   return (
-    <View style={styles.datePicker}>
+    <View style={[styles.datePicker, colors.background]}>
       <View style={styles.datePickerContainer}>
         <TouchableOpacity onPress={decrementDate} style={styles.iconButton}>
           <MaterialCommunityIcons name="chevron-left" size={24} color={colors.text.color} />
