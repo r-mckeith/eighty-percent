@@ -29,8 +29,12 @@ export async function addPlan(newPlan: NewPlanProps): Promise<PlanProps> {
   }
 }
 
-export async function editPlan(planId: number, updatedPlan: NewPlanProps): Promise<PlanProps> {
-  let { data, error } = await supabase.from('plans').update([updatedPlan]).eq('id', planId).select();
+export async function editPlan(planId: number, newName: string): Promise<PlanProps> {
+  let { data, error } = await supabase
+    .from('plans')
+    .update({ name: newName })
+    .eq('id', planId)
+    .select();
 
   if (error) {
     console.error(error);

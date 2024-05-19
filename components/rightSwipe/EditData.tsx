@@ -48,7 +48,7 @@ export default function EditData({ item, habitData, swipeableRow }: EditData) {
         name="table-edit"
         size={24}
         color="white"
-        opacity={1}
+        opacity={0.2}
         opacityStyle={[styles.rightSwipeItem, styles.dataEditButton]}
         onPress={() => setShowEditDataModal(true)}
       />

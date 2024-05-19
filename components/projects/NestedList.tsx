@@ -1,54 +1,54 @@
 import React from 'react';
 import { View, StyleSheet, useColorScheme } from 'react-native';
-import Project from './Project';
-import { HabitProps as ProjectProps } from '../../src/types/HabitTypes';
+import Plan from './Plan';
+import { PlanProps } from '../../src/types/HabitTypes';
 import { Section, RowText } from '../shared';
 import { getColors } from '../../src/colors';
 
 export default function NestedList({
-  projects,
-  rootProjectId,
+  plans,
+  rootPlanId,
 }: {
-  projects: ProjectProps[];
-  rootProjectId: number | null;
+  plans: PlanProps[];
+  rootPlanId: number | null;
 }) {
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
-  const rootProject = projects.find(project => project.id === rootProjectId);
+  const rootPlan = plans.find(plan => plan.id === rootPlanId);
 
-  const renderProjectsRecursively = (parentId: number) => {
-    return projects
-      .filter(project => project.parentId === parentId)
-      .map((project, index) => (
-        <View key={project.id} style={[colors.row, styles.childProject]}>
-          <Project
-            project={project}
-            rootProjectId={rootProjectId}
+  const renderPlansRecursively = (parentId: number) => {
+    return plans
+      .filter(plan => plan.parentId === parentId)
+      .map((plan, index) => (
+        <View key={plan.id} style={[colors.row, styles.childPlan]}>
+          <Plan
+            plan={plan}
+            rootPlanId={rootPlanId}
             first={true}
             last={true}
           />
-          {renderProjectsRecursively(project.id)}
+          {renderPlansRecursively(plan.id)}
         </View>
       ));
   };
 
   return (
     <Section>
-      {rootProject ? (
+      {rootPlan ? (
         <View>
-          <Project project={rootProject} rootProjectId={rootProjectId} first={true} last={true}/>
-          {renderProjectsRecursively(rootProject.id)}
+          <Plan plan={rootPlan} rootPlanId={rootPlanId} first={true} last={true}/>
+          {renderPlansRecursively(rootPlan.id)}
         </View>
       ) : (
-        <RowText text='No task found' />
+        <RowText text='No plan found' />
       )}
     </Section>
   );
 }
 
 const styles = StyleSheet.create({
-  childProject: {
+  childPlan: {
     paddingLeft: 20,
   },
 });

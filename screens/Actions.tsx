@@ -50,7 +50,7 @@ export default function Habits() {
           <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
         </View>
 
-        <PlanSection plans={plans} />
+        <PlanSection plans={planSection} />
 
         {groups.map(group => {
           const habitSection = habits.filter(habit => habit.section === group.name);

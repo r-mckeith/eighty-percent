@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { TextInput, StyleSheet, useColorScheme } from "react-native";
-import Modal from "./Modal";
-import { getColors } from "../../src/colors";
+import React, { useState } from 'react';
+import TextInput from '../shared/TextInput';
+import Modal from './Modal';
 
 type AddModal = {
   visible: boolean;
@@ -11,25 +10,22 @@ type AddModal = {
 };
 
 export default function AddModal({ visible, displayName, onClose, onAdd }: AddModal) {
-  const [newName, setNewName] = useState("");
-
-  const scheme = useColorScheme();
-  const colors = getColors(scheme);
+  const [newName, setNewName] = useState('');
 
   function handleSave() {
     if (newName) {
       onAdd(newName);
-      setNewName("");
+      setNewName('');
       onClose();
     }
   }
 
   function handleCancel() {
-    setNewName("");
+    setNewName('');
     onClose();
   }
 
-  const disabled = newName === ''
+  const disabled = newName === '';
 
   return (
     <Modal
@@ -37,29 +33,8 @@ export default function AddModal({ visible, displayName, onClose, onAdd }: AddMo
       visible={visible}
       onClose={handleCancel}
       onSave={handleSave}
-      disabled={disabled}
-    >
-      <TextInput
-        style={[styles.textInput, colors.background, colors.border]}
-        placeholder={`${displayName}...`}
-        placeholderTextColor="white"
-        value={newName}
-        onChangeText={setNewName}
-        autoFocus={true}
-        returnKeyType="done"
-      />
+      disabled={disabled}>
+      <TextInput placeholder={displayName} value={newName} handleChangeText={setNewName} autoFocus={true} />
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  textInput: {
-    marginTop: 30,
-    paddingLeft: 10,
-    paddingBottom: 5,
-    alignSelf: "stretch",
-    height: 30,
-    borderRadius: 10,
-    borderBottomWidth: 1,
-  },
-});

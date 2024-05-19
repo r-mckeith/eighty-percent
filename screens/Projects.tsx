@@ -1,51 +1,51 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
-import { useHabitContext as useProjectContext } from "../src/contexts/habits/UseHabitContext";
+import { View } from "react-native";
+import { usePlanContext } from "../src/contexts";
 import AddButton from "../components/shared/AddButton";
-import { HabitProps as ProjectProps } from "../src/types/HabitTypes";
-import ProjectSection from "../components/projects/ProjectSection";
+import { PlanProps } from "../src/types/HabitTypes";
+import PlanSection from "../components/projects/PlanSection";
 import NestedList from "../components/projects/NestedList";
 import { SectionTitle, Scroll } from "../components/shared";
 import ToggleAndBack from "../components/projects/ToggleAndBack";
 import { Toggle } from "../components/shared";
 
-export default function Projects() {
+export default function Plans() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
-  const [projectRoots, setProjectRoots] = useState<ProjectProps[]>([]);
-  const [filteredProjects, setFilteredProjects] = useState<ProjectProps[]>([]);
-  const [selectedProject, setSelectedProject] = useState<number | null>(null);
+  const [planRoots, setPlanRoots] = useState<PlanProps[]>([]);
+  const [filteredPlans, setFilteredPlans] = useState<PlanProps[]>([]);
+  const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
 
-  const { habits: projects } = useProjectContext();
+  const { plans } = usePlanContext();
 
   useEffect(() => {
-    const filteredProjects = showCompleted
-      ? projects.filter((tag) => tag.section === "today")
-      : projects.filter((tag) => tag.section === "today" && !tag.completed);
-    setFilteredProjects(filteredProjects);
+    const filteredPlans = showCompleted
+      ? plans
+      : plans.filter((plan) => !plan.completed);
+    setFilteredPlans(filteredPlans);
 
-    const projectRoots = filteredProjects.filter((tag) => tag.parentId === 0);
-    setProjectRoots(projectRoots);
-  }, [showCompleted, projects, selectedProject]);
+    const planRoots = filteredPlans.filter((plan) => plan.parentId === 0);
+    setPlanRoots(planRoots);
+  }, [showCompleted, plans, selectedPlan]);
 
   function handlePressBack() {
-    setSelectedProject(null);
+    setSelectedPlan(null);
     setShowCompleted(false);
   }
 
   return (
     <Scroll>
-      {selectedProject && (
+      {selectedPlan && (
         <View>
           <ToggleAndBack
             onPressBack={handlePressBack}
             onToggle={setShowCompleted}
             showCompleted={showCompleted}
           />
-          <NestedList projects={filteredProjects} rootProjectId={selectedProject} />
+          <NestedList plans={filteredPlans} rootPlanId={selectedPlan} />
         </View>
       )}
 
-      {!selectedProject && (
+      {!selectedPlan && (
         <>
           <Toggle
             onToggle={setShowCompleted}
@@ -54,9 +54,9 @@ export default function Projects() {
             style={{justifyContent: 'flex-end', paddingBottom: 30}}
           />
           <SectionTitle title="Recent">
-            <AddButton parentId={0} depth={0} type={"project"} />
+            <AddButton parentId={0} depth={0} type={"plan"} />
           </SectionTitle>
-          <ProjectSection projects={projectRoots} setSelected={setSelectedProject} />
+          <PlanSection plans={planRoots} setSelected={setSelectedPlan} />
         </>
       )}
     </Scroll>

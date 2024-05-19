@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { TextInput, StyleSheet } from "react-native";
-import Modal from "./Modal";
+import React, { useState } from 'react';
+import TextInput from '../shared/TextInput';
+import Modal from './Modal';
 
 type EditModal = {
   visible: boolean;
@@ -26,7 +26,7 @@ export default function EditModal({ visible, id, name, onClose, onSave }: EditMo
     onClose();
   }
 
-  const disabled = newName === name
+  const disabled = newName === name;
 
   return (
     <Modal
@@ -34,31 +34,8 @@ export default function EditModal({ visible, id, name, onClose, onSave }: EditMo
       visible={visible}
       onClose={handleCancel}
       onSave={handleSave}
-      disabled={disabled}
-    >
-      <TextInput
-        style={styles.textInput}
-        placeholder={name}
-        placeholderTextColor="white"
-        value={newName}
-        onChangeText={setNewName}
-        autoFocus={true}
-        returnKeyType="done"
-      />
+      disabled={disabled}>
+      <TextInput placeholder={name} value={newName} handleChangeText={setNewName} autoFocus={true} />
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  textInput: {
-    marginTop: 30,
-    alignSelf: "stretch",
-    height: 40,
-    color: "white",
-    borderBottomWidth: 1,
-    borderColor: "#bbb",
-    paddingHorizontal: 0,
-    paddingVertical: 10,
-    width: "100%",
-  },
-});

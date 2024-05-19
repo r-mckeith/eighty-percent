@@ -3,7 +3,7 @@ import { PlanProps } from "../types/HabitTypes";
 export type Action =
   | { type: "INITIALIZE_PLANS"; payload: PlanProps[] }
   | { type: "DELETE_PLAN"; id: number }
-  | { type: "UPDATE_PLAN"; id: number; updatedPlan: PlanProps }
+  | { type: "EDIT_PLAN"; id: number; newName: string }
   | { type: "ADD_PLAN"; payload: PlanProps }
   | { type: "TOGGLE_SCOPE"; id: number; selectedDate: string }
   | { type: "TOGGLE_COMPLETED"; id: number; selectedDate: any }
@@ -51,8 +51,17 @@ export function planReducer(state: PlanProps[], action: Action): PlanProps[] {
       return [...state, action.payload];
     case "DELETE_PLAN":
       return state.filter((plan) => plan.id !== action.id);
-    case "UPDATE_PLAN":
-      return state.map((plan) => (plan.id === action.id ? action.updatedPlan : plan));
+      case "EDIT_PLAN":
+        return state.map((tag) => {
+          if (tag.id === action.id) {
+            return {
+              ...tag,
+              name: action.newName,
+            };
+          } else {
+            return tag;
+          }
+        });
     case "TOGGLE_SCOPE":
       return updateScope(state, action);
     case "TOGGLE_COMPLETED":

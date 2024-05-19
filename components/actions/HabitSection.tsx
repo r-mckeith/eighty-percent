@@ -42,7 +42,7 @@ export default function Habits({ habits, sectionName, groupId }: Habits) {
       <SectionTitle title={sectionName}>
         {<AddButton sectionName={sectionName} type={'habit'} groupId={groupId} />}
       </SectionTitle>
-      <StatsHeader />
+      {habits.length > 0 && <StatsHeader />}
       {habits.map((habit, index) => {
         const habitData = habitsTableData.find(data => data.tag_id === habit.id);
         return (

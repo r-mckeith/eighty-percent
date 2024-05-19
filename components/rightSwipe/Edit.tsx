@@ -2,20 +2,23 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { editHabit } from "../../src/api/Habits";
+import { editPlan } from "../../src/api/Plans";
 import EditModal from "../modals/EditModal";
-import { HabitProps } from "../../src/types/HabitTypes";
-import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
+import { HabitProps, PlanProps } from "../../src/types/HabitTypes";
+import { usePlanContext, useHabitContext } from "../../src/contexts";
 import { Icon } from "../shared";
 
 type Edit = {
-  item: HabitProps;
+  item: HabitProps | PlanProps;
   swipeableRow: React.RefObject<Swipeable | null>;
+  type?: string;
 };
 
-export default function Edit({ item, swipeableRow }: Edit) {
+export default function Edit({ item, swipeableRow, type }: Edit) {
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
-  const { dispatch } = useHabitContext();
+  const { dispatch: habitDispatch } = useHabitContext();
+  const { dispatch: planDispatch } = usePlanContext();
 
   function handleClose() {
     swipeableRow.current?.close();
@@ -26,11 +29,27 @@ export default function Edit({ item, swipeableRow }: Edit) {
     try {
       await editHabit(id, newName);
       swipeableRow.current?.close();
-      dispatch({ type: "EDIT_HABIT", id, newName });
+      habitDispatch({ type: "EDIT_HABIT", id, newName });
     } catch (error) {
       console.error("Failed to edit habit:", error);
     }
   }
+
+  async function handleEditPlan(id: number, newName: string) {
+    try {
+      await editPlan(id, newName);
+      swipeableRow.current?.close();
+      planDispatch({ type: "EDIT_PLAN", id, newName });
+    } catch (error) {
+      console.error("Failed to edit habit:", error);
+    }
+  }
+
+  async function handleEditItem(id: number, newName: string) {
+  type === 'plan' ? handleEditPlan(id, newName) : handleEditHabit(id, newName)
+  }
+
+
 
   return (
     <>
@@ -38,7 +57,7 @@ export default function Edit({ item, swipeableRow }: Edit) {
         name="square-edit-outline"
         size={24}
         color="white"
-        opacity={1}
+        opacity={0.2}
         opacityStyle={[styles.rightSwipeItem, styles.editButton]}
         onPress={() => setShowEditModal(true)}
       />
@@ -46,7 +65,7 @@ export default function Edit({ item, swipeableRow }: Edit) {
       <EditModal
         visible={showEditModal}
         onClose={handleClose}
-        onSave={handleEditHabit}
+        onSave={handleEditItem}
         id={item.id}
         name={item.name}
       />

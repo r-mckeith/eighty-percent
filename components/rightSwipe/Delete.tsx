@@ -2,26 +2,43 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { deleteHabit } from "../../src/api/Habits";
-import { HabitProps } from "../../src/types/HabitTypes";
-import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
+import { deletePlan } from "../../src/api/Plans";
+import { HabitProps, PlanProps } from "../../src/types/HabitTypes";
+import { usePlanContext, useHabitContext } from "../../src/contexts";
 import { Icon } from "../shared";
 
 type Delete = {
-  item: HabitProps;
+  item: HabitProps | PlanProps;
   swipeableRow: React.RefObject<Swipeable | null>;
+  type?: string;
 };
 
-export default function Delete({ item, swipeableRow }: Delete) {
-  const { dispatch } = useHabitContext();
+export default function Delete({ item, swipeableRow, type }: Delete) {
+  const { dispatch: habitDispatch } = useHabitContext();
+  const { dispatch: planDispatch } = usePlanContext();
 
   async function handleDeleteHabit(id: number) {
     try {
       await deleteHabit(id);
       swipeableRow.current?.close();
-      dispatch({ type: "DELETE_HABIT", id });
+      habitDispatch({ type: "DELETE_HABIT", id });
     } catch (error) {
       console.error("Failed to delete habit:", error);
     }
+  }
+
+  async function handleDeletePlan(id: number) {
+    try {
+      await deletePlan(id);
+      swipeableRow.current?.close();
+      planDispatch({ type: "DELETE_PLAN", id });
+    } catch (error) {
+      console.error("Failed to delete habit:", error);
+    }
+  }
+
+  function handleDeleteItem() {
+    type === 'plan' ? handleDeletePlan(item.id) : handleDeleteHabit(item.id)
   }
 
   return (
@@ -29,9 +46,9 @@ export default function Delete({ item, swipeableRow }: Delete) {
         name="close-circle"
         size={24}
         color="white"
-        opacity={1}
+        opacity={0.2}
         opacityStyle={[styles.rightSwipeItem, styles.deleteButton]}
-        onPress={() => handleDeleteHabit(item.id)}
+        onPress={handleDeleteItem}
       />
   );
 }
