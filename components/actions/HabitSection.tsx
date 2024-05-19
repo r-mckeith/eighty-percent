@@ -3,14 +3,12 @@ import { View, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { HabitProps } from '../../src/types/HabitTypes';
 import { selectHabit } from '../../src/api/Habits';
-import { useHabitDataContext } from '../../src/contexts/habitData/UseHabitDataContext';
-import { useDateContext } from '../../src/contexts/date/useDateContext';
+import { useDateContext, useHabitDataContext } from '../../src/contexts';
 import { useAggregatedData } from '../../src/hooks/aggregateData';
-import { Row, RowText, Swipe, StatsText, Section } from '../shared';
-import RightSwipe from '../rightSwipe/RightSwipe';
+import { Row, RowText, Swipe, StatsText, Section, SectionTitle } from '../layout';
+import RightSwipe from '../swipe/RightSwipe';
 import StatsHeader from './StatsHeader';
-import { SectionTitle } from '../shared';
-import AddButton from '../shared/AddButton';
+import { AddButton } from '../shared';
 
 type Habits = {
   habits: HabitProps[];

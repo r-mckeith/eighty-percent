@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { View, useColorScheme } from "react-native";
-import { usePlanContext } from "../../src/contexts";
-import { toggleScope } from "../../src/api/Plans";
-import { useDateContext } from "../../src/contexts/date/useDateContext";
-import { Icon } from "../shared";
-import { getColors } from "../../src/colors";
+import React, { useState, useEffect } from 'react';
+import { View, useColorScheme } from 'react-native';
+import { useDateContext, usePlanContext } from '../../src/contexts';
+import { toggleScope } from '../../src/api/Plans';
+import { Icon } from '../shared';
+import { getColors } from '../../src/colors';
 
 type Scope = {
   id: number;
@@ -21,7 +20,7 @@ export default function Scope({ id, inScopeDay, completed }: Scope) {
   const colors = getColors(scheme);
 
   useEffect(() => {
-    setInScope(inScopeDay && inScopeDay <= selectedDate.toISOString().split("T")[0]);
+    setInScope(inScopeDay && inScopeDay <= selectedDate.toISOString().split('T')[0]);
   }, [inScopeDay]);
 
   async function handleToggleScope() {
@@ -29,20 +28,20 @@ export default function Scope({ id, inScopeDay, completed }: Scope) {
       return;
     }
     dispatch({
-      type: "TOGGLE_SCOPE",
+      type: 'TOGGLE_SCOPE',
       id: id,
-      selectedDate: selectedDate.toISOString().split("T")[0],
+      selectedDate: selectedDate.toISOString().split('T')[0],
     });
 
     try {
-      const updatedTask = await toggleScope(id, selectedDate.toISOString().split("T")[0]);
+      const updatedTask = await toggleScope(id, selectedDate.toISOString().split('T')[0]);
 
       if (updatedTask) {
       } else {
-        console.error("Failed to toggle scope for day");
+        console.error('Failed to toggle scope for day');
       }
     } catch (error) {
-      console.error("Failed to toggle scope for day:", error);
+      console.error('Failed to toggle scope for day:', error);
     }
   }
 
@@ -50,10 +49,10 @@ export default function Scope({ id, inScopeDay, completed }: Scope) {
     <View>
       <Icon
         opacity={completed ? 1 : 0.2}
-        name={inScope ? "radiobox-marked" : "radiobox-blank"}
+        name={inScope ? 'radiobox-marked' : 'radiobox-blank'}
         size={24}
         style={{ marginRight: 7 }}
-        color={completed ? "grey" : colors.text.color}
+        color={completed ? 'grey' : colors.text.color}
         onPress={handleToggleScope}
       />
     </View>

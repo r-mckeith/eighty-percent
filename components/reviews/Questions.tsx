@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TextInput, StyleSheet, useColorScheme } from 'react-native';
-import { RowText } from '../shared';
+import { RowText } from '../layout';
 import { getColors } from '../../src/colors';
 
 type TextBox = {

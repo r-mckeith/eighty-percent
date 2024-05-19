@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import TextInput from './TextInput';
-import Modal from './Modal';
+import { TextInput, Modal } from '../shared';
 
 type EditModal = {
   visible: boolean;

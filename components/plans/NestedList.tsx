@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, useColorScheme } from 'react-native';
 import Plan from './Plan';
 import { PlanProps } from '../../src/types/HabitTypes';
-import { Section, RowText } from '../shared';
+import { Section, RowText } from '../layout';
 import { getColors } from '../../src/colors';
 
 export default function NestedList({ plans, rootPlanId }: { plans: PlanProps[]; rootPlanId: number | null }) {

@@ -1,14 +1,10 @@
 import React from 'react';
 import { ActivityIndicator, View, StyleSheet, useColorScheme } from 'react-native';
 import { useDateContext, useHabitContext, useGroupContext, usePlanContext, useTaskContext } from '../src/contexts';
-import { HabitProps, PlanProps, TaskProps } from '../src/types/HabitTypes';
-import AddButton from '../components/shared/AddButton';
-import ReviewButton from '../components/reviews/ReviewButton';
-import DateSelector from '../components/actions/DateSelector';
-import { Scroll } from '../components/shared';
 import { getColors } from '../src/colors';
-import PlanSection from '../components/actions/PlanSection';
-import HabitSection from '../components/actions/HabitSection';
+import { AddButton, ReviewButton } from '../components/shared';
+import { Scroll } from '../components/layout';
+import { DateSelector, HabitSection, PlanSection } from '../components/actions';
 
 export default function Habits() {
   const { selectedDate, setSelectedDate } = useDateContext();

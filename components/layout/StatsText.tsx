@@ -1,6 +1,6 @@
-import React from "react";
-import { View, Text, StyleSheet, useColorScheme } from "react-native";
-import { getColors } from "../../src/colors";
+import React from 'react';
+import { View, Text, StyleSheet, useColorScheme } from 'react-native';
+import { getColors } from '../../src/colors';
 
 type StatsText = {
   day: string | number;
@@ -24,12 +24,12 @@ export default function StatsText({ day, week, children, style }: StatsText) {
 
 const styles = StyleSheet.create({
   statsContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     flex: 2,
   },
   statsText: {
     paddingHorizontal: 5,
     flex: 1,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });

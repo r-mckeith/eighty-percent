@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { StyleSheet } from "react-native";
-import { Swipeable } from "react-native-gesture-handler";
-import { editHabitData } from "../../src/api/Habits";
-import DataEditModal from "../shared/DataModal";
-import { HabitProps } from "../../src/types/HabitTypes";
-import { useHabitDataContext } from "../../src/contexts/habitData/UseHabitDataContext";
-import { useDateContext } from "../../src/contexts/date/useDateContext";
-import { Icon } from "../shared";
+import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
+import { Swipeable } from 'react-native-gesture-handler';
+import { editHabitData } from '../../src/api/Habits';
+import DataModal from './DataModal';
+import { HabitProps } from '../../src/types/HabitTypes';
+import { useDateContext, useHabitDataContext } from '../../src/contexts';
+import { Icon } from '../shared';
 
 type EditData = {
   item: HabitProps;
@@ -34,29 +33,29 @@ export default function EditData({ item, habitData, swipeableRow }: EditData) {
       const updatedHabitData = await editHabitData(item, selectedDate, count);
       swipeableRow.current?.close();
       habitDataDispatch({
-        type: "UPDATE_HABIT_DATA",
+        type: 'UPDATE_HABIT_DATA',
         payload: updatedHabitData,
       });
     } catch (error) {
-      console.error("Failed to edit habit data:", error);
+      console.error('Failed to edit habit data:', error);
     }
   }
 
   return (
     <>
       <Icon
-        name="table-edit"
+        name='table-edit'
         size={24}
-        color="white"
+        color='white'
         opacity={0.2}
         opacityStyle={[styles.rightSwipeItem, styles.dataEditButton]}
         onPress={() => setShowEditDataModal(true)}
       />
-      <DataEditModal
+      <DataModal
         visible={showEditDataModal}
         onClose={handleClose}
         onSave={handleEditHabitData}
-        placeholder={"Edit Day"}
+        placeholder={'Edit Day'}
         habitData={habitData}
       />
     </>
@@ -65,12 +64,12 @@ export default function EditData({ item, habitData, swipeableRow }: EditData) {
 
 const styles = StyleSheet.create({
   rightSwipeItem: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 40,
-    paddingVertical: 12
+    paddingVertical: 12,
   },
   dataEditButton: {
-    backgroundColor: "grey",
+    backgroundColor: 'grey',
   },
 });

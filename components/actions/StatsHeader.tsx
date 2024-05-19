@@ -1,6 +1,6 @@
-import React from "react";
-import { View, StyleSheet, Text, useColorScheme } from "react-native";
-import { getColors } from "../../src/colors";
+import React from 'react';
+import { View, StyleSheet, Text, useColorScheme } from 'react-native';
+import { getColors } from '../../src/colors';
 
 export default function StatsHeader() {
   const scheme = useColorScheme();
@@ -17,10 +17,10 @@ export default function StatsHeader() {
 
 const styles = StyleSheet.create({
   statsHeader: {
-    flexDirection: "row",
+    flexDirection: 'row',
     paddingHorizontal: 16,
     paddingVertical: 8,
-    alignItems: "center",
+    alignItems: 'center',
     borderWidth: 1,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
@@ -28,13 +28,13 @@ const styles = StyleSheet.create({
   },
   headerCell: {
     flex: 1,
-    textAlign: "center",
-    fontWeight: "bold",
+    textAlign: 'center',
+    fontWeight: 'bold',
     fontSize: 12,
   },
   headerCellHabitName: {
     flex: 3.5,
-    textAlign: "left",
-    fontWeight: "bold",
+    textAlign: 'left',
+    fontWeight: 'bold',
   },
 });

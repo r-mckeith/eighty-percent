@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, useColorScheme } from 'react-native';
-import { RowText, Section, SectionTitle, Row } from '../shared';
+import { RowText, Section, SectionTitle, Row } from '../layout';
 import { getColors } from '../../src/colors';
 
 export default function Summary({ lastReview }: any) {

@@ -2,7 +2,8 @@ import React from 'react';
 import { PlanProps } from '../../src/types/HabitTypes';
 import { markPlanAsComplete } from '../../src/api/Plans';
 import { usePlanContext, useDateContext } from '../../src/contexts';
-import { Row, RowText, Icon, StatsText, Section } from '../shared';
+import { Row, RowText, StatsText, Section } from '../layout';
+import { Icon } from '../shared';
 
 type Plans = {
   plans: PlanProps[];

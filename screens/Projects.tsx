@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { View } from "react-native";
-import { usePlanContext } from "../src/contexts";
-import AddButton from "../components/shared/AddButton";
-import { PlanProps } from "../src/types/HabitTypes";
-import PlanSection from "../components/plans/PlanSection";
-import NestedList from "../components/plans/NestedList";
-import { SectionTitle, Scroll } from "../components/shared";
-import ToggleAndBack from "../components/plans/ToggleAndBack";
-import { Toggle } from "../components/shared";
+import React, { useState, useEffect } from 'react';
+import { View } from 'react-native';
+import { usePlanContext } from '../src/contexts';
+import { PlanProps } from '../src/types/HabitTypes';
+import { PlanSection, NestedList, ToggleAndBack } from '../components/plans';
+import { SectionTitle, Scroll } from '../components/layout';
+import { AddButton, Toggle } from '../components/shared';
 
 export default function Plans() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
@@ -18,12 +15,10 @@ export default function Plans() {
   const { plans } = usePlanContext();
 
   useEffect(() => {
-    const filteredPlans = showCompleted
-      ? plans
-      : plans.filter((plan) => !plan.completed);
+    const filteredPlans = showCompleted ? plans : plans.filter(plan => !plan.completed);
     setFilteredPlans(filteredPlans);
 
-    const planRoots = filteredPlans.filter((plan) => plan.parentId === 0);
+    const planRoots = filteredPlans.filter(plan => plan.parentId === 0);
     setPlanRoots(planRoots);
   }, [showCompleted, plans, selectedPlan]);
 
@@ -36,11 +31,7 @@ export default function Plans() {
     <Scroll>
       {selectedPlan && (
         <View>
-          <ToggleAndBack
-            onPressBack={handlePressBack}
-            onToggle={setShowCompleted}
-            showCompleted={showCompleted}
-          />
+          <ToggleAndBack onPressBack={handlePressBack} onToggle={setShowCompleted} showCompleted={showCompleted} />
           <NestedList plans={filteredPlans} rootPlanId={selectedPlan} />
         </View>
       )}
@@ -51,10 +42,10 @@ export default function Plans() {
             onToggle={setShowCompleted}
             value={showCompleted}
             label={'Show Completed'}
-            style={{justifyContent: 'flex-end', paddingBottom: 30}}
+            style={{ justifyContent: 'flex-end', paddingBottom: 30 }}
           />
-          <SectionTitle title="Recent">
-            <AddButton parentId={0} depth={0} type={"plan"} />
+          <SectionTitle title='Recent'>
+            <AddButton parentId={0} depth={0} type={'plan'} />
           </SectionTitle>
           <PlanSection plans={planRoots} setSelected={setSelectedPlan} />
         </>

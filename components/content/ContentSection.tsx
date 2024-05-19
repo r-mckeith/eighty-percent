@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Content from './Content';
 import HowToUse from './HowToUse';
-import { Scroll, Section, SectionTitle } from '../shared';
+import { Scroll, Section, SectionTitle } from '../layout';
 
 const videos = ['How to use the app', 'Habits', 'Plans'];
 const templates = ['Set up app', 'Start a business', 'Buy a house'];

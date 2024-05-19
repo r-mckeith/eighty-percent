@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, useColorScheme } from "react-native";
-import Modal from "./Modal";
-import { getColors } from "../../src/colors";
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native';
+import { Modal } from '../shared';
+import { getColors } from '../../src/colors';
 
 type EditModal = {
   visible: boolean;
@@ -11,20 +11,14 @@ type EditModal = {
   onSave: (value: number) => void;
 };
 
-export default function DataEditModal({
-  visible,
-  placeholder,
-  habitData,
-  onClose,
-  onSave,
-}: EditModal) {
+export default function DataEditModal({ visible, placeholder, habitData, onClose, onSave }: EditModal) {
   const [currentValue, setCurrentValue] = useState<number>(habitData?.day ? habitData.day : 0);
 
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
   useEffect(() => {
-   setCurrentValue(habitData?.day)
+    setCurrentValue(habitData?.day);
   }, [habitData?.day]);
 
   function incrementValue() {
@@ -45,7 +39,7 @@ export default function DataEditModal({
     onClose();
   }
 
-  const disabled = currentValue === habitData
+  const disabled = currentValue === habitData;
 
   return (
     <Modal placeholder={placeholder} visible={visible} onClose={handleCancel} onSave={handleSave} disabled={disabled}>
@@ -64,8 +58,8 @@ export default function DataEditModal({
 
 const styles = StyleSheet.create({
   numberInputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
     marginTop: 30,
   },

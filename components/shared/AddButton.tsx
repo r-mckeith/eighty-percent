@@ -4,7 +4,7 @@ import { useGroupContext, useHabitContext, usePlanContext } from '../../src/cont
 import { addHabit } from '../../src/api/Habits';
 import { addPlan } from '../../src/api/Plans';
 import { addGroup } from '../../src/api/Groups';
-import AddModal from './AddModal';
+import AddModal from '../swipe/AddModal';
 import Icon from './Icon';
 
 type AddButton = {
@@ -70,7 +70,6 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
     }
   }
 
-
   function getProjectLevelName(depth: number): 'Plan' | 'Task' | 'Subtask' {
     const newProjectDepth = depth + 1;
     switch (newProjectDepth) {
@@ -87,7 +86,7 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
     if (habit) {
       return sectionName ? sectionName : 'Habit';
     } else if (plan) {
-      return depth ? getProjectLevelName(depth) : 'Plan';
+      return depth && depth >= 0 ? getProjectLevelName(depth) : 'Plan';
     }
     return 'Group';
   }

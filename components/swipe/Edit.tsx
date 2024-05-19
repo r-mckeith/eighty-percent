@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { editHabit } from "../../src/api/Habits";
 import { editPlan } from "../../src/api/Plans";
-import EditModal from "../shared/EditModal";
+import EditModal from "./EditModal";
 import { HabitProps, PlanProps } from "../../src/types/HabitTypes";
 import { usePlanContext, useHabitContext } from "../../src/contexts";
 import { Icon } from "../shared";

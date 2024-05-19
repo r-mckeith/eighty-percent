@@ -1,7 +1,7 @@
 import React from 'react';
 import { PlanProps } from '../../src/types/HabitTypes';
 import Plan from './Plan';
-import { Section } from '../shared';
+import { Section } from '../layout';
 
 type PlanSection = {
   plans: PlanProps[];

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
-import { Section, Row, RowText } from '../shared';
+import { Section, Row, RowText } from '../layout';
 import { getColors } from '../../src/colors';
 
 type Grid = {

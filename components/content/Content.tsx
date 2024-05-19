@@ -1,5 +1,6 @@
 import React from 'react';
-import { Row, RowText, Icon } from '../shared';
+import { Row, RowText } from '../layout';
+import { Icon } from '../shared';
 
 type Content = {
   name: string;
