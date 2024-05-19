@@ -29,11 +29,7 @@ export default function Plan({ plan, rootPlanId, first, last, setSelected }: Pla
         first={first}
         last={last}>
         {rootPlanId && (
-          <Scope
-            id={plan.id}
-            inScopeDay={plan.inScopeDay ? plan.inScopeDay : null}
-            completed={plan.completed}
-          />
+          <Scope id={plan.id} inScopeDay={plan.inScopeDay ? plan.inScopeDay : null} completed={plan.completed} />
         )}
         <RowText text={plan.name} disabled={!!plan.completed} completed={!!plan.completed} />
         {rootPlanId && !plan.completed && (

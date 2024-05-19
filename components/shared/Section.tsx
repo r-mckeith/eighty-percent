@@ -2,7 +2,6 @@ import React from 'react';
 import { View, StyleSheet, useColorScheme } from 'react-native';
 import { getColors } from '../../src/colors';
 import SectionTitle from './SectionTitle';
-import AddButton from './AddButton';
 
 type Section = {
   title?: string;

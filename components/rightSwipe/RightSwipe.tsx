@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { HabitProps, PlanProps } from '../../src/types/HabitTypes';
 import Edit from './Edit';
@@ -17,17 +17,17 @@ type RightSwipe = {
 export default function RightSwipe({ item, habitData, showData, swipeableRow, type }: RightSwipe) {
   const width = showData ? 120 : 80;
 
+  function renderShowData() {
+    if (showData) {
+      return <EditData item={item as HabitProps} habitData={habitData} swipeableRow={swipeableRow} />;
+    }
+  }
+
   return (
-    <View style={[styles.rightActionContainer, { width: width }]}>
-      {showData && <EditData item={item as HabitProps} habitData={habitData} swipeableRow={swipeableRow} />}
+    <View style={{ flexDirection: 'row', width: width }}>
+      {renderShowData()}
       <Edit item={item} swipeableRow={swipeableRow} type={type} />
       <Delete item={item} swipeableRow={swipeableRow} type={type} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  rightActionContainer: {
-    flexDirection: 'row',
-  },
-});

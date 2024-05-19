@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, useColorScheme } from "react-native";
-import { useHabitContext } from "../../src/contexts/habits/UseHabitContext";
-import { toggleScope } from "../../src/api/Habits";
+import { usePlanContext } from "../../src/contexts";
+import { toggleScope } from "../../src/api/Plans";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import { Icon } from "../shared";
 import { getColors } from "../../src/colors";
@@ -14,7 +14,7 @@ type Scope = {
 
 export default function Scope({ id, inScopeDay, completed }: Scope) {
   const [inScope, setInScope] = useState<any>();
-  const { dispatch } = useHabitContext();
+  const { dispatch } = usePlanContext();
   const { selectedDate } = useDateContext();
 
   const scheme = useColorScheme();

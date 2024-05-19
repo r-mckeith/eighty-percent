@@ -3,10 +3,10 @@ import { View } from "react-native";
 import { usePlanContext } from "../src/contexts";
 import AddButton from "../components/shared/AddButton";
 import { PlanProps } from "../src/types/HabitTypes";
-import PlanSection from "../components/projects/PlanSection";
-import NestedList from "../components/projects/NestedList";
+import PlanSection from "../components/plans/PlanSection";
+import NestedList from "../components/plans/NestedList";
 import { SectionTitle, Scroll } from "../components/shared";
-import ToggleAndBack from "../components/projects/ToggleAndBack";
+import ToggleAndBack from "../components/plans/ToggleAndBack";
 import { Toggle } from "../components/shared";
 
 export default function Plans() {

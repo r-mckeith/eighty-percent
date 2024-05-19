@@ -22,8 +22,6 @@ export default function Habits() {
   const colors = getColors(scheme);
 
   const selectedDateString = selectedDate.toLocaleDateString('en-CA');
-
-  // will be implemented after plans tab is updated to use plans table
   const planSection = filterPlans(plans, selectedDateString);
 
   function filterPlans(plans: any, selectedDateString: string) {

@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
-import TextInput from '../shared/TextInput';
+import TextInput from './TextInput';
 import Modal from './Modal';
 
 type AddModal = {
   visible: boolean;
   displayName: string;
   onClose: () => void;
-  onAdd: (name: string) => void;
+  onSave: (name: string) => void;
 };
 
-export default function AddModal({ visible, displayName, onClose, onAdd }: AddModal) {
+export default function AddModal({ visible, displayName, onClose, onSave }: AddModal) {
   const [newName, setNewName] = useState('');
 
   function handleSave() {
     if (newName) {
-      onAdd(newName);
+      onSave(newName);
       setNewName('');
       onClose();
     }

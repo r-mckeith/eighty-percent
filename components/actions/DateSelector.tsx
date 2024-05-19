@@ -1,9 +1,9 @@
-import React from "react";
-import { View, TouchableOpacity, Text, useColorScheme } from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { addDays } from "date-fns";
-import { StyleSheet } from "react-native";
-import { getColors } from "../../src/colors";
+import React from 'react';
+import { View, Text, useColorScheme } from 'react-native';
+import { addDays } from 'date-fns';
+import { Icon } from '../shared';
+import { StyleSheet } from 'react-native';
+import { getColors } from '../../src/colors';
 
 type DateSelector = {
   selectedDate: Date;
@@ -38,28 +38,39 @@ export default function DateSelector({ selectedDate, onDateChange }: DateSelecto
     selected.setHours(0, 0, 0, 0);
 
     if (selected.getTime() === today.getTime()) {
-      return "Today";
+      return 'Today';
     } else if (selected.getTime() === yesterday.getTime()) {
-      return "Yesterday";
+      return 'Yesterday';
     } else if (selected.getTime() === tomorrow.getTime()) {
-      return "Tomorrow";
+      return 'Tomorrow';
     } else {
-      return selectedDate.toLocaleDateString("en-US", { weekday: "long" });
+      return selectedDate.toLocaleDateString('en-US', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
     }
   }
 
   const dayDisplay = formatDateRelative(selectedDate);
 
+  function renderArrowForward() {
+    if (dayDisplay !== 'Today') {
+      return (
+        <Icon name={'chevron-right'} size={24} style={{ marginHorizontal: 10 }} opacity={0.2} onPress={incrementDate} />
+      );
+    } else {
+      return <View style={{ marginHorizontal: 20 }} />;
+    }
+  }
+
   return (
     <View style={[styles.datePicker, colors.background]}>
       <View style={styles.datePickerContainer}>
-        <TouchableOpacity onPress={decrementDate} style={styles.iconButton}>
-          <MaterialCommunityIcons name="chevron-left" size={24} color={colors.text.color} />
-        </TouchableOpacity>
-        <Text style={[styles.headerText, colors.text]}>{dayDisplay}</Text>
-        <TouchableOpacity onPress={incrementDate} style={styles.iconButton}>
-          <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.color} />
-        </TouchableOpacity>
+        <Icon name={'chevron-left'} size={24} style={{ marginHorizontal: 10 }} opacity={0.2} onPress={decrementDate} />
+        <Text style={colors.text}>{dayDisplay}</Text>
+        {renderArrowForward()}
       </View>
     </View>
   );
@@ -67,19 +78,13 @@ export default function DateSelector({ selectedDate, onDateChange }: DateSelecto
 
 const styles = StyleSheet.create({
   datePicker: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     marginRight: 4,
     marginBottom: 15,
   },
-  headerText: {
-    textTransform: "capitalize",
-  },
   datePickerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  iconButton: {
-    marginHorizontal: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { editHabitData } from "../../src/api/Habits";
-import DataEditModal from "../modals/DataModal";
+import DataEditModal from "../shared/DataModal";
 import { HabitProps } from "../../src/types/HabitTypes";
 import { useHabitDataContext } from "../../src/contexts/habitData/UseHabitDataContext";
 import { useDateContext } from "../../src/contexts/date/useDateContext";

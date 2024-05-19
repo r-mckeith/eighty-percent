@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { HabitProps } from '../../src/types/HabitTypes';
 import { selectHabit } from '../../src/api/Habits';
 import { useHabitDataContext } from '../../src/contexts/habitData/UseHabitDataContext';
 import { useDateContext } from '../../src/contexts/date/useDateContext';
-import { useAggregatedData, HabitsAggregatedData } from '../../src/hooks/aggregateData';
+import { useAggregatedData } from '../../src/hooks/aggregateData';
 import { Row, RowText, Swipe, StatsText, Section } from '../shared';
 import RightSwipe from '../rightSwipe/RightSwipe';
 import StatsHeader from './StatsHeader';

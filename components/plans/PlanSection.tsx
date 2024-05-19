@@ -1,6 +1,6 @@
 import React from 'react';
 import { PlanProps } from '../../src/types/HabitTypes';
-import Project from './Plan';
+import Plan from './Plan';
 import { Section } from '../shared';
 
 type PlanSection = {
@@ -12,7 +12,7 @@ export default function ProjectSection({ plans, setSelected }: PlanSection) {
   return (
     <Section>
       {plans.map((project, index) => (
-        <Project
+        <Plan
           key={index}
           plan={project}
           setSelected={setSelected}

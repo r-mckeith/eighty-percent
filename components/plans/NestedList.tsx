@@ -5,13 +5,7 @@ import { PlanProps } from '../../src/types/HabitTypes';
 import { Section, RowText } from '../shared';
 import { getColors } from '../../src/colors';
 
-export default function NestedList({
-  plans,
-  rootPlanId,
-}: {
-  plans: PlanProps[];
-  rootPlanId: number | null;
-}) {
+export default function NestedList({ plans, rootPlanId }: { plans: PlanProps[]; rootPlanId: number | null }) {
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
@@ -22,12 +16,7 @@ export default function NestedList({
       .filter(plan => plan.parentId === parentId)
       .map((plan, index) => (
         <View key={plan.id} style={[colors.row, styles.childPlan]}>
-          <Plan
-            plan={plan}
-            rootPlanId={rootPlanId}
-            first={true}
-            last={true}
-          />
+          <Plan key={index} plan={plan} rootPlanId={rootPlanId} first={true} last={true} />
           {renderPlansRecursively(plan.id)}
         </View>
       ));
@@ -37,7 +26,7 @@ export default function NestedList({
     <Section>
       {rootPlan ? (
         <View>
-          <Plan plan={rootPlan} rootPlanId={rootPlanId} first={true} last={true}/>
+          <Plan plan={rootPlan} rootPlanId={rootPlanId} first={true} last={true} />
           {renderPlansRecursively(rootPlan.id)}
         </View>
       ) : (

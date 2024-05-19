@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TextInput from '../shared/TextInput';
+import TextInput from './TextInput';
 import Modal from './Modal';
 
 type EditModal = {

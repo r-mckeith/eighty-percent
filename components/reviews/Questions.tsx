@@ -22,7 +22,7 @@ export default function TextBox({ value, question, category, handleChange }: Tex
         placeholderTextColor='white'
         value={value}
         onChangeText={e => handleChange(category, e)}
-        autoFocus={true}
+        autoFocus={false}
         returnKeyType='done'
         multiline={true}
         numberOfLines={4}

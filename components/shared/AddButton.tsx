@@ -4,7 +4,7 @@ import { useGroupContext, useHabitContext, usePlanContext } from '../../src/cont
 import { addHabit } from '../../src/api/Habits';
 import { addPlan } from '../../src/api/Plans';
 import { addGroup } from '../../src/api/Groups';
-import AddModal from '../modals/AddModal';
+import AddModal from './AddModal';
 import Icon from './Icon';
 
 type AddButton = {
@@ -23,7 +23,6 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
   const { dispatch: groupDispatch } = useGroupContext();
 
   const habit = type === 'habit';
-  const project = type === 'project';
   const plan = type === 'plan';
 
   const handleAction = habit ? handleAddHabit : plan ? handleAddPlan : handleAddGroup;
@@ -62,24 +61,6 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
     }
   }
 
-  // async function handleAddProject(name: string): Promise<void> {
-  //   if (name) {
-  //     const newProject: any = {
-  //       name: name,
-  //       parentId: parentId,
-  //       depth: depth && depth + 1,
-  //       section: 'today',
-  //     };
-
-  //     try {
-  //       const createdProject = await addProject(newProject);
-  //       habitDispatch({ type: 'ADD_HABIT', payload: createdProject });
-  //     } catch (error) {
-  //       console.error('Failed to add habit:', error);
-  //     }
-  //   }
-  // }
-
   async function handleAddGroup(name: string): Promise<void> {
     try {
       const createdGroup = await addGroup(name);
@@ -117,7 +98,7 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
       <AddModal
         visible={showModal}
         onClose={() => setShowModal(false)}
-        onAdd={handleAction}
+        onSave={handleAction}
         displayName={getDisplayName()}
       />
     </>

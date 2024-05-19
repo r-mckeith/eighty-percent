@@ -4,9 +4,9 @@ import { useAggregatedData } from "../../src/hooks/aggregateData";
 import { useDateContext } from "../../src/contexts/date/useDateContext";
 import { useReviewContext } from "../../src/contexts/reviews/UseReviewContext";
 import Grid from "./Grid";
-import TextBox from "./TextBox";
+import Questions from "./Questions";
 import Summary from "./Summary";
-import Modal from "../modals/Modal";
+import Modal from "../shared/Modal";
 import { Section } from "../shared";
 
 type ReviewModal = {
@@ -25,6 +25,7 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
   const { selectedDate } = useDateContext();
   const { habitGridData, projectTableData } = useAggregatedData();
   const { reviews, dispatch } = useReviewContext();
+
   const lastReview = reviews && reviews[0]?.response;
   const isAnswered = answer.good !== "" || answer.bad !== "" || answer.improve !== "";
 
@@ -66,19 +67,19 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
         <Grid data={habitGridData} name={"Habits"} selectedDate={selectedDate} />
       )}
       <Section>
-        <TextBox
+        <Questions
           value={answer.good}
           question={"What went well last week?"}
           handleChange={handleChange}
           category={"good"}
         />
-        <TextBox
+        <Questions
           value={answer.bad}
           question={"What did not go well last week?"}
           handleChange={handleChange}
           category={"bad"}
         />
-        <TextBox
+        <Questions
           value={answer.improve}
           question={"What is your plan to improve this week?"}
           handleChange={handleChange}
