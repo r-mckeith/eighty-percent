@@ -28,11 +28,7 @@ const GroupContextProvider = ({ children }: GroupContextProviderProps) => {
     fetchGroups();
   }, []);
 
-  return (
-    <GroupContext.Provider value={{ groups, dispatch }}>
-      {children}
-    </GroupContext.Provider>
-  );
+  return <GroupContext.Provider value={{ groups, dispatch }}>{children}</GroupContext.Provider>;
 };
 
 export default GroupContextProvider;

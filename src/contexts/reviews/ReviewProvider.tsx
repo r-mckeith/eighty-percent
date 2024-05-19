@@ -28,11 +28,7 @@ const ReviewContextProvider = ({ children }: ReviewContextProviderProps) => {
     fetchReviews();
   }, []);
 
-  return (
-    <ReviewContext.Provider value={{ reviews, dispatch }}>
-      {children}
-    </ReviewContext.Provider>
-  );
+  return <ReviewContext.Provider value={{ reviews, dispatch }}>{children}</ReviewContext.Provider>;
 };
 
 export default ReviewContextProvider;

@@ -1,4 +1,4 @@
-import { GroupProps } from '../types/GroupTypes';
+import { GroupProps } from '../types/shared';
 import { supabase } from './Client'
 
 export async function getGroups () {

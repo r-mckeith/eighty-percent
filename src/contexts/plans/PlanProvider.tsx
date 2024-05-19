@@ -5,7 +5,7 @@ import { planReducer } from '../../reducers/PlanReducer';
 
 type PlanContextProvider = {
   children: ReactNode;
-}
+};
 
 const PlanContextProvider = ({ children }: PlanContextProvider) => {
   const [plans, dispatch] = useReducer(planReducer, []);
@@ -19,13 +19,7 @@ const PlanContextProvider = ({ children }: PlanContextProvider) => {
     fetchPlans();
   }, []);
 
-  return (
-    <PlanContext.Provider value={{ plans, dispatch }}>
-      {children}
-    </PlanContext.Provider>
-  );
+  return <PlanContext.Provider value={{ plans, dispatch }}>{children}</PlanContext.Provider>;
 };
 
-
 export default PlanContextProvider;
-

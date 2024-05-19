@@ -1,7 +1,6 @@
 import React from 'react';
 import { Action } from '../../reducers/ReviewReducer';
-import { ReviewProps } from '../../types/ReviewTypes';
-
+import { ReviewProps } from '../../types/shared';
 
 export interface ReviewContextType {
   reviews: ReviewProps[];

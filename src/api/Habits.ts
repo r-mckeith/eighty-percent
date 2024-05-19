@@ -1,4 +1,4 @@
-import { NewHabitProps, HabitProps, HabitDataProps } from '../types/HabitTypes';
+import { NewHabitProps, HabitProps, HabitDataProps } from '../types/shared';
 import { supabase } from './Client';
 
 export async function getHabits() {
@@ -43,21 +43,6 @@ export async function addHabit(newHabit: NewHabitProps): Promise<HabitProps> {
   if (habitError) {
     console.error(habitError);
     throw new Error('Failed to add habit');
-  }
-
-  if (!habitData) {
-    throw new Error('No data returned after insert operation');
-  } else {
-    return habitData[0];
-  }
-}
-
-export async function addProject(newProject: any): Promise<HabitProps> {
-  let { data: habitData, error: habitError } = await supabase.from('tags').insert([newProject]).select();
-
-  if (habitError) {
-    console.error(habitError);
-    throw new Error('Failed to add task');
   }
 
   if (!habitData) {
@@ -150,34 +135,6 @@ export async function deleteHabit(habitId: number) {
   }
 }
 
-export async function toggleScope(habitId: number, selectedDate: string) {
-  const { data, error } = await supabase.from('tags').select('inScopeDay').eq('id', habitId).single();
-
-  if (error || !data) {
-    console.error('Failed to fetch task:', error);
-    throw new Error('Failed to fetch task');
-  }
-
-  const newScopeDate = data.inScopeDay ? null : selectedDate;
-
-  const { data: updateData, error: updateError } = await supabase
-    .from('tags')
-    .update({ inScopeDay: newScopeDate })
-    .eq('id', habitId)
-    .select();
-
-  if (updateError) {
-    console.error('Failed to toggle scope:', updateError);
-    throw new Error('Failed to update task');
-  }
-
-  if (!data) {
-    throw new Error('No data returned after insert operation');
-  } else {
-    return updateData;
-  }
-}
-
 export async function selectHabit(habit: HabitProps, selectedDate: Date): Promise<HabitDataProps> {
   const dateFormatted = selectedDate.toISOString().split('T')[0];
 
@@ -230,31 +187,5 @@ export async function selectHabit(habit: HabitProps, selectedDate: Date): Promis
     }
 
     return insertedData[0];
-  }
-}
-
-export async function markHabitAsComplete(habitId: number, completionDate: Date) {
-  const fetchResult = await supabase.from('tags').select('completed').eq('id', habitId).single();
-
-  if (fetchResult.error || !fetchResult.data) {
-    console.error('Failed to fetch habit:', fetchResult.error);
-    throw new Error('Failed to fetch habit');
-  }
-
-  const habit = fetchResult.data;
-
-  const newCompletionDate = habit.completed ? null : completionDate;
-
-  const data = await supabase.from('tags').update({ completed: newCompletionDate }).eq('id', habitId);
-
-  if (data.error) {
-    console.error('Failed to mark task as complete/incomplete:', data.error);
-    throw new Error('Failed to update task');
-  }
-
-  if (!data) {
-    throw new Error('No data returned after insert operation');
-  } else {
-    return data;
   }
 }

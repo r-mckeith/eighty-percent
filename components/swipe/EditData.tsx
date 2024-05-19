@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { editHabitData } from '../../src/api/Habits';
 import DataModal from './DataModal';
-import { HabitProps } from '../../src/types/HabitTypes';
+import { HabitProps } from '../../src/types/shared';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
 import { Icon } from '../shared';
 

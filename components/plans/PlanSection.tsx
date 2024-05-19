@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlanProps } from '../../src/types/HabitTypes';
+import { PlanProps } from '../../src/types/shared';
 import Plan from './Plan';
 import { Section } from '../layout';
 

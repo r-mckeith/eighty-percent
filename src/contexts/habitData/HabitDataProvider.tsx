@@ -6,12 +6,11 @@ import { useDateContext } from '../date/useDateContext';
 
 type HabitDataContextProviderProps = {
   children: ReactNode;
-}
+};
 
 const HabitDataContextProvider = ({ children }: HabitDataContextProviderProps) => {
   const [habitData, dispatchHabitData] = useReducer(habitDataReducer, []);
   const { selectedDate } = useDateContext();
-
 
   useEffect(() => {
     const fetchHabitData = async () => {
@@ -23,9 +22,7 @@ const HabitDataContextProvider = ({ children }: HabitDataContextProviderProps) =
   }, []);
 
   return (
-    <HabitDataContext.Provider value={{ habitData, dispatch: dispatchHabitData }}>
-      {children}
-    </HabitDataContext.Provider>
+    <HabitDataContext.Provider value={{ habitData, dispatch: dispatchHabitData }}>{children}</HabitDataContext.Provider>
   );
 };
 

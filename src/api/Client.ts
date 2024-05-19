@@ -1,20 +1,21 @@
-import 'react-native-url-polyfill/auto'
-import * as SecureStore from 'expo-secure-store'
-import { createClient } from '@supabase/supabase-js'
+import 'react-native-url-polyfill/auto';
+import * as SecureStore from 'expo-secure-store';
+import { createClient } from '@supabase/supabase-js';
 const ExpoSecureStoreAdapter = {
   getItem: (key: string) => {
-    return SecureStore.getItemAsync(key)
+    return SecureStore.getItemAsync(key);
   },
   setItem: (key: string, value: string) => {
-    SecureStore.setItemAsync(key, value)
+    SecureStore.setItemAsync(key, value);
   },
   removeItem: (key: string) => {
-    SecureStore.deleteItemAsync(key)
+    SecureStore.deleteItemAsync(key);
   },
-}
+};
 
-const supabaseUrl = 'https://shvupquohfsjpnxgqgen.supabase.co'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNodnVwcXVvaGZzanBueGdxZ2VuIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTAwMzIzNDAsImV4cCI6MjAwNTYwODM0MH0.52YOHKMqOcxmOxWtU6wDNKfWyrWZjWojxCdgQ-4HG3I'
+const supabaseUrl = 'https://shvupquohfsjpnxgqgen.supabase.co';
+const supabaseAnonKey =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNodnVwcXVvaGZzanBueGdxZ2VuIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTAwMzIzNDAsImV4cCI6MjAwNTYwODM0MH0.52YOHKMqOcxmOxWtU6wDNKfWyrWZjWojxCdgQ-4HG3I';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
@@ -23,4 +24,4 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     persistSession: true,
     detectSessionInUrl: false,
   },
-})
+});

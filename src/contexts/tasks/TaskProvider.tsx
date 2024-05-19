@@ -5,7 +5,7 @@ import { taskReducer } from '../../reducers/TaskReducer';
 
 type TaskContextProviderProps = {
   children: ReactNode;
-}
+};
 
 const TaskContextProvider = ({ children }: TaskContextProviderProps) => {
   const [tasks, dispatch] = useReducer(taskReducer, []);
@@ -19,13 +19,7 @@ const TaskContextProvider = ({ children }: TaskContextProviderProps) => {
     fetchTasks();
   }, []);
 
-  return (
-    <TaskContext.Provider value={{ tasks, dispatch }}>
-      {children}
-    </TaskContext.Provider>
-  );
+  return <TaskContext.Provider value={{ tasks, dispatch }}>{children}</TaskContext.Provider>;
 };
 
-
 export default TaskContextProvider;
-

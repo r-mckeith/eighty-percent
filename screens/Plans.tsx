@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import { usePlanContext } from '../src/contexts';
-import { PlanProps } from '../src/types/HabitTypes';
+import { PlanProps } from '../src/types/shared';
 import { PlanSection, NestedList, ToggleAndBack } from '../components/plans';
 import { SectionTitle, Scroll } from '../components/layout';
 import { AddButton, Toggle } from '../components/shared';

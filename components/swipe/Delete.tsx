@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { deleteHabit } from "../../src/api/Habits";
 import { deletePlan } from "../../src/api/Plans";
-import { HabitProps, PlanProps } from "../../src/types/HabitTypes";
+import { HabitProps, PlanProps } from "../../src/types/shared";
 import { usePlanContext, useHabitContext } from "../../src/contexts";
 import { Icon } from "../shared";
 

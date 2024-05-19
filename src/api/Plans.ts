@@ -1,4 +1,4 @@
-import { PlanProps, NewPlanProps } from '../types/HabitTypes';
+import { PlanProps, NewPlanProps } from '../types/shared';
 import { supabase } from './Client';
 
 export async function getPlans() {
@@ -30,11 +30,7 @@ export async function addPlan(newPlan: NewPlanProps): Promise<PlanProps> {
 }
 
 export async function editPlan(planId: number, newName: string): Promise<PlanProps> {
-  let { data, error } = await supabase
-    .from('plans')
-    .update({ name: newName })
-    .eq('id', planId)
-    .select();
+  let { data, error } = await supabase.from('plans').update({ name: newName }).eq('id', planId).select();
 
   if (error) {
     console.error(error);
@@ -110,7 +106,7 @@ export async function markPlanAsComplete(planId: number, completionDate: Date) {
   }
 }
 
-// to be used later to toggle/ complete children tags
+// to be used later to toggle/ complete children plans
 
 // export const findChildTags = (tagId: number, tags: HabitProps[]): HabitProps[] => {
 //   if (!tags) {

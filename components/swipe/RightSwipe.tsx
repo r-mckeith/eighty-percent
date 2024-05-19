@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import { HabitProps, PlanProps } from '../../src/types/HabitTypes';
+import { HabitProps, PlanProps } from '../../src/types/shared';
 import { Delete, Edit, EditData } from '../swipe';
 
 type RightSwipe = {

@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import { useDateContext } from "../contexts/date/useDateContext";
-import { useHabitContext } from "../contexts/habits/UseHabitContext";
-import { useHabitDataContext } from "../contexts/habitData/UseHabitDataContext";
-import { getHabitData } from "../api/Habits";
-import { HabitProps, HabitDataProps } from "../types/HabitTypes";
+import { useState, useEffect } from 'react';
+import { useDateContext } from '../contexts/date/useDateContext';
+import { useHabitContext } from '../contexts/habits/UseHabitContext';
+import { useHabitDataContext } from '../contexts/habitData/UseHabitDataContext';
+import { getHabitData } from '../api/Habits';
+import { HabitProps, HabitDataProps } from '../types/shared';
 
 export type HabitsAggregatedData = {
   tag_id: number;
@@ -54,7 +54,7 @@ export function useAggregatedData() {
         setHabitGridData(aggregatedGridData);
         setProjectTableData(aggregatedProjects);
       } catch (error) {
-        console.error("Failed to fetch data:", error);
+        console.error('Failed to fetch data:', error);
       }
     };
 
@@ -74,7 +74,7 @@ export function useAggregatedData() {
     const startYear = new Date(startDay);
     startYear.setUTCDate(startDay.getUTCDate() - 364);
 
-    yearData.forEach((habit) => {
+    yearData.forEach(habit => {
       const completedDate = new Date(habit.date);
 
       if (!habitMap[habit.tag_id]) {
@@ -101,7 +101,7 @@ export function useAggregatedData() {
       }
     });
 
-    return Object.values(habitMap).filter((habit) => habit.month > 0);
+    return Object.values(habitMap).filter(habit => habit.month > 0);
   }
 
   function aggregateHabitGridData(gridData: HabitDataProps[]) {
@@ -117,16 +117,16 @@ export function useAggregatedData() {
       return date;
     });
 
-    gridData.forEach((habit) => {
+    gridData.forEach(habit => {
       const completedDate = new Date(habit.date);
 
       if (!habitGridMap[habit.tag_id]) {
         habitGridMap[habit.tag_id] = {
           name: habit.tag_name,
-          days: dates.map((date) => ({
+          days: dates.map(date => ({
             day: date.toDateString(),
-            icon: "-",
-            color: "#FF0000",
+            icon: '-',
+            color: '#FF0000',
           })),
         };
       }
@@ -135,7 +135,7 @@ export function useAggregatedData() {
         if (completedDate.toDateString() === date.toDateString()) {
           const dayData = habitGridMap[habit.tag_id].days[index];
           dayData.icon = habit.count;
-          dayData.color = "blue";
+          dayData.color = 'blue';
         }
       });
     });
@@ -152,20 +152,18 @@ export function useAggregatedData() {
     endDay.setHours(23, 59, 59, 999);
 
     return projects
-      .map((project) => ({
+      .map(project => ({
         name: project.name,
         completedDay: project.completed ? new Date(project.completed) : null,
         inScopeDay: project.inScopeDay ? new Date(project.inScopeDay) : null,
         completed: !!project.completed,
       }))
       .filter(
-        (project) =>
+        project =>
           (project.inScopeDay && project.inScopeDay >= startDay && project.inScopeDay <= endDay) ||
-          (project.completedDay &&
-            project.completedDay >= startDay &&
-            project.completedDay <= endDay)
+          (project.completedDay && project.completedDay >= startDay && project.completedDay <= endDay)
       )
-      .map((project) => {
+      .map(project => {
         const inScopeDate = project.inScopeDay;
         const completedDate = project.completedDay;
 
@@ -175,30 +173,30 @@ export function useAggregatedData() {
             const day = new Date(startDay);
             day.setDate(startDay.getDate() + dayIndex);
 
-            const dayStr = day.toISOString().split("T")[0];
-            const completedDayStr = completedDate ? completedDate.toISOString().split("T")[0] : "";
+            const dayStr = day.toISOString().split('T')[0];
+            const completedDayStr = completedDate ? completedDate.toISOString().split('T')[0] : '';
 
             const isCompleted = completedDate && dayStr === completedDayStr;
             const isInScope = inScopeDate ? day.getTime() >= inScopeDate.getTime() : false;
             const isPushed = !isCompleted && isInScope && completedDate && completedDate > day;
             const isIncomplete = isInScope && !completedDate;
 
-            let status = "";
-            let icon = "";
-            let color = "red";
+            let status = '';
+            let icon = '';
+            let color = 'red';
 
             if (isPushed || isIncomplete) {
-              status = "P";
-              icon = "→";
-              color = "#FF0000";
+              status = 'P';
+              icon = '→';
+              color = '#FF0000';
             } else if (isCompleted) {
-              status = "C";
-              icon = "✓";
-              color = "blue";
+              status = 'C';
+              icon = '✓';
+              color = 'blue';
             } else if (isIncomplete) {
-              status = "I";
-              icon = "✗";
-              color = "red";
+              status = 'I';
+              icon = '✗';
+              color = 'red';
             }
 
             return {

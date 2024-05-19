@@ -1,4 +1,4 @@
-import { TaskProps, NewTaskProps } from '../types/HabitTypes';
+import { TaskProps, NewTaskProps } from '../types/shared';
 import { supabase } from './Client';
 
 export async function getTasks() {
@@ -52,34 +52,6 @@ export async function deleteTask(taskId: number) {
   }
 }
 
-export async function toggleScope(taskId: number, selectedDate: string) {
-  const { data, error } = await supabase.from('tasks').select('inScopeDay').eq('id', taskId).single();
-
-  if (error || !data) {
-    console.error('Failed to fetch task:', error);
-    throw new Error('Failed to fetch task');
-  }
-
-  const newScopeDate = data.inScopeDay ? null : selectedDate;
-
-  const { data: updateData, error: updateError } = await supabase
-    .from('tasks')
-    .update({ inScopeDay: newScopeDate })
-    .eq('id', taskId)
-    .select();
-
-  if (updateError) {
-    console.error('Failed to toggle scope:', updateError);
-    throw new Error('Failed to update task');
-  }
-
-  if (!data) {
-    throw new Error('No data returned after insert operation');
-  } else {
-    return updateData;
-  }
-}
-
 export async function markTaskAsComplete(taskId: number, completionDate: Date) {
   const fetchResult = await supabase.from('tasks').select('completed').eq('id', taskId).single();
 
@@ -105,29 +77,3 @@ export async function markTaskAsComplete(taskId: number, completionDate: Date) {
     return data;
   }
 }
-
-// to be used later to toggle/ complete children tags
-
-// export const findChildTags = (tagId: number, tags: HabitProps[]): HabitProps[] => {
-//   if (!tags) {
-//     console.error('Tasks is undefined!');
-//     return [];
-//   }
-
-//   const directChildren = tags.filter(tag => tag.parentId === tagId);
-//   let allChildren = [...directChildren];
-
-//   directChildren.forEach(child => {
-//     const grandchildren = findChildTags(child.id, tags);
-//     allChildren = [...allChildren, ...grandchildren];
-//   });
-
-//   return allChildren;
-// };
-
-// export const findParentTags = (taskId: number, tags: HabitProps[]): HabitProps[] => {
-//   const parentTask = tags.find(task => task.id === taskId);
-//   return parentTask && parentTask.parentId
-//     ? [...findParentTags(parentTask.parentId, tags), parentTask]
-//     : [];
-// };

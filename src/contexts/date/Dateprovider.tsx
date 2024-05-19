@@ -30,13 +30,7 @@ const DateProvider = ({ children }: DateProviderProps) => {
     };
   }, []);
 
-  return (
-    <DateContext.Provider value={{ selectedDate, setSelectedDate }}>
-      {children}
-    </DateContext.Provider>
-  );
+  return <DateContext.Provider value={{ selectedDate, setSelectedDate }}>{children}</DateContext.Provider>;
 };
 
 export default DateProvider;
-
-

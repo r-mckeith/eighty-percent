@@ -5,7 +5,7 @@ import { tagReducer } from '../../reducers/HabitReducer';
 
 type HabitContextProviderProps = {
   children: ReactNode;
-}
+};
 
 const HabitContextProvider = ({ children }: HabitContextProviderProps) => {
   const [habits, dispatch] = useReducer(tagReducer, []);
@@ -19,13 +19,7 @@ const HabitContextProvider = ({ children }: HabitContextProviderProps) => {
     fetchTags();
   }, []);
 
-  return (
-    <HabitContext.Provider value={{ habits, dispatch }}>
-      {children}
-    </HabitContext.Provider>
-  );
+  return <HabitContext.Provider value={{ habits, dispatch }}>{children}</HabitContext.Provider>;
 };
 
-
 export default HabitContextProvider;
-

@@ -1,11 +1,7 @@
-import { supabase } from './Client'
+import { supabase } from './Client';
 
-export async function getReviews () {
-  const { data, error } = await supabase
-    .from('reviews')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(1);
+export async function getReviews() {
+  const { data, error } = await supabase.from('reviews').select('*').order('created_at', { ascending: false }).limit(1);
 
   if (error) {
     console.error(error);
@@ -15,7 +11,7 @@ export async function getReviews () {
   const review = data || [];
 
   return review;
-};
+}
 
 export async function addReview(review: any, date: string): Promise<any> {
   let { data: reviewData, error: reviewError } = await supabase
@@ -35,13 +31,10 @@ export async function addReview(review: any, date: string): Promise<any> {
   }
 }
 
-export async function updateReview (reviewId: number, updatedReview: any) {
-  const { data, error } = await supabase
-    .from('reviews')
-    .update({ review: updatedReview })
-    .eq('id', reviewId);
+export async function updateReview(reviewId: number, updatedReview: any) {
+  const { data, error } = await supabase.from('reviews').update({ review: updatedReview }).eq('id', reviewId);
 
   if (error) {
     console.error(error);
   }
-};
+}

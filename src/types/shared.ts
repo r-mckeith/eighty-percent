@@ -57,3 +57,11 @@ export type NewPlanProps = {
   parentId?: number;
   depth?: number;
 };
+
+export interface GroupProps {
+  id: number;
+  user_id: number;
+  name: string
+};
+
+export type ReviewProps = any

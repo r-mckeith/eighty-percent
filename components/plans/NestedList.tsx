@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, useColorScheme } from 'react-native';
 import Plan from './Plan';
-import { PlanProps } from '../../src/types/HabitTypes';
+import { PlanProps } from '../../src/types/shared';
 import { Section, RowText } from '../layout';
 import { getColors } from '../../src/colors';
 

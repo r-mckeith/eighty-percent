@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { NewHabitProps } from '../../src/types/HabitTypes';
+import { NewHabitProps } from '../../src/types/shared';
 import { useGroupContext, useHabitContext, usePlanContext } from '../../src/contexts';
 import { addHabit } from '../../src/api/Habits';
 import { addPlan } from '../../src/api/Plans';
 import { addGroup } from '../../src/api/Groups';
-import AddModal from '../swipe/AddModal';
+import AddModal from './AddModal';
 import Icon from './Icon';
 
 type AddButton = {

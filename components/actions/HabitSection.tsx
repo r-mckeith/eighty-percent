@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import { HabitProps } from '../../src/types/HabitTypes';
+import { HabitProps } from '../../src/types/shared';
 import { selectHabit } from '../../src/api/Habits';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
 import { useAggregatedData } from '../../src/hooks/aggregateData';

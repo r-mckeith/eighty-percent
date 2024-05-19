@@ -16,7 +16,7 @@ export default function Input({ placeholder, value, autoFocus, handleChangeText,
   const colors = getColors(scheme);
   return (
       <TextInput
-        style={[styles.textInput, colors.background, colors.border]}
+        style={[styles.textInput, colors.background, colors.border, colors.text]}
         placeholder={placeholder}
         placeholderTextColor={colors.text.color}
         value={value}
