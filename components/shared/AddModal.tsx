@@ -34,7 +34,7 @@ export default function AddModal({ visible, displayName, onClose, onSave }: AddM
       onClose={handleCancel}
       onSave={handleSave}
       disabled={disabled}>
-      <TextInput placeholder={displayName} value={newName} handleChangeText={setNewName} autoFocus={true} />
+      <TextInput placeholder={displayName} value={newName} handleChangeText={setNewName} autoFocus={true} onSave={handleSave} />
     </Modal>
   );
 }

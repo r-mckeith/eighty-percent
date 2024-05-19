@@ -7,11 +7,10 @@ type Input = {
   value: string;
   autoFocus: boolean;
   handleChangeText: (arg0: string) => void;
-  multiline?: boolean;
-  numberOfLines?: number;
+  onSave: () => void;
 };
 
-export default function Input({ placeholder, value, autoFocus, handleChangeText, multiline, numberOfLines }: Input) {
+export default function Input({ placeholder, value, autoFocus, handleChangeText, onSave }: Input) {
   const scheme = useColorScheme();
   const colors = getColors(scheme);
   return (
@@ -23,8 +22,7 @@ export default function Input({ placeholder, value, autoFocus, handleChangeText,
         onChangeText={(text) => handleChangeText(text)}
         autoFocus={autoFocus}
         returnKeyType="done"
-        multiline={multiline}
-        numberOfLines={numberOfLines}
+        onSubmitEditing={onSave}
       />
   );
 }

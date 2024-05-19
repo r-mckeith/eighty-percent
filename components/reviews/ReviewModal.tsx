@@ -9,10 +9,10 @@ import { Section } from '../layout';
 type ReviewModal = {
   visible: boolean;
   onClose: () => void;
-  onAdd: (name: string) => void;
+  onSave: (name: string) => void;
 };
 
-export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
+export default function ReviewModal({ visible, onClose, onSave }: ReviewModal) {
   const [answer, setAnswer] = useState<{ good: string; bad: string; improve: string }>({
     good: '',
     bad: '',
@@ -26,11 +26,18 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
   const lastReview = reviews && reviews[0]?.response;
   const isAnswered = answer.good !== '' || answer.bad !== '' || answer.improve !== '';
 
-  function handleSave() {
+  async function handleSaveReview(): Promise<void> {
+    const dateString = selectedDate.toISOString().split('T')[0];
+
     if (answer) {
-      addReview(answer, selectedDate.toISOString().split('T')[0]);
-      setAnswer({ good: '', bad: '', improve: '' });
-      onClose();
+      try {
+        const newReview = await addReview(answer, dateString);
+        dispatch({ type: 'ADD_REVIEW', payload: newReview, date: dateString });
+        setAnswer({ good: '', bad: '', improve: '' });
+        onClose();
+      } catch (error) {
+        console.error('Failed to add review:', error);
+      }
     }
   }
 
@@ -50,7 +57,7 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
       placeholder={'Weekly Review'}
       visible={visible}
       onClose={handleCancel}
-      onSave={handleSave}
+      onSave={handleSaveReview}
       size={'large'}
       disabled={!isAnswered}>
       {lastReview && <Summary lastReview={lastReview} />}

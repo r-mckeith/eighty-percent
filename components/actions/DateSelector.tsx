@@ -61,7 +61,7 @@ export default function DateSelector({ selectedDate, onDateChange }: DateSelecto
         <Icon name={'chevron-right'} size={24} style={{ marginHorizontal: 10 }} opacity={0.2} onPress={incrementDate} />
       );
     } else {
-      return <View style={{ marginHorizontal: 20 }} />;
+      return <View style={{ marginHorizontal: 30 }} />;
     }
   }
 
@@ -79,7 +79,6 @@ export default function DateSelector({ selectedDate, onDateChange }: DateSelecto
 const styles = StyleSheet.create({
   datePicker: {
     alignSelf: 'flex-end',
-    marginRight: 4,
     marginBottom: 15,
   },
   datePickerContainer: {

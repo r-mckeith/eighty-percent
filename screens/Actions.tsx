@@ -56,8 +56,6 @@ export default function Habits() {
 
           return <HabitSection habits={habitSection} sectionName={group.name} groupId={group.id} />;
         })}
-
-        <AddButton type={'group'} />
       </Scroll>
       <ReviewButton />
     </>
