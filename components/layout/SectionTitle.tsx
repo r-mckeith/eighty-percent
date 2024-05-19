@@ -12,7 +12,7 @@ export default function SectionTitle({ title, children }: SectionTitle) {
   const colors = getColors(scheme);
 
   return (
-    <View style={styles.sectionName}>
+    <View style={[styles.sectionName, colors.background]}>
       <Text style={[styles.sectionTitle, colors.text]}>{title}</Text>
       <View style={styles.children}>{children}</View>
     </View>

@@ -25,7 +25,7 @@ export default function Row({ children, style, opacity, disabled, selected, firs
     <View style={style ? style : {}}>
       <TouchableOpacity
         activeOpacity={opacity}
-        style={[styles.row, rowColor, borderRadius, bottomBorderWidth, colors.border]}
+        style={[styles.row, rowColor, { borderBottomWidth: 1}, colors.border]}
         onPress={onPress}>
         {children}
       </TouchableOpacity>
@@ -37,11 +37,11 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderTopWidth: 1,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 0,
+    // borderTopWidth: 1,
+    // borderLeftWidth: 1,
+    // borderRightWidth: 1,
     alignSelf: 'stretch',
   },
   first: {

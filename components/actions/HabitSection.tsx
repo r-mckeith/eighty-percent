@@ -57,7 +57,7 @@ export default function Habits({ habits, sectionName, groupId }: Habits) {
               first={false}
               last={index === habits.length - 1 || habits.length === 1}>
               <View style={styles.rowLayout}>
-                <RowText text={habit.name} />
+                <RowText text={habit.name} flex={3.5} maxLength={30} />
                 {habitData && (
                   <StatsText
                     day={habitData.day > 0 ? habitData.day : '-'}

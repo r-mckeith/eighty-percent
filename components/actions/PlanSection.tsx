@@ -29,7 +29,7 @@ export default function Plans({ plans }: Plans) {
   }
 
   return (
-    <Section title={'Plans'}>
+    <Section title='Plans'>
       {plans.map((plan, index) => {
         const isSelected = plan.completed ? plan.completed === selectedDate.toISOString().split('T')[0] : false;
         const isSelectedLater = plan.completed ? plan.completed > selectedDate.toISOString().split('T')[0] : false;
@@ -42,12 +42,8 @@ export default function Plans({ plans }: Plans) {
             selected={isSelected}
             first={index === 0}
             last={index === plans.length - 1 || plans.length === 1}>
-            <RowText text={plan.name} disabled={isSelected || isSelectedLater} completed={isSelected} />
-            <StatsText
-              day={''}
-              week={''}
-              children={<Icon name={isSelected ? 'check' : isSelectedLater ? 'arrow-right' : ''} />}
-            />
+            <RowText text={plan.name} disabled={isSelected || isSelectedLater} completed={isSelected} flex={8} maxLength={40} />
+            <Icon name={isSelected ? 'check' : isSelectedLater ? 'arrow-right' : ''} style={{ paddingRight: 15 }} />
           </Row>
         );
       })}

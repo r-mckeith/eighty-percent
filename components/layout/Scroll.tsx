@@ -4,6 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { getColors } from '../../src/colors';
 
 export default function Scroll({ children }: any) {
+  console.log(children)
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 

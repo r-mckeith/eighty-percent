@@ -8,24 +8,44 @@ type RowText = {
   fontSize?: number;
   disabled?: boolean;
   completed?: boolean;
+  flex?: number;
+  maxLength?: number;
 };
 
-export default function RowText({ text, style, fontSize = 16, disabled, completed }: RowText) {
+export default function RowText({ text, style, fontSize = 16, disabled, completed, flex, maxLength }: RowText) {
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
   const textColor = disabled ? colors.disabledText : colors.text;
   const completedText = completed ? styles.completed : {};
 
+  function truncateText() {
+    const lastSpaceIndex = text.lastIndexOf(' ', maxLength);
+    if (lastSpaceIndex === -1) {
+      return `${text.substring(0, maxLength)}...`;
+    }
+    return `${text.substring(0, lastSpaceIndex)}...`;
+  }
+  const truncatedText = maxLength && text.length > maxLength ? truncateText() : text;
+
   return (
-    <Text style={[styles.text, textColor, completedText, { fontSize: fontSize }, style ? style : null]}>{text}</Text>
+    <Text
+      style={[
+        styles.text,
+        textColor,
+        completedText,
+        { fontSize: fontSize },
+        { flex: flex ? flex : null },
+        style ? style : null,
+      ]}>
+      {truncatedText}
+    </Text>
   );
 }
 
 const styles = StyleSheet.create({
   text: {
     fontWeight: 'bold',
-    flex: 3.5,
   },
   completed: {
     textDecorationLine: 'line-through',

@@ -43,9 +43,7 @@ export default function Habits() {
         <View style={colors.background}>
           <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
         </View>
-
         <PlanSection plans={planSection} />
-
         {groups.map(group => {
           const habitSection = habits.filter(habit => habit.section === group.name);
 
