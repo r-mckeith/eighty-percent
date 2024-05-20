@@ -5,10 +5,9 @@ import { HabitProps } from '../../src/types/shared';
 import { selectHabit } from '../../src/api/Habits';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
 import { useAggregatedData } from '../../src/hooks/aggregateData';
-import { Row, RowText, Swipe, StatsText, Section, SectionTitle } from '../layout';
+import { Row, RowText, Swipe, StatsText, Section} from '../layout';
 import RightSwipe from '../rightSwipe/RightSwipe';
 import StatsHeader from './StatsHeader';
-import { AddButton } from '../shared';
 
 type Habits = {
   habits: HabitProps[];
@@ -16,7 +15,7 @@ type Habits = {
   groupId: number;
 };
 
-export default function Habits({ habits, sectionName, groupId }: Habits) {
+export default function Habits({ habits}: Habits) {
   const { dispatch: habitDataDispatch } = useHabitDataContext();
   const { habitsTableData } = useAggregatedData();
   const { selectedDate } = useDateContext();
@@ -48,9 +47,6 @@ export default function Habits({ habits, sectionName, groupId }: Habits) {
 
   return (
     <Section>
-      {/* <SectionTitle title={sectionName}>
-        {<AddButton sectionName={sectionName} type={'habit'} groupId={groupId} />}
-      </SectionTitle> */}
       {habits.length > 0 && <StatsHeader />}
       {sortedHabits.map((habit, index) => {
         const { habitData } = habit;
@@ -61,13 +57,15 @@ export default function Habits({ habits, sectionName, groupId }: Habits) {
             swipeableRow={swipeableRow}
             renderRightActions={() => (
               <RightSwipe item={habit} habitData={habitData} showData={true} swipeableRow={swipeableRow} />
-            )}>
+            )}
+          >
             <Row
               key={index}
               opacity={0.2}
               onPress={() => handleSelectHabit(habit)}
               first={false}
-              last={index === habits.length - 1 || habits.length === 1}>
+              last={index === habits.length - 1 || habits.length === 1}
+            >
               <View style={styles.rowLayout}>
                 <RowText text={habit.name} flex={3.5} maxLength={25} />
                 <StatsText

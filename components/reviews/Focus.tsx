@@ -17,7 +17,7 @@ export default function Focus() {
       <Row opacity={1} first={true} last={true}>
         <Text>
           <Text style={[{ fontWeight: 'bold' }, colors.text]}>This week's focus: </Text>
-          <Text style={colors.text}>{lastReview.improve}</Text>
+          <Text style={colors.text}>{lastReview && lastReview.improve}</Text>
         </Text>
       </Row>
     </Section>

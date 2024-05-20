@@ -2,7 +2,7 @@ import React from 'react';
 import { ActivityIndicator, View, StyleSheet, useColorScheme } from 'react-native';
 import { useDateContext, useHabitContext, useGroupContext, usePlanContext, useTaskContext } from '../src/contexts';
 import { getColors } from '../src/colors';
-import { ReviewButton } from '../components/shared';
+import { ReviewButton, AddButton } from '../components/shared';
 import { Scroll, SectionTitle } from '../components/layout';
 import { Focus } from '../components/reviews';
 import { DateSelector, HabitSection, PlanSection } from '../components/actions';
@@ -19,6 +19,8 @@ export default function Habits() {
   const colors = getColors(scheme);
 
   const selectedDateString = selectedDate.toLocaleDateString('en-CA');
+  const habitGroup = groups.filter(group => group.name === 'habits');
+  const groupId = habitGroup && habitGroup[0]?.id;
   const planSection = filterPlans(plans, selectedDateString);
   const habitSection = habits.filter(habit => habit.section === 'habits');
 
@@ -40,19 +42,18 @@ export default function Habits() {
   }
 
   return (
-    <>
-      <Scroll stickyIndices={[2, 4]}>
-        <View style={colors.background}>
-          <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
-        </View>
-        <Focus />
-        <SectionTitle title='Plans' />
-        <PlanSection plans={planSection} />
-        <SectionTitle title='Habits' />
-        <HabitSection habits={habitSection} sectionName={'habits'} groupId={0} />
-        <ReviewButton />
-      </Scroll>
-    </>
+    <Scroll stickyIndices={[2, 4]}>
+      <View style={colors.background}>
+        <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
+      </View>
+      <Focus />
+      <SectionTitle title='Plans' />
+      <PlanSection plans={planSection} />
+
+      <SectionTitle title={'Habits'}>{<AddButton sectionName={'habits'} type={'habit'} groupId={groupId} />}</SectionTitle>
+      <HabitSection habits={habitSection} sectionName={'habits'} groupId={groupId} />
+      <ReviewButton />
+    </Scroll>
   );
 }
 

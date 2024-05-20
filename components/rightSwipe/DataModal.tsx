@@ -45,7 +45,7 @@ export default function DataEditModal({ visible, placeholder, habitData, onClose
     <Modal placeholder={placeholder} visible={visible} onClose={handleCancel} onSave={handleSave} disabled={disabled}>
       <View style={styles.numberInputContainer}>
         <TouchableOpacity onPress={decrementValue} style={[styles.controlButton, colors.border]}>
-          <Text style={styles.controlButtonText}>-</Text>
+          <Text style={[styles.controlButtonText, colors.text]}>-</Text>
         </TouchableOpacity>
         <Text style={[styles.numberDisplay, colors.text]}>{currentValue}</Text>
         <TouchableOpacity onPress={incrementValue} style={styles.controlButton}>

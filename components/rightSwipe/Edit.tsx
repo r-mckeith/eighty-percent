@@ -26,9 +26,9 @@ export default function Edit({ item, swipeableRow, type }: Edit) {
   }
 
   async function handleEditHabit(id: number, newName: string) {
+    swipeableRow.current?.close();
     try {
       await editHabit(id, newName);
-      swipeableRow.current?.close();
       habitDispatch({ type: "EDIT_HABIT", id, newName });
     } catch (error) {
       console.error("Failed to edit habit:", error);

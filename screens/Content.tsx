@@ -22,11 +22,11 @@ export default function ContentSection() {
   if (selected === null)
     return (
       <Scroll>
-        {sections.map(section => {
+        {sections.map((section, index) => {
           return (
             <>
               <SectionTitle title={section.name} />
-              <Section>
+              <Section key={index}>
                 {section.content.map((content, index) => {
                   return (
                     <Content

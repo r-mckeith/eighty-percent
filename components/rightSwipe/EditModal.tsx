@@ -34,7 +34,7 @@ export default function EditModal({ visible, id, name, onClose, onSave }: EditMo
       onClose={handleCancel}
       onSave={handleSave}
       disabled={disabled}>
-      <TextInput placeholder={name} value={newName} handleChangeText={setNewName} autoFocus={true} />
+      <TextInput placeholder={name} value={newName} handleChangeText={setNewName} autoFocus={true} onSave={handleSave} />
     </Modal>
   );
 }
