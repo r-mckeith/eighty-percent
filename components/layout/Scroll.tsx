@@ -3,12 +3,17 @@ import { StyleSheet, useColorScheme } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getColors } from '../../src/colors';
 
-export default function Scroll({ children }: any) {
+type Scroll = {
+  children: any;
+  stickyIndices?: number[];
+}
+
+export default function Scroll({ children, stickyIndices }: Scroll) {
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
   return (
-    <ScrollView style={[styles.scrollView, colors.background]} keyboardShouldPersistTaps='handled'>
+    <ScrollView style={[styles.scrollView, colors.background]} keyboardShouldPersistTaps='handled' stickyHeaderIndices={stickyIndices}>
       {children}
     </ScrollView>
   );
@@ -17,6 +22,6 @@ export default function Scroll({ children }: any) {
 const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 16,
   },
 });

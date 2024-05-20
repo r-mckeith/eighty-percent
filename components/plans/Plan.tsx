@@ -4,7 +4,7 @@ import AddButton from '../shared/AddButton';
 import Scope from './Scope';
 import { PlanProps } from '../../src/types/shared';
 import { Row, RowText, Swipe } from '../layout';
-import RightSwipe from '../swipe/RightSwipe';
+import RightSwipe from '../rightSwipe/RightSwipe';
 
 type Plan = {
   plan: PlanProps;

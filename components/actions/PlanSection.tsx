@@ -1,8 +1,9 @@
 import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { PlanProps } from '../../src/types/shared';
 import { markPlanAsComplete } from '../../src/api/Plans';
 import { usePlanContext, useDateContext } from '../../src/contexts';
-import { Row, RowText, StatsText, Section } from '../layout';
+import { Row, RowText, Section } from '../layout';
 import { Icon } from '../shared';
 
 type Plans = {
@@ -12,6 +13,25 @@ type Plans = {
 export default function Plans({ plans }: Plans) {
   const { selectedDate } = useDateContext();
   const { dispatch } = usePlanContext();
+
+  const planMap: { [key: string]: PlanProps } = plans.reduce((acc: { [key: string]: PlanProps }, plan: PlanProps) => {
+    acc[plan.id] = plan;
+    return acc;
+  }, {});
+
+  const getBreadcrumbTrail = (plan: PlanProps) => {
+    let breadcrumb = [];
+    let currentPlan: PlanProps | undefined = plan;
+
+    while (currentPlan) {
+      breadcrumb.unshift(currentPlan.name);
+      currentPlan = currentPlan.parentId ? planMap[currentPlan.parentId] : undefined;
+    }
+
+    breadcrumb.pop();
+
+    return breadcrumb.length > 0 ? `${breadcrumb.join(' > ')} >` : null;
+  };
 
   async function handleToggleCompleted(id: number, selectedDate: Date, dispatch: React.Dispatch<any>) {
     dispatch({ type: 'TOGGLE_COMPLETED', id: id, selectedDate: selectedDate });
@@ -29,10 +49,12 @@ export default function Plans({ plans }: Plans) {
   }
 
   return (
-    <Section title='Plans'>
+    <Section>
       {plans.map((plan, index) => {
         const isSelected = plan.completed ? plan.completed === selectedDate.toISOString().split('T')[0] : false;
         const isSelectedLater = plan.completed ? plan.completed > selectedDate.toISOString().split('T')[0] : false;
+        const breadcrumb = getBreadcrumbTrail(plan);
+
         return (
           <Row
             key={index}
@@ -42,7 +64,16 @@ export default function Plans({ plans }: Plans) {
             selected={isSelected}
             first={index === 0}
             last={index === plans.length - 1 || plans.length === 1}>
-            <RowText text={plan.name} disabled={isSelected || isSelectedLater} completed={isSelected} flex={8} maxLength={30} />
+            <View style={styles.textContainer}>
+              {!isSelected && !isSelectedLater && <Text style={styles.breadcrumbText}>{breadcrumb}</Text>}
+
+              <RowText
+                text={plan.name}
+                disabled={isSelected || isSelectedLater}
+                completed={isSelected}
+                maxLength={30}
+              />
+            </View>
             <Icon name={isSelected ? 'check' : isSelectedLater ? 'arrow-right' : ''} style={{ paddingRight: 15 }} />
           </Row>
         );
@@ -50,3 +81,15 @@ export default function Plans({ plans }: Plans) {
     </Section>
   );
 }
+
+const styles = StyleSheet.create({
+  textContainer: {
+    flexDirection: 'column',
+    flex: 8,
+  },
+  breadcrumbText: {
+    fontSize: 10,
+    color: '#999',
+    marginBottom: 2,
+  },
+});

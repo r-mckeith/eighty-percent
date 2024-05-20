@@ -6,7 +6,7 @@ import { selectHabit } from '../../src/api/Habits';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
 import { useAggregatedData } from '../../src/hooks/aggregateData';
 import { Row, RowText, Swipe, StatsText, Section, SectionTitle } from '../layout';
-import RightSwipe from '../swipe/RightSwipe';
+import RightSwipe from '../rightSwipe/RightSwipe';
 import StatsHeader from './StatsHeader';
 import { AddButton } from '../shared';
 
@@ -23,6 +23,17 @@ export default function Habits({ habits, sectionName, groupId }: Habits) {
 
   const swipeableRow = useRef<Swipeable | null>(null);
 
+  const habitsWithData = habits.map(habit => ({
+    ...habit,
+    habitData: habitsTableData.find(data => data.tag_id === habit.id),
+  }));
+
+  const sortedHabits = habitsWithData.sort((a, b) => {
+    const weekA = a.habitData ? a.habitData.week : 0;
+    const weekB = b.habitData ? b.habitData.week : 0;
+    return weekB - weekA;
+  });
+
   const handleSelectHabit = async (selectedHabit: HabitProps) => {
     try {
       const updatedHabitData = await selectHabit(selectedHabit, selectedDate);
@@ -37,12 +48,13 @@ export default function Habits({ habits, sectionName, groupId }: Habits) {
 
   return (
     <Section>
-      <SectionTitle title={sectionName}>
+      {/* <SectionTitle title={sectionName}>
         {<AddButton sectionName={sectionName} type={'habit'} groupId={groupId} />}
-      </SectionTitle>
+      </SectionTitle> */}
       {habits.length > 0 && <StatsHeader />}
-      {habits.map((habit, index) => {
-        const habitData = habitsTableData.find(data => data.tag_id === habit.id);
+      {sortedHabits.map((habit, index) => {
+        const { habitData } = habit;
+
         return (
           <Swipe
             key={habit.id}
@@ -58,12 +70,10 @@ export default function Habits({ habits, sectionName, groupId }: Habits) {
               last={index === habits.length - 1 || habits.length === 1}>
               <View style={styles.rowLayout}>
                 <RowText text={habit.name} flex={3.5} maxLength={25} />
-                {habitData && (
-                  <StatsText
-                    day={habitData.day > 0 ? habitData.day : '-'}
-                    week={habitData.week > 0 ? habitData.week : '-'}
-                  />
-                )}
+                <StatsText
+                  day={habitData ? (habitData.day > 0 ? habitData.day : '0') : '0'}
+                  week={habitData ? (habitData.week > 0 ? habitData.week : '0') : '0'}
+                />
               </View>
             </Row>
           </Swipe>

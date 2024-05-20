@@ -73,13 +73,13 @@ export default function ReviewModal({ visible, onClose }: ReviewModal) {
         />
         <ReviewQuestion
           value={answer.bad}
-          question={'What did not go well?'}
+          question={"What didn't go well?"}
           handleChange={handleChange}
           category={'bad'}
         />
         <ReviewQuestion
           value={answer.improve}
-          question={'What is your plan to improve?'}
+          question={"What's your plan to improve?"}
           handleChange={handleChange}
           category={'improve'}
         />

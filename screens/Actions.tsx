@@ -20,6 +20,7 @@ export default function Habits() {
 
   const selectedDateString = selectedDate.toLocaleDateString('en-CA');
   const planSection = filterPlans(plans, selectedDateString);
+  const habitSection = habits.filter(habit => habit.section === 'habits');
 
   function filterPlans(plans: any, selectedDateString: string) {
     return plans.filter((plan: any) => {
@@ -40,24 +41,17 @@ export default function Habits() {
 
   return (
     <>
-      <Scroll>
+      <Scroll stickyIndices={[2, 4]}>
         <View style={colors.background}>
           <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
         </View>
         <Focus />
+        <SectionTitle title='Plans' />
         <PlanSection plans={planSection} />
-        {groups.map(group => {
-          const habitSection = habits.filter(habit => habit.section === group.name);
-
-          // until old projects are removed from habits in the db
-          if (group.name === 'today') {
-            return;
-          }
-
-          return <HabitSection habits={habitSection} sectionName={group.name} groupId={group.id} />;
-        })}
+        <SectionTitle title='Habits' />
+        <HabitSection habits={habitSection} sectionName={'habits'} groupId={0} />
+        <ReviewButton />
       </Scroll>
-      <ReviewButton />
     </>
   );
 }
