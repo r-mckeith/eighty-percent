@@ -11,6 +11,7 @@ import {
   GroupProvider,
   HabitDataProvider,
   HabitProvider,
+  NoteProvider,
   PlanProvider,
   ReviewProvider,
   TaskProvider,
@@ -31,22 +32,24 @@ export default function App() {
           <TaskProvider>
             <HabitDataProvider>
               <PlanProvider>
-                <ReviewProvider>
-                  <SafeAreaView style={[styles.container, colors.background]}>
-                    <StatusBar style='light' />
-                    <MenuProvider>
-                      <GestureHandlerRootView style={{ flex: 1 }}>
-                        {session && session.user ? (
-                          <NavigationContainer>
-                            <MyTabs />
-                          </NavigationContainer>
-                        ) : (
-                          <Auth />
-                        )}
-                      </GestureHandlerRootView>
-                    </MenuProvider>
-                  </SafeAreaView>
-                </ReviewProvider>
+                <NoteProvider>
+                  <ReviewProvider>
+                    <SafeAreaView style={[styles.container, colors.background]}>
+                      <StatusBar style='light' />
+                      <MenuProvider>
+                        <GestureHandlerRootView style={{ flex: 1 }}>
+                          {session && session.user ? (
+                            <NavigationContainer>
+                              <MyTabs />
+                            </NavigationContainer>
+                          ) : (
+                            <Auth />
+                          )}
+                        </GestureHandlerRootView>
+                      </MenuProvider>
+                    </SafeAreaView>
+                  </ReviewProvider>
+                </NoteProvider>
               </PlanProvider>
             </HabitDataProvider>
           </TaskProvider>

@@ -23,6 +23,7 @@ export default function Habits() {
   const groupId = habitGroup && habitGroup[0]?.id;
   const planSection = filterPlans(plans, selectedDateString);
   const habitSection = habits.filter(habit => habit.section === 'habits');
+  const stickyIndices = planSection.length > 0 ? [2, 4] : [3];
 
   function filterPlans(plans: any, selectedDateString: string) {
     return plans.filter((plan: any) => {
@@ -42,15 +43,17 @@ export default function Habits() {
   }
 
   return (
-    <Scroll stickyIndices={[2, 4]}>
+    <Scroll stickyIndices={stickyIndices}>
       <View style={colors.background}>
         <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
       </View>
       <Focus />
-      <SectionTitle title='Plans' />
-      <PlanSection plans={planSection} />
+      <SectionTitle title={planSection.length > 0 ? 'Plans' : ''} />
+      {planSection.length > 0 && <PlanSection plans={planSection} />}
 
-      <SectionTitle title={'Habits'}>{<AddButton sectionName={'habits'} type={'habit'} groupId={groupId} />}</SectionTitle>
+      <SectionTitle title={'Habits'}>
+        {<AddButton sectionName={'habits'} type={'habit'} groupId={groupId} />}
+      </SectionTitle>
       <HabitSection habits={habitSection} sectionName={'habits'} groupId={groupId} />
       <ReviewButton />
     </Scroll>

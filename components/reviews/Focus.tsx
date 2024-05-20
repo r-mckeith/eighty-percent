@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, useColorScheme, Text } from 'react-native';
+import { useColorScheme, Text } from 'react-native';
 import { getColors } from '../../src/colors';
 import { useReviewContext } from '../../src/contexts';
-import { Section, SectionTitle, Row } from '../layout';
+import { Section, Row } from '../layout';
 
 export default function Focus() {
   const { reviews } = useReviewContext();
@@ -10,7 +10,9 @@ export default function Focus() {
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
-  const lastReview = reviews && reviews[0]?.response;
+  const lastReview = reviews && reviews[0]?.response ? reviews[0]?.response : null;
+
+  if (!lastReview) return
 
   return (
     <Section>
@@ -23,15 +25,3 @@ export default function Focus() {
     </Section>
   );
 }
-
-const styles = StyleSheet.create({
-  activityContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  activityHorizontal: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 10,
-  },
-});

@@ -14,7 +14,7 @@ export default function ReviewButton() {
       <TouchableOpacity activeOpacity={0.2} style={colors.reviewButton}>
         <Button title={'review'} onPress={() => setShowModal(true)} color={'white'} />
       </TouchableOpacity>
-      <ReviewModal visible={showModal} onClose={() => setShowModal(false)} onAdd={() => {}} />
+      <ReviewModal visible={showModal} onClose={() => setShowModal(false)} />
     </View>
   );
 }

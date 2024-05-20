@@ -58,10 +58,14 @@ export type NewPlanProps = {
   depth?: number;
 };
 
-export interface GroupProps {
+export type GroupProps = {
   id: number;
   user_id: number;
-  name: string
+  name: string;
 };
 
-export type ReviewProps = any
+export type ReviewProps = any;
+
+export type NoteProps = any;
+
+export type NewNoteProps = any;

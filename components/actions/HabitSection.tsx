@@ -56,7 +56,7 @@ export default function Habits({ habits}: Habits) {
             key={habit.id}
             swipeableRow={swipeableRow}
             renderRightActions={() => (
-              <RightSwipe item={habit} habitData={habitData} showData={true} swipeableRow={swipeableRow} />
+              <RightSwipe item={habit} habitData={habitData} showData={true} swipeableRow={swipeableRow} type={'habit'} />
             )}
           >
             <Row

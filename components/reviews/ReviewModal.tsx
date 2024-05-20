@@ -3,7 +3,7 @@ import { addReview } from '../../src/api/Reviews';
 import { useAggregatedData } from '../../src/hooks/aggregateData';
 import { useDateContext, useReviewContext } from '../../src/contexts';
 import { Grid, ReviewQuestion, Summary } from '../reviews';
-import { Modal } from '../shared';
+import Modal from '../shared/Modal'
 import { Section } from '../layout';
 
 type ReviewModal = {
