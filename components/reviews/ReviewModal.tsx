@@ -2,17 +2,16 @@ import React, { useState } from 'react';
 import { addReview } from '../../src/api/Reviews';
 import { useAggregatedData } from '../../src/hooks/aggregateData';
 import { useDateContext, useReviewContext } from '../../src/contexts';
-import { Grid, Questions, Summary } from '../reviews';
+import { Grid, ReviewQuestion, Summary } from '../reviews';
 import { Modal } from '../shared';
 import { Section } from '../layout';
 
 type ReviewModal = {
   visible: boolean;
   onClose: () => void;
-  onSave: (name: string) => void;
 };
 
-export default function ReviewModal({ visible, onClose, onSave }: ReviewModal) {
+export default function ReviewModal({ visible, onClose }: ReviewModal) {
   const [answer, setAnswer] = useState<{ good: string; bad: string; improve: string }>({
     good: '',
     bad: '',
@@ -65,22 +64,22 @@ export default function ReviewModal({ visible, onClose, onSave }: ReviewModal) {
       {projectTableData.length > 0 && <Grid data={projectTableData} name={'Projects'} selectedDate={selectedDate} />}
 
       {habitGridData.length > 0 && <Grid data={habitGridData} name={'Habits'} selectedDate={selectedDate} />}
-      <Section>
-        <Questions
+      <Section title={'Review your week:'}>
+        <ReviewQuestion
           value={answer.good}
-          question={'What went well last week?'}
+          question={'What went well?'}
           handleChange={handleChange}
           category={'good'}
         />
-        <Questions
+        <ReviewQuestion
           value={answer.bad}
-          question={'What did not go well last week?'}
+          question={'What did not go well?'}
           handleChange={handleChange}
           category={'bad'}
         />
-        <Questions
+        <ReviewQuestion
           value={answer.improve}
-          question={'What is your plan to improve this week?'}
+          question={'What is your plan to improve?'}
           handleChange={handleChange}
           category={'improve'}
         />

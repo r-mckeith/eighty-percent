@@ -2,8 +2,9 @@ import React from 'react';
 import { ActivityIndicator, View, StyleSheet, useColorScheme } from 'react-native';
 import { useDateContext, useHabitContext, useGroupContext, usePlanContext, useTaskContext } from '../src/contexts';
 import { getColors } from '../src/colors';
-import { AddButton, ReviewButton } from '../components/shared';
-import { Scroll } from '../components/layout';
+import { ReviewButton } from '../components/shared';
+import { Scroll, SectionTitle } from '../components/layout';
+import { Focus } from '../components/reviews';
 import { DateSelector, HabitSection, PlanSection } from '../components/actions';
 
 export default function Habits() {
@@ -43,6 +44,7 @@ export default function Habits() {
         <View style={colors.background}>
           <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
         </View>
+        <Focus />
         <PlanSection plans={planSection} />
         {groups.map(group => {
           const habitSection = habits.filter(habit => habit.section === group.name);

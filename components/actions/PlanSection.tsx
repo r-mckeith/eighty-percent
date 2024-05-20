@@ -42,7 +42,7 @@ export default function Plans({ plans }: Plans) {
             selected={isSelected}
             first={index === 0}
             last={index === plans.length - 1 || plans.length === 1}>
-            <RowText text={plan.name} disabled={isSelected || isSelectedLater} completed={isSelected} flex={8} maxLength={40} />
+            <RowText text={plan.name} disabled={isSelected || isSelectedLater} completed={isSelected} flex={8} maxLength={30} />
             <Icon name={isSelected ? 'check' : isSelectedLater ? 'arrow-right' : ''} style={{ paddingRight: 15 }} />
           </Row>
         );

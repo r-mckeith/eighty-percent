@@ -12,7 +12,7 @@ type Grid = {
 export default function Grid({ data, selectedDate, name }: Grid) {
   const scheme = useColorScheme();
   const colors = getColors(scheme);
-  
+
   const dataLength = data.length;
 
   function generateDayHeaders() {
@@ -36,18 +36,18 @@ export default function Grid({ data, selectedDate, name }: Grid) {
       {data &&
         data.map((data: any, index: any) => (
           <Row key={index} opacity={1} last={index === dataLength - 1}>
-            <RowText text={data.name} fontSize={12} style={{ marginLeft: 7 }} />
+            <RowText text={data.name} fontSize={12} style={{ marginLeft: 7 }} flex={3.5} maxLength={14} />
             {data.days.map((day: any, idx: number) => (
-              <Text
+              <RowText
                 key={idx}
+                text={day.icon}
                 style={[
                   styles.gridCell,
                   {
-                    color: day.status === 'P' || day.icon === '-' ? day.color : colors.text.color
+                    color: day.status === 'P' || day.icon === '-' ? day.color : colors.text.color,
                   },
-                ]}>
-                {day.icon}
-              </Text>
+                ]}
+              />
             ))}
           </Row>
         ))}
@@ -67,7 +67,6 @@ const styles = StyleSheet.create({
   headerCell: {
     flex: 4,
     textAlign: 'center',
-    fontWeight: 'bold',
   },
   gridCell: {
     flex: 1,

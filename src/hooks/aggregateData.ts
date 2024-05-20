@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useDateContext } from '../contexts/date/useDateContext';
-import { useHabitContext } from '../contexts/habits/UseHabitContext';
-import { useHabitDataContext } from '../contexts/habitData/UseHabitDataContext';
 import { getHabitData } from '../api/Habits';
-import { HabitProps, HabitDataProps } from '../types/shared';
+import { HabitProps, HabitDataProps, PlanProps } from '../types/shared';
+import { useDateContext, useHabitContext, useHabitDataContext, usePlanContext } from '../contexts';
 
-export type HabitsAggregatedData = {
+export type AggregatedHabitData = {
   tag_id: number;
   day: number;
   week: number;
@@ -13,7 +11,7 @@ export type HabitsAggregatedData = {
   year: number;
 };
 
-export type ProjectsAggregatedData = {
+export type AggregatedPlanData = {
   details: [
     {
       name: string;
@@ -33,13 +31,14 @@ export type ProjectsAggregatedData = {
 };
 
 export function useAggregatedData() {
-  const [habitsTableData, setHabitsTableData] = useState<HabitsAggregatedData[]>([]);
+  const [habitsTableData, setHabitsTableData] = useState<AggregatedHabitData[]>([]);
   const [habitGridData, setHabitGridData] = useState<any>([]);
   const [projectTableData, setProjectTableData] = useState<any>([]);
 
   const { selectedDate } = useDateContext();
   const { habits } = useHabitContext();
   const { habitData } = useHabitDataContext();
+  const { plans } = usePlanContext()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,7 +47,7 @@ export function useAggregatedData() {
         const habitGridData = await getHabitData(selectedDate);
         const aggregatedHabits = aggregateHabitData(habitRowData);
         const aggregatedGridData = aggregateHabitGridData(habitGridData);
-        const aggregatedProjects = aggregateProjectsData(habits);
+        const aggregatedProjects = aggregatePlanData(plans);
 
         setHabitsTableData(aggregatedHabits);
         setHabitGridData(aggregatedGridData);
@@ -61,8 +60,8 @@ export function useAggregatedData() {
     fetchData();
   }, [selectedDate, habits, habitData]);
 
-  function aggregateHabitData(yearData: HabitDataProps[]): HabitsAggregatedData[] {
-    const habitMap: Record<string, HabitsAggregatedData> = {};
+  function aggregateHabitData(yearData: HabitDataProps[]): AggregatedHabitData[] {
+    const habitMap: Record<string, AggregatedHabitData> = {};
 
     const startDay = new Date(
       Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth(), selectedDate.getUTCDate())
@@ -143,7 +142,7 @@ export function useAggregatedData() {
     return Object.values(habitGridMap);
   }
 
-  function aggregateProjectsData(projects: HabitProps[]) {
+  function aggregatePlanData(projects: PlanProps[]) {
     const startDay = new Date(selectedDate);
     startDay.setHours(0, 0, 0, 0);
     startDay.setDate(startDay.getDate() - 6);
