@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { HabitProps, PlanProps } from '../../src/types/shared';
-import { Delete, Edit, EditData, Note } from '.';
+import { DeleteButton, EditButton, EditDataButton, NoteButton } from '.';
 
 type RightSwipe = {
   item: HabitProps | PlanProps;
@@ -17,16 +17,16 @@ export default function RightSwipe({ item, habitData, showData, swipeableRow, ty
 
   function renderShowData() {
     if (showData) {
-      return <EditData item={item as HabitProps} habitData={habitData} swipeableRow={swipeableRow} />;
+      return <EditDataButton item={item as HabitProps} habitData={habitData} swipeableRow={swipeableRow} />;
     }
   }
 
   return (
     <View style={{ flexDirection: 'row', width: width }}>
       {renderShowData()}
-      <Edit item={item} swipeableRow={swipeableRow} type={type} />
-      <Note type={type} itemId={item.id} swipeableRow={swipeableRow} />
-      <Delete item={item} swipeableRow={swipeableRow} type={type} />
+      <EditButton item={item} swipeableRow={swipeableRow} type={type} />
+      <NoteButton type={type} itemId={item.id} swipeableRow={swipeableRow} />
+      <DeleteButton item={item} swipeableRow={swipeableRow} type={type} />
     </View>
   );
 }

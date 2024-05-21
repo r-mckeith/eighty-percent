@@ -31,7 +31,7 @@ export default function Plan({ plan, rootPlanId, first, last, setSelected }: Pla
         {rootPlanId && (
           <Scope id={plan.id} inScopeDay={plan.inScopeDay ? plan.inScopeDay : null} completed={plan.completed} />
         )}
-        <RowText text={plan.name} disabled={!!plan.completed} completed={!!plan.completed} flex={8} maxLength={30} />
+        <RowText text={plan.name} disabled={!!plan.completed} completed={!!plan.completed} flex={8} maxLength={100} />
         {rootPlanId && !plan.completed && (
           <AddButton parentId={plan.id} depth={plan.depth ? plan.depth : 0} type={'plan'} />
         )}

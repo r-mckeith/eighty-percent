@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { editHabitData } from '../../src/api/Habits';
 import DataModal from './DataModal';
+import RightSwipeButton from './RightSwipeButton';
 import { HabitProps } from '../../src/types/shared';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
-import { Icon } from '../shared';
 
-type EditData = {
+type EditDataButton = {
   item: HabitProps;
   habitData: any;
   swipeableRow: React.RefObject<Swipeable | null>;
 };
 
-export default function EditData({ item, habitData, swipeableRow }: EditData) {
+export default function EditDataButton({ item, habitData, swipeableRow }: EditDataButton) {
   const [showEditDataModal, setShowEditDataModal] = useState<boolean>(false);
 
   const { dispatch: habitDataDispatch } = useHabitDataContext();
@@ -43,14 +42,7 @@ export default function EditData({ item, habitData, swipeableRow }: EditData) {
 
   return (
     <>
-      <Icon
-        name='table-edit'
-        size={24}
-        color='white'
-        opacity={0.2}
-        opacityStyle={[styles.rightSwipeItem, styles.dataEditButton]}
-        onPress={() => setShowEditDataModal(true)}
-      />
+    <RightSwipeButton icon='table-edit' backgroundColor='green' text='Edit day' onPress={() => setShowEditDataModal(true)}/>
       <DataModal
         visible={showEditDataModal}
         onClose={handleClose}
@@ -61,15 +53,3 @@ export default function EditData({ item, habitData, swipeableRow }: EditData) {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  rightSwipeItem: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 40,
-    paddingVertical: 12,
-  },
-  dataEditButton: {
-    backgroundColor: 'grey',
-  },
-});

@@ -34,7 +34,6 @@ export default function Habits() {
   const habitSection = habits.filter(habit => habit.section === 'habits');
   const lastReview = reviews && reviews[0]?.response ? reviews[0]?.response : null;
 
-
   function filterPlans(plans: any, selectedDateString: string) {
     return plans.filter((plan: any) => {
       const isInScopeForTodayOrFuture =
@@ -76,31 +75,33 @@ export default function Habits() {
 
   function getStickyIndices() {
     if (lastReview && planSection.length > 0) {
-      return [2, 4];
-    } else if (lastReview && planSection.length === 0) {
-      return [2];
-    } else if (!lastReview && planSection.length > 0) {
       return [1, 3];
-    } else if (!lastReview && planSection.length === 0) {
+    } else if (lastReview && planSection.length === 0) {
       return [1];
+    } else if (!lastReview && planSection.length > 0) {
+      return [0, 2];
+    } else if (!lastReview && planSection.length === 0) {
+      return [0];
     }
   }
 
   return (
-    <Scroll stickyIndices={getStickyIndices()}>
+    <>
       <View style={colors.background}>
         <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
       </View>
-      {renderFocus()}
-      {renderPlanSectionTitle()}
-      {renderPlanSection()}
+      <Scroll stickyIndices={getStickyIndices()}>
+        {renderFocus()}
+        {renderPlanSectionTitle()}
+        {renderPlanSection()}
 
-      <SectionTitle title={'Habits'}>
-        {<AddButton sectionName={'habits'} type={'habit'} groupId={groupId} />}
-      </SectionTitle>
-      <HabitSection habits={habitSection} sectionName={'habits'} groupId={groupId} />
-      <ReviewButton />
-    </Scroll>
+        <SectionTitle title={'Habits'}>
+          {<AddButton sectionName={'habits'} type={'habit'} groupId={groupId} />}
+        </SectionTitle>
+        <HabitSection habits={habitSection} sectionName={'habits'} groupId={groupId} />
+        <ReviewButton />
+      </Scroll>
+    </>
   );
 }
 

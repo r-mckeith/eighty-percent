@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { addNote } from '../../src/api/Notes';
 import { useDateContext, useNoteContext } from '../../src/contexts';
 import { NoteProps } from '../../src/types/shared';
 import { AddModal } from '../shared';
-import { Icon } from '../shared';
+import RightSwipeButton from './RightSwipeButton';
 
-type Note = {
+type NoteButton = {
   type: string;
   itemId: number;
   swipeableRow: React.RefObject<Swipeable | null>;
 };
 
-export default function Note({ type, itemId, swipeableRow }: Note) {
+export default function NoteButton({ type, itemId, swipeableRow }: NoteButton) {
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
 
   const { dispatch } = useNoteContext();
@@ -42,28 +41,9 @@ export default function Note({ type, itemId, swipeableRow }: Note) {
 
   return (
     <>
-      <Icon
-        name='book'
-        size={24}
-        color='white'
-        opacity={0.2}
-        opacityStyle={[styles.rightSwipeItem, styles.editButton]}
-        onPress={() => setShowAddModal(true)}
-      />
+      <RightSwipeButton icon='book' backgroundColor='blue' text='Note' onPress={() => setShowAddModal(true)}/>
 
       <AddModal visible={showAddModal} onClose={handleClose} onSave={handleAddNote} displayName='Note' />
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  rightSwipeItem: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 40,
-    paddingVertical: 12,
-  },
-  editButton: {
-    backgroundColor: 'green',
-  },
-});
