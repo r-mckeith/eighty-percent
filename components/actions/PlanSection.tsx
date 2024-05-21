@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, useColorScheme } from 'react-native';
+import { getColors } from '../../src/colors';
 import { PlanProps } from '../../src/types/shared';
 import { markPlanAsComplete } from '../../src/api/Plans';
 import { usePlanContext, useDateContext } from '../../src/contexts';
@@ -8,11 +9,16 @@ import { Icon } from '../shared';
 
 type Plans = {
   plans: PlanProps[];
+  children?: any;
+  hasReview?: boolean;
 };
 
-export default function Plans({ plans }: Plans) {
+export default function Plans({ plans, children, hasReview }: Plans) {
   const { selectedDate } = useDateContext();
   const { dispatch } = usePlanContext();
+
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
 
   const planMap: { [key: string]: PlanProps } = plans.reduce((acc: { [key: string]: PlanProps }, plan: PlanProps) => {
     acc[plan.id] = plan;
@@ -63,9 +69,9 @@ export default function Plans({ plans }: Plans) {
             disabled={isSelectedLater}
             selected={isSelected}
             first={index === 0}
-            last={index === plans.length - 1 || plans.length === 1}>
+            last={hasReview ? false : index === plans.length - 1 || plans.length === 1}>
             <View style={styles.textContainer}>
-              {!isSelected && !isSelectedLater && <Text style={styles.breadcrumbText}>{breadcrumb}</Text>}
+              {!isSelected && !isSelectedLater && breadcrumb && <Text style={[styles.breadcrumbText, colors.text]}>{breadcrumb}</Text>}
 
               <RowText
                 text={plan.name}
@@ -78,6 +84,7 @@ export default function Plans({ plans }: Plans) {
           </Row>
         );
       })}
+      {children}
     </Section>
   );
 }
@@ -89,7 +96,6 @@ const styles = StyleSheet.create({
   },
   breadcrumbText: {
     fontSize: 10,
-    color: '#999',
     marginBottom: 2,
   },
 });

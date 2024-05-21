@@ -4,8 +4,7 @@ import { useDateContext, useHabitContext, useGroupContext, usePlanContext, useTa
 import { getColors } from '../src/colors';
 import { ReviewButton, AddButton } from '../components/shared';
 import { Scroll, SectionTitle } from '../components/layout';
-import { Focus } from '../components/reviews';
-import { DateSelector, HabitSection, PlanSection } from '../components/actions';
+import { DateSelector, Focus, HabitSection, PlanSection, ReviewButtonRow } from '../components/actions';
 
 export default function Habits() {
   const { selectedDate, setSelectedDate } = useDateContext();
@@ -17,6 +16,8 @@ export default function Habits() {
 
   const scheme = useColorScheme();
   const colors = getColors(scheme);
+
+  const weeklyReview = true;
 
   const selectedDateString = selectedDate.toLocaleDateString('en-CA');
   const habitGroup = groups.filter(group => group.name === 'habits');
@@ -48,8 +49,12 @@ export default function Habits() {
         <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
       </View>
       <Focus />
-      <SectionTitle title={planSection.length > 0 ? 'Plans' : ''} />
-      {planSection.length > 0 && <PlanSection plans={planSection} />}
+      <SectionTitle title={planSection.length > 0 || weeklyReview ? 'Plans' : ''} />
+      {planSection.length > 0 && (
+        <PlanSection plans={planSection} hasReview={weeklyReview}>
+          <ReviewButtonRow first={planSection.length === 0 ? true : false}/>
+        </PlanSection>
+      )}
 
       <SectionTitle title={'Habits'}>
         {<AddButton sectionName={'habits'} type={'habit'} groupId={groupId} />}
