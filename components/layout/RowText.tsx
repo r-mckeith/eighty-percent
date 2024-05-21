@@ -12,6 +12,14 @@ type RowText = {
   maxLength?: number;
 };
 
+export function truncateText(text: string, maxLength: number) {
+  const lastSpaceIndex = text.lastIndexOf(' ', maxLength);
+  if (lastSpaceIndex === -1) {
+    return `${text.substring(0, maxLength)}...`;
+  }
+  return `${text.substring(0, lastSpaceIndex)}...`;
+}
+
 export default function RowText({ text, style, fontSize = 16, disabled, completed, flex, maxLength }: RowText) {
   const scheme = useColorScheme();
   const colors = getColors(scheme);
@@ -19,14 +27,7 @@ export default function RowText({ text, style, fontSize = 16, disabled, complete
   const textColor = disabled ? colors.disabledText : colors.text;
   const completedText = completed ? styles.completed : {};
 
-  function truncateText() {
-    const lastSpaceIndex = text.lastIndexOf(' ', maxLength);
-    if (lastSpaceIndex === -1) {
-      return `${text.substring(0, maxLength)}...`;
-    }
-    return `${text.substring(0, lastSpaceIndex)}...`;
-  }
-  const truncatedText = maxLength && text.length > maxLength ? truncateText() : text;
+  const truncatedText = maxLength && text.length > maxLength ? truncateText(text, maxLength) : text;
 
   return (
     <Text

@@ -1,19 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
 import { getColors } from '../../src/colors';
 import { PlanProps } from '../../src/types/shared';
 import { markPlanAsComplete } from '../../src/api/Plans';
 import { usePlanContext, useDateContext } from '../../src/contexts';
-import { Row, RowText, Section } from '../layout';
+import { Row, RowText, Section, truncateText } from '../layout';
 import { Icon } from '../shared';
+import ReviewModal from '../reviews/ReviewModal';
 
 type Plans = {
   plans: PlanProps[];
-  children?: any;
-  hasReview?: boolean;
 };
 
-export default function Plans({ plans, children, hasReview }: Plans) {
+export default function Plans({ plans }: Plans) {
+  const [showReviewModal, setShowReviewModal] = useState(false);
+
   const { selectedDate } = useDateContext();
   const { dispatch } = usePlanContext();
 
@@ -30,7 +31,7 @@ export default function Plans({ plans, children, hasReview }: Plans) {
     let currentPlan: PlanProps | undefined = plan;
 
     while (currentPlan) {
-      breadcrumb.unshift(currentPlan.name);
+      breadcrumb.unshift(truncateText(currentPlan.name, 20));
       currentPlan = currentPlan.parentId ? planMap[currentPlan.parentId] : undefined;
     }
 
@@ -39,22 +40,25 @@ export default function Plans({ plans, children, hasReview }: Plans) {
     return breadcrumb.length > 0 ? `${breadcrumb.join(' > ')} >` : null;
   };
 
-  async function handleToggleCompleted(id: number, selectedDate: Date, dispatch: React.Dispatch<any>) {
-    dispatch({ type: 'TOGGLE_COMPLETED', id: id, selectedDate: selectedDate });
+  async function handleToggleCompleted(plan: PlanProps, selectedDate: Date, dispatch: React.Dispatch<any>) {
+    if (plan.name === 'Weekly review') {
+    } else {
+      dispatch({ type: 'TOGGLE_COMPLETED', id: plan.id, selectedDate: selectedDate });
+      try {
+        const updatedPlan = await markPlanAsComplete(plan.id, selectedDate);
 
-    try {
-      const updatedPlan = await markPlanAsComplete(id, selectedDate);
-
-      if (updatedPlan) {
-      } else {
-        console.error('Failed to toggle complete');
+        if (updatedPlan) {
+        } else {
+          console.error('Failed to toggle complete');
+        }
+      } catch (error) {
+        console.error('Failed to toggle complete', error);
       }
-    } catch (error) {
-      console.error('Failed to toggle complete', error);
     }
   }
 
   return (
+    <>
     <Section>
       {plans.map((plan, index) => {
         const isSelected = plan.completed ? plan.completed === selectedDate.toISOString().split('T')[0] : false;
@@ -65,13 +69,15 @@ export default function Plans({ plans, children, hasReview }: Plans) {
           <Row
             key={index}
             opacity={isSelectedLater ? 1 : 0.2}
-            onPress={!isSelectedLater ? () => handleToggleCompleted(plan.id, selectedDate, dispatch) : () => {}}
+            onPress={!isSelectedLater ? () => handleToggleCompleted(plan, selectedDate, dispatch) : () => {}}
             disabled={isSelectedLater}
             selected={isSelected}
             first={index === 0}
-            last={hasReview ? false : index === plans.length - 1 || plans.length === 1}>
+            last={index === plans.length - 1 || plans.length === 1}>
             <View style={styles.textContainer}>
-              {!isSelected && !isSelectedLater && breadcrumb && <Text style={[styles.breadcrumbText, colors.text]}>{breadcrumb}</Text>}
+              {!isSelected && !isSelectedLater && breadcrumb && (
+                <Text style={[styles.breadcrumbText, colors.text]}>{breadcrumb}</Text>
+              )}
 
               <RowText
                 text={plan.name}
@@ -84,8 +90,9 @@ export default function Plans({ plans, children, hasReview }: Plans) {
           </Row>
         );
       })}
-      {children}
     </Section>
+    <ReviewModal visible={showReviewModal} onClose={() => setShowReviewModal(false)} />
+    </>
   );
 }
 

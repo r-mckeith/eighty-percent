@@ -9,9 +9,9 @@ import {
   useTaskContext,
 } from '../src/contexts';
 import { getColors } from '../src/colors';
-import { ReviewButton, AddButton } from '../components/shared';
+import { WeeklyReviewButton, AddButton } from '../components/shared';
 import { Scroll, SectionTitle } from '../components/layout';
-import { DateSelector, Focus, HabitSection, PlanSection, ReviewButtonRow } from '../components/actions';
+import { DateSelector, Focus, HabitSection, PlanSection } from '../components/actions';
 
 export default function Habits() {
   const { selectedDate, setSelectedDate } = useDateContext();
@@ -24,8 +24,6 @@ export default function Habits() {
 
   const scheme = useColorScheme();
   const colors = getColors(scheme);
-
-  const weeklyReview = true;
 
   const selectedDateString = selectedDate.toLocaleDateString('en-CA');
   const habitGroup = groups.filter(group => group.name === 'habits');
@@ -59,16 +57,14 @@ export default function Habits() {
 
   function renderPlanSectionTitle() {
     if (planSection.length > 0) {
-      return <SectionTitle title={planSection.length > 0 || weeklyReview ? 'Plans' : ''} />;
+      return <SectionTitle title={planSection.length > 0 ? 'Plans' : ''} />;
     }
   }
 
   function renderPlanSection() {
     if (planSection.length > 0) {
       return (
-        <PlanSection plans={planSection} hasReview={weeklyReview}>
-          <ReviewButtonRow first={planSection.length === 0 ? true : false} />
-        </PlanSection>
+        <PlanSection plans={planSection} />
       );
     }
   }
@@ -99,7 +95,7 @@ export default function Habits() {
           {<AddButton sectionName={'habits'} type={'habit'} groupId={groupId} />}
         </SectionTitle>
         <HabitSection habits={habitSection} sectionName={'habits'} groupId={groupId} />
-        <ReviewButton />
+        <WeeklyReviewButton />
       </Scroll>
     </>
   );
