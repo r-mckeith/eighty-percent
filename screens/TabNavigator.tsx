@@ -1,11 +1,8 @@
 import React from 'react';
 import { useColorScheme } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import ContentSection from '../components/content/ContentSection';
-import Projects from './Projects';
-import Habits from './Habits';
-import Settings from './Settings';
 import { getColors } from '../src/colors';
+import { Actions, Content, Plans, Settings } from '../screens'
 
 const Tab = createBottomTabNavigator();
 
@@ -22,9 +19,9 @@ export function MyTabs() {
         }
       }}
     >
-      <Tab.Screen name="Actions" component={Habits} options={{ headerShown: false }}/>
-      <Tab.Screen name="Plans" component={Projects} options={{ headerShown: false }}/>
-      <Tab.Screen name="Content" component={ContentSection} options={{ headerShown: false }}/>
+      <Tab.Screen name="Actions" component={Actions} options={{ headerShown: false }}/>
+      <Tab.Screen name="Plans" component={Plans} options={{ headerShown: false }}/>
+      <Tab.Screen name="Content" component={Content} options={{ headerShown: false }}/>
       <Tab.Screen name="Settings" component={Settings} options={{ headerShown: false }}/>
     </Tab.Navigator>
   );

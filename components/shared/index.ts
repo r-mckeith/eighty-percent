@@ -1,9 +1,8 @@
-export { default as Row } from './Row'
-export { default as RowText } from './RowText'
-export { default as Section } from './Section'
-export { default as Swipe } from './Swipe'
-export { default as Icon } from './Icon'
-export { default as SectionTitle } from './SectionTitle'
-export { default as Scroll } from './Scroll'
-export { default as Toggle } from './Toggle'
-export { default as StatsText } from './StatsText'
+export { default as AddButton } from './AddButton';
+export { default as AddModal } from './AddModal'
+export { default as Icon } from './Icon';
+export { default as Modal } from './Modal';
+export { default as ModalHeader } from './ModalHeader'
+export { default as WeeklyReviewButton } from './WeeklyReviewButton'
+export { default as TextInput } from './TextInput';
+export { default as Toggle } from './Toggle';

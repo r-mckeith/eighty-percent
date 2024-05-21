@@ -1,7 +1,7 @@
-import { supabase } from "../../src/api/SupabaseClient";
-import { StyleSheet, View } from "react-native";
-import { Button } from "react-native-elements";
-import { Scroll } from "../shared";
+import { supabase } from '../../src/api/Client';
+import { StyleSheet, View } from 'react-native';
+import { Button } from 'react-native-elements';
+import { Scroll } from '../layout';
 export default function Account() {
   return (
     <>
@@ -10,7 +10,7 @@ export default function Account() {
           <View style={styles.verticallySpaced}></View>
         </View>
       </Scroll>
-      <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
+      <Button title='Sign Out' onPress={() => supabase.auth.signOut()} />
     </>
   );
 }
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   verticallySpaced: {
     paddingTop: 4,
     paddingBottom: 4,
-    alignSelf: "stretch",
+    alignSelf: 'stretch',
   },
   mt20: {
     marginTop: 20,

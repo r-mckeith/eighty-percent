@@ -1,32 +1,32 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import { HabitProps } from '../../src/types/HabitTypes';
-import Edit from './Edit';
-import Delete from './Delete';
-import EditData from './EditData';
+import { HabitProps, PlanProps } from '../../src/types/shared';
+import { DeleteButton, EditButton, EditDataButton, NoteButton } from '.';
 
 type RightSwipe = {
-  item: HabitProps;
+  item: HabitProps | PlanProps;
   habitData?: any;
   showData?: boolean;
   swipeableRow: React.RefObject<Swipeable | null>;
+  type: string;
 };
 
-export default function RightSwipe({ item, habitData, showData, swipeableRow }: RightSwipe) {
-  const width = showData ? 120 : 80;
+export default function RightSwipe({ item, habitData, showData, swipeableRow, type }: RightSwipe) {
+  const width = showData ? 160 : 120;
+
+  function renderShowData() {
+    if (showData) {
+      return <EditDataButton item={item as HabitProps} habitData={habitData} swipeableRow={swipeableRow} />;
+    }
+  }
 
   return (
-    <View style={[styles.rightActionContainer, { width: width }]}>
-      {showData && <EditData item={item} habitData={habitData} swipeableRow={swipeableRow} />}
-      <Edit item={item} swipeableRow={swipeableRow} />
-      <Delete item={item} swipeableRow={swipeableRow} />
+    <View style={{ flexDirection: 'row', width: width }}>
+      {renderShowData()}
+      <EditButton item={item} swipeableRow={swipeableRow} type={type} />
+      <NoteButton type={type} itemId={item.id} swipeableRow={swipeableRow} />
+      <DeleteButton item={item} swipeableRow={swipeableRow} type={type} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  rightActionContainer: {
-    flexDirection: 'row',
-  },
-});

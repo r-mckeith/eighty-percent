@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { NewHabitProps } from '../../src/types/HabitTypes';
-import { useHabitContext } from '../../src/contexts/habits/UseHabitContext';
-import { useGroupContext } from '../../src/contexts/groups/UseGroupContext';
-import { addHabit, addProject } from '../../src/api/SupabaseHabits';
-import { addGroup } from '../../src/api/SupabaseGroups';
-import AddModal from '../modals/AddModal';
+import { NewHabitProps } from '../../src/types/shared';
+import { useGroupContext, useHabitContext, usePlanContext } from '../../src/contexts';
+import { addHabit } from '../../src/api/Habits';
+import { addPlan } from '../../src/api/Plans';
+import { addGroup } from '../../src/api/Groups';
+import AddModal from './AddModal';
 import Icon from './Icon';
 
 type AddButton = {
@@ -21,10 +19,13 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
   const [showModal, setShowModal] = useState(false);
 
   const { dispatch: habitDispatch } = useHabitContext();
+  const { dispatch: planDispatch } = usePlanContext();
   const { dispatch: groupDispatch } = useGroupContext();
 
   const habit = type === 'habit';
-  const project = type === 'project';
+  const plan = type === 'plan';
+
+  const handleAction = habit ? handleAddHabit : plan ? handleAddPlan : handleAddGroup;
 
   async function handleAddHabit(name: string): Promise<void> {
     if (sectionName && groupId) {
@@ -43,20 +44,19 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
     }
   }
 
-  async function handleAddProject(name: string): Promise<void> {
+  async function handleAddPlan(name: string): Promise<void> {
     if (name) {
-      const newProject: any = {
+      const newPlan: any = {
         name: name,
         parentId: parentId,
         depth: depth && depth + 1,
-        section: 'today',
       };
 
       try {
-        const createdProject = await addProject(newProject);
-        habitDispatch({ type: 'ADD_HABIT', payload: createdProject });
+        const createdPlan = await addPlan(newPlan);
+        planDispatch({ type: 'ADD_PLAN', payload: createdPlan });
       } catch (error) {
-        console.error('Failed to add habit:', error);
+        console.error('Failed to add plan:', error);
       }
     }
   }
@@ -69,8 +69,6 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
       console.error('Failed to add group:', error);
     }
   }
-
-  const handleAction = habit ? handleAddHabit : project ? handleAddProject : handleAddGroup;
 
   function getProjectLevelName(depth: number): 'Plan' | 'Task' | 'Subtask' {
     const newProjectDepth = depth + 1;
@@ -87,21 +85,21 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
   function getDisplayName() {
     if (habit) {
       return sectionName ? sectionName : 'Habit';
-    } else if (project) {
-      return depth ? getProjectLevelName(depth) : 'Plan';
+    } else if (plan) {
+      return depth && depth >= 0 ? getProjectLevelName(depth) : 'Plan';
     }
     return 'Group';
   }
 
   return (
-    <View>
+    <>
       <Icon name='plus' size={24} opacity={1} onPress={() => setShowModal(true)} />
       <AddModal
         visible={showModal}
         onClose={() => setShowModal(false)}
-        onAdd={handleAction}
+        onSave={handleAction}
         displayName={getDisplayName()}
       />
-    </View>
+    </>
   );
 }

@@ -1,38 +1,42 @@
-import React, { useState } from "react";
-import { addReview } from "../../src/api/SupabaseReviews";
-import { useAggregatedData } from "../../src/hooks/aggregateData";
-import { useDateContext } from "../../src/contexts/date/useDateContext";
-import { useReviewContext } from "../../src/contexts/reviews/UseReviewContext";
-import Grid from "./Grid";
-import TextBox from "./TextBox";
-import Summary from "./Summary";
-import Modal from "../modals/Modal";
-import { Section } from "../shared";
+import React, { useState } from 'react';
+import { addReview } from '../../src/api/Reviews';
+import { useAggregatedData } from '../../src/hooks/aggregateData';
+import { useDateContext, useReviewContext } from '../../src/contexts';
+import { Grid, ReviewQuestion, Summary } from '../reviews';
+import Modal from '../shared/Modal'
+import { Section } from '../layout';
 
 type ReviewModal = {
   visible: boolean;
   onClose: () => void;
-  onAdd: (name: string) => void;
 };
 
-export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
+export default function ReviewModal({ visible, onClose }: ReviewModal) {
   const [answer, setAnswer] = useState<{ good: string; bad: string; improve: string }>({
-    good: "",
-    bad: "",
-    improve: "",
+    good: '',
+    bad: '',
+    improve: '',
   });
 
   const { selectedDate } = useDateContext();
   const { habitGridData, projectTableData } = useAggregatedData();
   const { reviews, dispatch } = useReviewContext();
-  const lastReview = reviews && reviews[0]?.response;
-  const isAnswered = answer.good !== "" || answer.bad !== "" || answer.improve !== "";
 
-  function handleSave() {
+  const lastReview = reviews && reviews[0]?.response;
+  const isAnswered = answer.good !== '' || answer.bad !== '' || answer.improve !== '';
+
+  async function handleSaveReview(): Promise<void> {
+    const dateString = selectedDate.toISOString().split('T')[0];
+
     if (answer) {
-      addReview(answer, selectedDate.toISOString().split("T")[0]);
-      setAnswer({ good: "", bad: "", improve: "" });
-      onClose();
+      try {
+        const newReview = await addReview(answer, dateString);
+        dispatch({ type: 'ADD_REVIEW', payload: newReview, date: dateString });
+        setAnswer({ good: '', bad: '', improve: '' });
+        onClose();
+      } catch (error) {
+        console.error('Failed to add review:', error);
+      }
     }
   }
 
@@ -41,7 +45,7 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
   }
 
   const handleChange = (key: string, value: string) => {
-    setAnswer((prev) => ({
+    setAnswer(prev => ({
       ...prev,
       [key]: value,
     }));
@@ -49,40 +53,35 @@ export default function ReviewModal({ visible, onClose, onAdd }: ReviewModal) {
 
   return (
     <Modal
-      placeholder={"Weekly Review"}
+      placeholder={'Weekly Review'}
       visible={visible}
       onClose={handleCancel}
-      onSave={handleSave}
-      size={"large"}
-      disabled={!isAnswered}
-    >
+      onSave={handleSaveReview}
+      size={'large'}
+      disabled={!isAnswered}>
       {lastReview && <Summary lastReview={lastReview} />}
 
-      {projectTableData.length > 0 && (
-        <Grid data={projectTableData} name={"Projects"} selectedDate={selectedDate} />
-      )}
+      {projectTableData.length > 0 && <Grid data={projectTableData} name={'Projects'} selectedDate={selectedDate} />}
 
-      {habitGridData.length > 0 && (
-        <Grid data={habitGridData} name={"Habits"} selectedDate={selectedDate} />
-      )}
-      <Section>
-        <TextBox
+      {habitGridData.length > 0 && <Grid data={habitGridData} name={'Habits'} selectedDate={selectedDate} />}
+      <Section title={'Review your week:'}>
+        <ReviewQuestion
           value={answer.good}
-          question={"What went well last week?"}
+          question={'What went well?'}
           handleChange={handleChange}
-          category={"good"}
+          category={'good'}
         />
-        <TextBox
+        <ReviewQuestion
           value={answer.bad}
-          question={"What did not go well last week?"}
+          question={"What didn't go well?"}
           handleChange={handleChange}
-          category={"bad"}
+          category={'bad'}
         />
-        <TextBox
+        <ReviewQuestion
           value={answer.improve}
-          question={"What is your plan to improve this week?"}
+          question={"What's your plan to improve?"}
           handleChange={handleChange}
-          category={"improve"}
+          category={'improve'}
         />
       </Section>
     </Modal>
