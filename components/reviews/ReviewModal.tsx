@@ -61,7 +61,7 @@ export default function ReviewModal({ visible, onClose }: ReviewModal) {
       disabled={!isAnswered}>
       {lastReview && <Summary lastReview={lastReview} />}
 
-      {projectTableData.length > 0 && <Grid data={projectTableData} name={'Projects'} selectedDate={selectedDate} />}
+      {projectTableData.length > 0 && <Grid data={projectTableData} name={'Plans'} selectedDate={selectedDate} />}
 
       {habitGridData.length > 0 && <Grid data={habitGridData} name={'Habits'} selectedDate={selectedDate} />}
       <Section title={'Review your week:'}>
