@@ -17,7 +17,12 @@ export const useSession = () => {
   return session;
 };
 
-const useUserId = (): string | null => {
+export const useUser = (): any | null => {
+  const session = useSession();
+  return session?.user || null;
+};
+
+export const useUserId = (): string | null => {
   const session = useSession();
   return session?.user?.id || null;
 };

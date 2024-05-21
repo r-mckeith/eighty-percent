@@ -16,8 +16,9 @@ import {
   ReviewProvider,
   TaskProvider,
 } from './src/contexts';
+import InitializeApp from './src/InitializeApp';
 import { MyTabs } from './screens/TabNavigator';
-import { useSession } from './src/contexts/sessions/UseSessionHook';
+import { useSession } from './src/contexts';
 import { getColors } from './src/colors';
 
 export default function App() {
@@ -34,20 +35,22 @@ export default function App() {
               <PlanProvider>
                 <NoteProvider>
                   <ReviewProvider>
-                    <SafeAreaView style={[styles.container, colors.background]}>
-                      <StatusBar style='light' />
-                      <MenuProvider>
-                        <GestureHandlerRootView style={{ flex: 1 }}>
-                          {session && session.user ? (
-                            <NavigationContainer>
-                              <MyTabs />
-                            </NavigationContainer>
-                          ) : (
-                            <Auth />
-                          )}
-                        </GestureHandlerRootView>
-                      </MenuProvider>
-                    </SafeAreaView>
+                    <InitializeApp>
+                      <SafeAreaView style={[styles.container, colors.background]}>
+                        <StatusBar style='light' />
+                        <MenuProvider>
+                          <GestureHandlerRootView style={{ flex: 1 }}>
+                            {session && session.user ? (
+                              <NavigationContainer>
+                                <MyTabs />
+                              </NavigationContainer>
+                            ) : (
+                              <Auth />
+                            )}
+                          </GestureHandlerRootView>
+                        </MenuProvider>
+                      </SafeAreaView>
+                    </InitializeApp>
                   </ReviewProvider>
                 </NoteProvider>
               </PlanProvider>
@@ -62,6 +65,5 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: '#000',
   },
 });

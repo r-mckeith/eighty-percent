@@ -5,7 +5,7 @@ export { useHabitContext } from './habits/UseHabitContext';
 export { useNoteContext } from './notes/UseNoteContext';
 export { usePlanContext } from './plans/UsePlanContext'
 export { useReviewContext } from './reviews/UseReviewContext';
-export { default as useUserId } from './sessions/UseSessionHook';
+export { useUser, useUserId, useSession } from './sessions/UseSessionHook';
 export { useTaskContext } from './tasks/UseTaskContext';
 
 export { default as DateProvider } from './date/Dateprovider';

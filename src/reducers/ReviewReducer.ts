@@ -15,7 +15,7 @@ export function reviewReducer(state: ReviewProps[], action: Action): ReviewProps
     case 'INITIALIZE_REVIEWS':
       return action.payload;
     case 'ADD_REVIEW':
-      return [...state, action.payload];
+      return [action.payload, ...state];
     case 'DELETE_REVIEW':
       return state.filter(review => review.id !== action.id);
     case 'UPDATE_REVIEW':
