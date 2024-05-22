@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "eighty-percent-tags",
-    "slug": "eighty-percent-tags",
+    "name": "flywheel-app",
+    "slug": "flywheel-app",
     "version": "1.1.2",
     "orientation": "portrait",
-    "icon": "./assets/eighty.png",
+    "icon": "./assets/logo.png",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
@@ -26,11 +26,6 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "e3f38eec-e1cd-4385-af96-b94210259506"
-      }
     }
   }
 }

@@ -9,11 +9,12 @@ import {
   useTaskContext,
 } from '../src/contexts';
 import { getColors } from '../src/colors';
+import { PlanProps } from '../src/types/shared';
 import { WeeklyReviewButton, AddButton } from '../components/shared';
 import { Scroll, SectionTitle } from '../components/layout';
 import { DateSelector, Focus, HabitSection, PlanSection } from '../components/actions';
 
-export default function Habits() {
+export default function Actions() {
   const { selectedDate, setSelectedDate } = useDateContext();
 
   const { groups } = useGroupContext();
@@ -41,6 +42,30 @@ export default function Habits() {
     });
   }
 
+  function getBreadcrumbTrail(plan: PlanProps, planMap: { [key: string]: PlanProps }) {
+    let breadcrumb = [];
+    let currentPlan: PlanProps | undefined = plan;
+
+    while (currentPlan) {
+      breadcrumb.unshift(currentPlan.name);
+      currentPlan = currentPlan.parentId ? planMap[currentPlan.parentId] : undefined;
+    }
+
+    breadcrumb.pop();
+
+    return breadcrumb.length > 0 ? breadcrumb.join(' > ') : null;
+  }
+
+  const planMap = plans.reduce((acc: { [key: string]: PlanProps }, plan: PlanProps) => {
+    acc[plan.id] = plan;
+    return acc;
+  }, {});
+
+  const plansWithBreadcrumbs = planSection.map((plan: PlanProps) => ({
+    ...plan,
+    breadcrumb: getBreadcrumbTrail(plan, planMap),
+  }));
+
   if (groups.length === 0) {
     return (
       <View style={[styles.activityContainer, styles.activityHorizontal]}>
@@ -56,27 +81,25 @@ export default function Habits() {
   }
 
   function renderPlanSectionTitle() {
-    if (planSection.length > 0) {
-      return <SectionTitle title={planSection.length > 0 ? 'Plans' : ''} />;
+    if (plansWithBreadcrumbs.length > 0) {
+      return <SectionTitle title='Plans' />;
     }
   }
 
   function renderPlanSection() {
-    if (planSection.length > 0) {
-      return (
-        <PlanSection plans={planSection} />
-      );
+    if (plansWithBreadcrumbs.length > 0) {
+      return <PlanSection plans={plansWithBreadcrumbs} />;
     }
   }
 
   function getStickyIndices() {
-    if (lastReview && planSection.length > 0) {
+    if (lastReview && plansWithBreadcrumbs.length > 0) {
       return [1, 3];
-    } else if (lastReview && planSection.length === 0) {
+    } else if (lastReview && plansWithBreadcrumbs.length === 0) {
       return [1];
-    } else if (!lastReview && planSection.length > 0) {
+    } else if (!lastReview && plansWithBreadcrumbs.length > 0) {
       return [0, 2];
-    } else if (!lastReview && planSection.length === 0) {
+    } else if (!lastReview && plansWithBreadcrumbs.length === 0) {
       return [0];
     }
   }
@@ -91,10 +114,10 @@ export default function Habits() {
         {renderPlanSectionTitle()}
         {renderPlanSection()}
 
-        <SectionTitle title={'Habits'}>
-          {<AddButton sectionName={'habits'} type={'habit'} groupId={groupId} />}
+        <SectionTitle title='Habits'>
+          <AddButton sectionName='habits' type='habit' groupId={groupId} />
         </SectionTitle>
-        <HabitSection habits={habitSection} sectionName={'habits'} groupId={groupId} />
+        <HabitSection habits={habitSection} sectionName='habits' groupId={groupId} />
         <WeeklyReviewButton />
       </Scroll>
     </>

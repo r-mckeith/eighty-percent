@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Modal, StyleSheet, KeyboardAvoidingView, Platform, View, useColorScheme } from 'react-native';
 import ModalHeader from './ModalHeader';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -22,14 +22,14 @@ export default function SmallModal({ children, placeholder, visible, size, disab
 
   return (
     <Modal animationType='slide' transparent={true} visible={visible} onRequestClose={onClose}>
-      <KeyboardAvoidingView
-        style={styles.centeredView}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 1 : 0}>
+      <KeyboardAvoidingView style={styles.centeredView} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={[styles.modalView, modalSize, colors.modal, colors.shadow]}>
           <ModalHeader placeholder={placeholder} onSave={onSave} onClose={onClose} disabled={disabled} />
 
-          <ScrollView style={{ width: '100%', marginTop: 30 }} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            style={{ width: '100%', marginTop: 30 }}
+            showsVerticalScrollIndicator={false}
+            automaticallyAdjustKeyboardInsets={true}>
             {children}
           </ScrollView>
         </View>
