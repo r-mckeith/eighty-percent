@@ -26,7 +26,6 @@ const InitializeApp = ({ children }: any) => {
 
     async function addReviewIfNeeded(): Promise<void> {
       if (moreThanAWeekOld(lastReview)) {
-      console.log(lastReview.date, 'inside');
 
         const newPlan: any = {
           name: 'Weekly review',
