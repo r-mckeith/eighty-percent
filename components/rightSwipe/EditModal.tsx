@@ -36,7 +36,7 @@ export default function EditModal({ visible, item, type, target, onClose, onSave
     ((target && target.times === times && target.timeframe === timeframe) || (!target && !hasTarget));
   return (
     <Modal
-      placeholder={`Edit ${item.name}`}
+      placeholder={`Edit ${type}`}
       visible={visible}
       onClose={handleCancel}
       onSave={handleSave}
@@ -45,7 +45,7 @@ export default function EditModal({ visible, item, type, target, onClose, onSave
         <Toggle onToggle={setHasTarget} value={hasTarget} label={'Set target'} style={{ justifyContent: 'flex-end' }} />
       )}
       <TextInput
-        placeholder={item.name}
+        placeholder={type}
         value={newName}
         handleChangeText={setNewName}
         autoFocus={true}

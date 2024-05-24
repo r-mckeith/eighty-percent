@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, useColorScheme } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+import { getColors } from '../../src/colors';
 
 type TargetSelector = {
   times: number | null;
@@ -10,15 +11,31 @@ type TargetSelector = {
 };
 
 export default function TargetSelector({ times, timeframe, setTimes, setTimeframe }: TargetSelector) {
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
+
+  const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+      fontSize: 16,
+      paddingVertical: 12,
+      paddingHorizontal: 10,
+      borderWidth: 1,
+      borderColor: colors.border.borderColor,
+      borderRadius: 4,
+      color: colors.text.color,
+      paddingRight: 30,
+    },
+  });
+  
   return (
-    <View style={styles.dropdownContainer}>
+    <View style={[styles.dropdownContainer, colors.background]}>
       <RNPickerSelect
         style={pickerSelectStyles}
         value={times}
         onValueChange={value => setTimes(value)}
         items={[...Array(10).keys()].map(i => ({ label: (i + 1).toString(), value: (i + 1).toString() }))}
       />
-      <Text style={styles.inlineLabel}>times per</Text>
+      <Text style={[styles.inlineLabel, colors.text]}>times per</Text>
       <RNPickerSelect
         style={pickerSelectStyles}
         value={timeframe}
@@ -42,28 +59,5 @@ const styles = StyleSheet.create({
   inlineLabel: {
     marginHorizontal: 10,
     fontSize: 16,
-  },
-});
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30,
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: 'purple',
-    borderRadius: 8,
-    color: 'black',
-    paddingRight: 30,
   },
 });

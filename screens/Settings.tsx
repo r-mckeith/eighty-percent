@@ -12,7 +12,6 @@ export default function Settings() {
         onToggle={() => setShowPercent(!showPercent)}
         value={showPercent}
         label={'Show habit data as percents'}
-        style={{ marginTop: 130 }}
       />
       <Account session={session} />
     </>
