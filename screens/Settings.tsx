@@ -1,11 +1,20 @@
-import React from 'react';
-import { useSession } from '../src/contexts/sessions/UseSessionHook';
+import React, { useState } from 'react';
+import { useSession } from '../src/contexts';
 import Account from '../components/auth/Account';
+import { Toggle } from '../components/shared';
 
 export default function Settings() {
-
-const session = useSession();
+  const [showPercent, setShowPercent] = useState(false);
+  const session = useSession();
   return (
-    <Account session={session} />
+    <>
+      <Toggle
+        onToggle={() => setShowPercent(!showPercent)}
+        value={showPercent}
+        label={'Show habit data as percents'}
+        style={{ marginTop: 130 }}
+      />
+      <Account session={session} />
+    </>
   );
 }

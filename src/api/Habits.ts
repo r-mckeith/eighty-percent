@@ -52,10 +52,14 @@ export async function addHabit(newHabit: NewHabitProps): Promise<HabitProps> {
   }
 }
 
-export async function editHabit(habitId: number, newName: string): Promise<HabitProps> {
+export async function editHabit(
+  habitId: number,
+  newName: string,
+  target: { times: number; timeframe: string }
+): Promise<HabitProps> {
   let { data: habitData, error: habitError } = await supabase
     .from('tags')
-    .update({ name: newName })
+    .update({ name: newName, target: target ? target : null })
     .eq('id', habitId)
     .select();
 
