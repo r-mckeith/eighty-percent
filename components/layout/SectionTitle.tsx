@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
   sectionName: {
     flexDirection: 'row',
     marginBottom: 5,
+    paddingBottom: 10
   },
   sectionTitle: {
     flex: 1,

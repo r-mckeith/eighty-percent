@@ -14,7 +14,7 @@ export default function Toggle({ onToggle, value, label, style }: Toggle) {
   const colors = getColors(scheme);
 
   return (
-    <View style={[styles.toggleContainer, style ? style : {}]}>
+    <View style={[styles.toggleContainer, colors.background, style ? style : {}]}>
       <Text style={[styles.toggleLabel, colors.text]}>{label}</Text>
       <Switch
         value={value}

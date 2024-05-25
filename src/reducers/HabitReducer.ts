@@ -3,7 +3,7 @@ import { HabitProps } from '../types/shared';
 export type Action =
   | { type: 'INITIALIZE_TAGS'; payload: HabitProps[] }
   | { type: 'DELETE_HABIT'; id: number }
-  | { type: 'EDIT_HABIT'; id: number; newName: string }
+  | { type: 'EDIT_HABIT'; id: number; newName: string; target: { times: number; timeframe: string } }
   | { type: 'ADD_HABIT'; payload: HabitProps }
   | { type: 'ADD_LIST_TAG'; payload: any }
   | { type: 'UPDATE_TAG'; payload: HabitProps }
@@ -25,6 +25,7 @@ export function tagReducer(state: HabitProps[], action: Action): HabitProps[] {
           return {
             ...tag,
             name: action.newName,
+            target: action.target,
           };
         } else {
           return tag;

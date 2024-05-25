@@ -5,7 +5,7 @@ import { HabitProps } from '../../src/types/shared';
 import { selectHabit } from '../../src/api/Habits';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
 import { useAggregatedData } from '../../src/hooks/aggregateData';
-import { Row, RowText, Swipe, StatsText, Section} from '../layout';
+import { Row, RowText, Swipe, StatsText, Section } from '../layout';
 import RightSwipe from '../rightSwipe/RightSwipe';
 import StatsHeader from './StatsHeader';
 
@@ -15,7 +15,7 @@ type Habits = {
   groupId: number;
 };
 
-export default function Habits({ habits}: Habits) {
+export default function Habits({ habits }: Habits) {
   const { dispatch: habitDataDispatch } = useHabitDataContext();
   const { habitsTableData } = useAggregatedData();
   const { selectedDate } = useDateContext();
@@ -45,32 +45,60 @@ export default function Habits({ habits}: Habits) {
     }
   };
 
+  const calculatePercentage = (actual: number, target: number) => {
+    return target > 0 ? ((actual / target) * 100).toFixed(0) : '0';
+  };
+
   return (
     <Section>
       {habits.length > 0 && <StatsHeader />}
       {sortedHabits.map((habit, index) => {
-        const { habitData } = habit;
+        const { habitData, target } = habit;
+
+        const dayPercentage =
+          target && habitData && target.timeframe === 'day' ? calculatePercentage(habitData.day, target.times) : null;
+
+        const weeklyTargetFromDaily = target && target.timeframe === 'day' ? target.times * 7 : null;
+        const weekPercentage =
+          target && habitData && weeklyTargetFromDaily && target.timeframe === 'day'
+            ? calculatePercentage(habitData.week, weeklyTargetFromDaily)
+            : null;
+
+        const actualWeekPercentage =
+          target && habitData && target.timeframe === 'week'
+            ? calculatePercentage(habitData.week, target.times)
+            : weekPercentage;
 
         return (
           <Swipe
             key={habit.id}
             swipeableRow={swipeableRow}
             renderRightActions={() => (
-              <RightSwipe item={habit} habitData={habitData} showData={true} swipeableRow={swipeableRow} type={'habit'} />
-            )}
-          >
+              <RightSwipe
+                item={habit}
+                habitData={habitData}
+                showData={true}
+                swipeableRow={swipeableRow}
+                type={'habit'}
+              />
+            )}>
             <Row
               key={index}
               opacity={0.2}
               onPress={() => handleSelectHabit(habit)}
               first={false}
-              last={index === habits.length - 1 || habits.length === 1}
-            >
+              last={index === habits.length - 1 || habits.length === 1}>
               <View style={styles.rowLayout}>
                 <RowText text={habit.name} flex={3.5} maxLength={25} />
                 <StatsText
-                  day={habitData ? (habitData.day > 0 ? habitData.day : '0') : '0'}
-                  week={habitData ? (habitData.week > 0 ? habitData.week : '0') : '0'}
+                  day={dayPercentage !== null ? `${dayPercentage}%` : habitData && habitData.day ? habitData.day : 0}
+                  week={
+                    actualWeekPercentage !== null
+                      ? `${actualWeekPercentage}%`
+                      : habitData && habitData.week
+                      ? habitData.week
+                      : 0
+                  }
                 />
               </View>
             </Row>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, useColorScheme } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Icon } from '../shared';
 
 type RightSwipeButton = {

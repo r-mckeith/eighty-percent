@@ -6,14 +6,18 @@ import { getColors } from '../../src/colors';
 type Scroll = {
   children: any;
   stickyIndices?: number[];
-}
+};
 
 export default function Scroll({ children, stickyIndices }: Scroll) {
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
   return (
-    <ScrollView style={[styles.scrollView, colors.background]} keyboardShouldPersistTaps='handled' stickyHeaderIndices={stickyIndices}>
+    <ScrollView
+      style={[styles.scrollView, colors.background]}
+      keyboardShouldPersistTaps='handled'
+      showsVerticalScrollIndicator={false}
+      stickyHeaderIndices={stickyIndices}>
       {children}
     </ScrollView>
   );

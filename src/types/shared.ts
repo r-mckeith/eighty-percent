@@ -2,6 +2,7 @@ export type NewHabitProps = {
   name: string;
   section: string;
   group_id: number;
+  target?: { times: number; timeframe: string | null };
 };
 
 export type HabitDataProps = {
@@ -24,6 +25,7 @@ export type HabitProps = {
   completed?: string | null;
   depth?: number;
   parentId?: number;
+  target?: { times: number; timeframe: string } | null;
 };
 
 export type TaskProps = {

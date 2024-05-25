@@ -10,7 +10,7 @@ import { usePlanContext, useHabitContext } from '../../src/contexts';
 type Edit = {
   item: HabitProps | PlanProps;
   swipeableRow: React.RefObject<Swipeable | null>;
-  type?: string;
+  type: string;
 };
 
 export default function Edit({ item, swipeableRow, type }: Edit) {
@@ -19,16 +19,18 @@ export default function Edit({ item, swipeableRow, type }: Edit) {
   const { dispatch: habitDispatch } = useHabitContext();
   const { dispatch: planDispatch } = usePlanContext();
 
+  const target = (item as HabitProps).target || null;
+
   function handleClose() {
     swipeableRow.current?.close();
     setShowEditModal(false);
   }
 
-  async function handleEditHabit(id: number, newName: string) {
+  async function handleEditHabit(id: number, newName: string, target: any) {
     swipeableRow.current?.close();
     try {
-      await editHabit(id, newName);
-      habitDispatch({ type: 'EDIT_HABIT', id, newName });
+      await editHabit(id, newName, target);
+      habitDispatch({ type: 'EDIT_HABIT', id, newName, target });
     } catch (error) {
       console.error('Failed to edit habit:', error);
     }
@@ -44,8 +46,8 @@ export default function Edit({ item, swipeableRow, type }: Edit) {
     }
   }
 
-  async function handleEditItem(id: number, newName: string) {
-    type === 'plan' ? handleEditPlan(id, newName) : handleEditHabit(id, newName);
+  async function handleEditItem(id: any, newName: string, target?: any) {
+    type === 'plan' ? handleEditPlan(id, newName) : handleEditHabit(id, newName, target);
   }
 
   return (
@@ -57,7 +59,14 @@ export default function Edit({ item, swipeableRow, type }: Edit) {
         onPress={() => setShowEditModal(true)}
       />
 
-      <EditModal visible={showEditModal} onClose={handleClose} onSave={handleEditItem} id={item.id} name={item.name} />
+      <EditModal
+        visible={showEditModal}
+        onClose={handleClose}
+        onSave={handleEditItem}
+        item={item}
+        type={type}
+        target={target}
+      />
     </>
   );
 }

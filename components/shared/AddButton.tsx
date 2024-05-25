@@ -27,12 +27,14 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
 
   const handleAction = habit ? handleAddHabit : plan ? handleAddPlan : handleAddGroup;
 
-  async function handleAddHabit(name: string): Promise<void> {
+  async function handleAddHabit(name: string, target: { times: number; timeframe: string } | null): Promise<void> {
     if (sectionName && groupId) {
+      const newTarget: any = target ? target : null;
       const newHabit: NewHabitProps = {
         name: name,
         section: sectionName,
         group_id: groupId,
+        target: newTarget,
       };
 
       try {
@@ -84,7 +86,7 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
 
   function getDisplayName() {
     if (habit) {
-      return sectionName ? sectionName : 'Habit';
+      return 'Habit';
     } else if (plan) {
       return depth && depth >= 0 ? getProjectLevelName(depth) : 'Plan';
     }
