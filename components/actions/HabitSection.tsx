@@ -91,18 +91,14 @@ export default function Habits({ habits }: Habits) {
               </DataTable.Row>
               {habitData && target && (
                 <ProgressBar
-                  progress={calculatePercentage(habitData.day, target.times)}
+                  progress={calculatePercentage(habitData.day, target.times) > 0 ? calculatePercentage(habitData.day, target.times) : 0}
                   color={MD3Colors.error50}
                   style={styles.progressBar}
                 />
               )}
-                           {actualWeekPercentage && (
-                <ProgressBar
-                  progress={actualWeekPercentage}
-                  color={MD3Colors.primary40}
-                  style={styles.progressBar}
-                />
-              )}
+              {/* {actualWeekPercentage && (
+                <ProgressBar progress={actualWeekPercentage > 0 ? actualWeekPercentage : 0} color={MD3Colors.primary40} style={styles.progressBar} />
+              )} */}
             </View>
           </Swipe>
         );

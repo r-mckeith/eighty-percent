@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     flex: 1,
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: 'bold',
     textTransform: 'capitalize',
   },

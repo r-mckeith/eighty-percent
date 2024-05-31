@@ -12,8 +12,9 @@ import { getColors } from '../src/colors';
 import { PlanProps } from '../src/types/shared';
 import { WeeklyReviewButton } from '../components/shared';
 import { Scroll, SectionTitle } from '../components/layout';
-import { DateSelector, Focus, HabitSection, PlanSection } from '../components/actions';
+import { DateSelector, HabitSection, PlanSection } from '../components/actions';
 import StatsHeader from '../components/actions/StatsHeader';
+import { Appbar, Card, Text } from 'react-native-paper';
 
 export default function Actions() {
   const { selectedDate, setSelectedDate } = useDateContext();
@@ -75,9 +76,23 @@ export default function Actions() {
     );
   }
 
+  function renderFocusTitle() {
+    if (lastReview?.improve) {
+      return <SectionTitle title='Focus' />;
+    }
+  }
+
   function renderFocus() {
-    if (lastReview) {
-      return <Focus review={lastReview.improve} />;
+    if (lastReview?.improve) {
+      return (
+        <View style={{ paddingBottom: 30 }}>
+          <Card mode={'outlined'}>
+            <Card.Content>
+              <Text variant='bodyMedium'>{lastReview.improve}</Text>
+            </Card.Content>
+          </Card>
+        </View>
+      );
     }
   }
 
@@ -95,9 +110,9 @@ export default function Actions() {
 
   function getStickyIndices() {
     if (lastReview && plansWithBreadcrumbs.length > 0) {
-      return [1, 3];
+      return [0, 2, 4];
     } else if (lastReview && plansWithBreadcrumbs.length === 0) {
-      return [1];
+      return [0, 1];
     } else if (!lastReview && plansWithBreadcrumbs.length > 0) {
       return [0, 2];
     } else if (!lastReview && plansWithBreadcrumbs.length === 0) {
@@ -107,11 +122,9 @@ export default function Actions() {
 
   return (
     <>
-
-      <View style={colors.background}>
-        <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
-      </View>
+      <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
       <Scroll stickyIndices={getStickyIndices()}>
+        {renderFocusTitle()}
         {renderFocus()}
         {renderPlanSectionTitle()}
         {renderPlanSection()}

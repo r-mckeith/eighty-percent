@@ -1,10 +1,8 @@
 import React from 'react';
 import { View, useColorScheme } from 'react-native';
 import { addDays } from 'date-fns';
-import { Icon } from '../shared';
-import { StyleSheet } from 'react-native';
+import { Appbar, Text } from 'react-native-paper';
 import { getColors } from '../../src/colors';
-import { Text } from 'react-native-paper';
 
 type DateSelector = {
   selectedDate: Date;
@@ -56,39 +54,15 @@ export default function DateSelector({ selectedDate, onDateChange }: DateSelecto
 
   const dayDisplay = formatDateRelative(selectedDate);
 
-  function renderArrowForward() {
-    return (
-      <Icon
-        name={'chevron-right'}
-        size={24}
-        style={{ marginHorizontal: 10 }}
-        opacity={dayDisplay === 'Today' ? 0.2 : 1}
-        onPress={dayDisplay !== 'Today' ? incrementDate : () => {}}
-      />
-    );
-  }
-
   return (
-    <View style={[styles.datePicker, colors.background]}>
-      <View style={styles.datePickerContainer}>
-        <Icon name={'chevron-left'} size={24} style={{ marginHorizontal: 10 }} opacity={0.2} onPress={decrementDate} />
-        <Text variant='bodyMedium' style={colors.text}>
-          {dayDisplay ? dayDisplay : ''}
-        </Text>
-        {renderArrowForward()}
+    <>
+      <View style={[{ paddingBottom: 10 }, colors.background]}>
+        <Appbar mode='center-aligned'>
+          <Appbar.Action icon='chevron-left' style={{ paddingLeft: 35 }} onPress={decrementDate} />
+          <Appbar.Content title={dayDisplay} />
+          <Appbar.Action icon='chevron-right' style={{ paddingRight: 35 }} onPress={incrementDate} />
+        </Appbar>
       </View>
-    </View>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  datePicker: {
-    alignSelf: 'flex-end',
-    marginBottom: 15,
-  },
-  datePickerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 
   },
   text: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: 'bold',
     textTransform: 'capitalize',
   }
