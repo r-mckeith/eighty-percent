@@ -5,7 +5,7 @@ import { Modal, Portal, Button } from 'react-native-paper';
 
 type Modal = {
   children: any;
-  placeholder: string;
+  placeholder?: string;
   visible: boolean;
   size?: string;
   disabled: boolean;

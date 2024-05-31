@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { TextInput, Modal, TargetSelector, Toggle } from '../shared';
+import { View, Text } from 'react-native';
+import { Modal, TargetSelector } from '../shared';
 import { HabitProps, PlanProps } from '../../src/types/shared';
+import { Switch, TextInput } from 'react-native-paper';
 
 type EditModal = {
   visible: boolean;
@@ -41,16 +43,22 @@ export default function EditModal({ visible, item, type, target, onClose, onSave
       onClose={handleCancel}
       onSave={handleSave}
       disabled={disabled}>
-      {type === 'habit' && (
-        <Toggle onToggle={setHasTarget} value={hasTarget} label={'Set target'} style={{ justifyContent: 'flex-end' }} />
-      )}
       <TextInput
-        placeholder={type}
         value={newName}
-        handleChangeText={setNewName}
+        mode='flat'
+        dense={true}
+        onChangeText={setNewName}
         autoFocus={true}
-        onSave={handleSave}
+        onSubmitEditing={handleSave}
+        returnKeyType='done'
       />
+
+      {type === 'habit' && (
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingVertical: 10 }}>
+          <Text style={{ paddingRight: 10 }}>Set target</Text>
+          <Switch onValueChange={setHasTarget} value={hasTarget} />
+        </View>
+      )}
       {hasTarget && (
         <TargetSelector times={times} timeframe={timeframe} setTimes={setTimes} setTimeframe={setTimeframe} />
       )}
