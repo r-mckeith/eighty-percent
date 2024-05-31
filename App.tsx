@@ -2,6 +2,7 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
+import { PaperProvider } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import { MenuProvider } from 'react-native-popup-menu';
 import 'react-native-url-polyfill/auto';
@@ -36,20 +37,22 @@ export default function App() {
                 <NoteProvider>
                   <ReviewProvider>
                     <InitializeApp>
-                      <SafeAreaView style={[styles.container, colors.background]}>
-                        <StatusBar style='light' />
-                        <MenuProvider>
-                          <GestureHandlerRootView style={{ flex: 1 }}>
-                            {session && session.user ? (
-                              <NavigationContainer>
-                                <MyTabs />
-                              </NavigationContainer>
-                            ) : (
-                              <Auth />
-                            )}
-                          </GestureHandlerRootView>
-                        </MenuProvider>
-                      </SafeAreaView>
+                      <PaperProvider>
+                        <SafeAreaView style={[styles.container, colors.background]}>
+                          <StatusBar style='light' />
+                          <MenuProvider>
+                            <GestureHandlerRootView style={{ flex: 1 }}>
+                              {session && session.user ? (
+                                <NavigationContainer>
+                                  <MyTabs />
+                                </NavigationContainer>
+                              ) : (
+                                <Auth />
+                              )}
+                            </GestureHandlerRootView>
+                          </MenuProvider>
+                        </SafeAreaView>
+                      </PaperProvider>
                     </InitializeApp>
                   </ReviewProvider>
                 </NoteProvider>

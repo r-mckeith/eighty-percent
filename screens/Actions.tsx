@@ -10,9 +10,10 @@ import {
 } from '../src/contexts';
 import { getColors } from '../src/colors';
 import { PlanProps } from '../src/types/shared';
-import { WeeklyReviewButton, AddButton } from '../components/shared';
+import { WeeklyReviewButton } from '../components/shared';
 import { Scroll, SectionTitle } from '../components/layout';
 import { DateSelector, Focus, HabitSection, PlanSection } from '../components/actions';
+import StatsHeader from '../components/actions/StatsHeader';
 
 export default function Actions() {
   const { selectedDate, setSelectedDate } = useDateContext();
@@ -106,6 +107,7 @@ export default function Actions() {
 
   return (
     <>
+
       <View style={colors.background}>
         <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
       </View>
@@ -113,10 +115,7 @@ export default function Actions() {
         {renderFocus()}
         {renderPlanSectionTitle()}
         {renderPlanSection()}
-
-        <SectionTitle title='Habits'>
-          <AddButton sectionName='habits' type='habit' groupId={groupId} />
-        </SectionTitle>
+        <StatsHeader />
         <HabitSection habits={habitSection} sectionName='habits' groupId={groupId} />
         <WeeklyReviewButton />
       </Scroll>

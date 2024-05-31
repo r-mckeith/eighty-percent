@@ -1,7 +1,6 @@
 import React from 'react';
 import { PlanProps } from '../../src/types/shared';
-import Plan from './Plan';
-import { Section } from '../layout';
+import { Divider, List, RadioButton } from 'react-native-paper';
 
 type PlanSection = {
   plans: PlanProps[];
@@ -10,16 +9,28 @@ type PlanSection = {
 
 export default function ProjectSection({ plans, setSelected }: PlanSection) {
   return (
-    <Section>
-      {plans.map((project, index) => (
-        <Plan
-          key={index}
-          plan={project}
-          setSelected={setSelected}
-          first={index === 0}
-          last={index === plans.length - 1}
-        />
-      ))}
-    </Section>
+    <List.Section>
+      {plans.map((plan, index) => {
+        return (
+          <>
+            <RadioButton.Item
+              key={index}
+              label={plan.name}
+              value={plan.name}
+              onPress={() => setSelected(plan.id)}
+              disabled={plan.completed ? true : false}
+            />
+            <Divider />
+          </>
+        );
+      })}
+    </List.Section>
   );
 }
+// key={index}
+// label={`${breadcrumb ? breadcrumb : ''} ${plan.name}`}
+// value={plan.name}
+// labelVariant='bodyMedium'
+// status={isSelected || isSelectedLater ? 'checked' : 'unchecked'}
+// onPress={!isSelectedLater ? () => handleToggleCompleted(plan, selectedDate, dispatch) : () => {}}
+// disabled={isSelectedLater}

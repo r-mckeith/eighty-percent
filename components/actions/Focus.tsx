@@ -1,21 +1,18 @@
 import React from 'react';
-import { useColorScheme, Text } from 'react-native';
+import { useColorScheme } from 'react-native';
 import { getColors } from '../../src/colors';
-import { Section, Row } from '../layout';
+import { Card, Text } from 'react-native-paper';
 
 export default function Focus({ review }: { review: string }) {
-
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
   return (
-    <Section>
-      <Row opacity={1} first={true} last={true}>
-        <Text>
-          <Text style={[{ fontWeight: 'bold' }, colors.text]}>This week's focus: </Text>
-          <Text style={colors.text}>{review}</Text>
-        </Text>
-      </Row>
-    </Section>
+    <Card mode={'elevated'} style={[{ marginBottom: 30 }, colors.background]}>
+      <Card.Content>
+        <Text variant='titleLarge'>This week's focus:</Text>
+        <Text variant='bodyMedium'>{review}</Text>
+      </Card.Content>
+    </Card>
   );
 }

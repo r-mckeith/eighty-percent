@@ -5,6 +5,7 @@ import Scope from './Scope';
 import { PlanProps } from '../../src/types/shared';
 import { Row, RowText, Swipe } from '../layout';
 import RightSwipe from '../rightSwipe/RightSwipe';
+import { List, Checkbox, RadioButton } from 'react-native-paper';
 
 type Plan = {
   plan: PlanProps;
@@ -22,7 +23,20 @@ export default function Plan({ plan, rootPlanId, first, last, setSelected }: Pla
       key={plan.id}
       swipeableRow={swipeableRow}
       renderRightActions={() => <RightSwipe item={plan} swipeableRow={swipeableRow} type={'plan'} />}>
-      <Row
+      {/* <List.Item
+      disabled={true}
+        title={plan.name}
+        left={props => <List.Icon {...props} icon={plan.inScopeDay ? 'radiobox-marked' : 'radiobox-blank'} />}
+        right={props => <List.Icon {...props} icon='plus' />}
+      /> */}
+                <RadioButton.Item
+            key={plan.id}
+            label={plan.name}
+            value={plan.name}
+            // onPress={() => setSelected(plan.id)}
+            disabled={plan.completed ? true : false}
+          />
+      {/* <Row
         opacity={rootPlanId ? 1 : 0.2}
         onPress={() => setSelected && setSelected(plan.id)}
         disabled={!!plan.completed}
@@ -35,7 +49,7 @@ export default function Plan({ plan, rootPlanId, first, last, setSelected }: Pla
         {rootPlanId && !plan.completed && (
           <AddButton parentId={plan.id} depth={plan.depth ? plan.depth : 0} type={'plan'} />
         )}
-      </Row>
+      </Row> */}
     </Swipe>
   );
 }

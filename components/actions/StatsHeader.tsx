@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text, useColorScheme } from 'react-native';
 import { getColors } from '../../src/colors';
+import { AddButton } from '../shared';
 
 export default function StatsHeader() {
   const scheme = useColorScheme();
@@ -8,7 +9,11 @@ export default function StatsHeader() {
 
   return (
     <View style={[styles.statsHeader, colors.background, colors.border]}>
-      <Text style={[styles.headerCellHabitName, colors.text]}></Text>
+      <View style={styles.headerCellHabitName}>
+      <Text style={[colors.text, styles.text, {paddingRight: 10}]}>Habits</Text>
+      <AddButton sectionName='habits' type='habit' groupId={0} />
+      </View>
+
       <Text style={[styles.headerCell, colors.text]}>Day</Text>
       <Text style={[styles.headerCell, colors.text]}>Week</Text>
     </View>
@@ -18,13 +23,8 @@ export default function StatsHeader() {
 const styles = StyleSheet.create({
   statsHeader: {
     flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
     alignItems: 'center',
-    borderWidth: 1,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    borderBottomWidth: 0,
+    paddingBottom: 10,
   },
   headerCell: {
     flex: 1,
@@ -34,7 +34,13 @@ const styles = StyleSheet.create({
   },
   headerCellHabitName: {
     flex: 3.5,
-    textAlign: 'left',
-    fontWeight: 'bold',
+    flexDirection: 'row',
+    alignItems: 'center',
+
   },
+  text: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textTransform: 'capitalize',
+  }
 });

@@ -5,9 +5,9 @@ import { HabitProps } from '../../src/types/shared';
 import { selectHabit } from '../../src/api/Habits';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
 import { useAggregatedData } from '../../src/hooks/aggregateData';
-import { Swipe } from '../layout';
+import { Row, RowText, Swipe, StatsText, Section } from '../layout';
 import RightSwipe from '../rightSwipe/RightSwipe';
-import { DataTable, ProgressBar, MD3Colors } from 'react-native-paper';
+import StatsHeader from './StatsHeader';
 
 type Habits = {
   habits: HabitProps[];
@@ -46,11 +46,12 @@ export default function Habits({ habits }: Habits) {
   };
 
   const calculatePercentage = (actual: number, target: number) => {
-    return target > 0 ? actual / target : 0;
+    return target > 0 ? ((actual / target) * 100).toFixed(0) : '0';
   };
 
   return (
-    <DataTable>
+    <Section>
+      {habits.length > 0 && <StatsHeader />}
       {sortedHabits.map((habit, index) => {
         const { habitData, target } = habit;
 
@@ -81,42 +82,37 @@ export default function Habits({ habits }: Habits) {
                 type={'habit'}
               />
             )}>
-            <View key={index} style={styles.rowContainer}>
-              <DataTable.Row onPress={() => handleSelectHabit(habit)}>
-                <DataTable.Cell style={{ flex: 6 }}>{habit.name}</DataTable.Cell>
-                <DataTable.Cell style={{ flex: 1.5, paddingRight: 10 }}>
-                  {habitData?.day ? habitData.day : 0}
-                </DataTable.Cell>
-                <DataTable.Cell style={{ flex: 0.5 }}>{habitData?.week ? habitData.week : 0}</DataTable.Cell>
-              </DataTable.Row>
-              {habitData && target && (
-                <ProgressBar
-                  progress={calculatePercentage(habitData.day, target.times)}
-                  color={MD3Colors.error50}
-                  style={styles.progressBar}
+            <Row
+              key={index}
+              opacity={0.2}
+              onPress={() => handleSelectHabit(habit)}
+              first={false}
+              last={index === habits.length - 1 || habits.length === 1}>
+              <View style={styles.rowLayout}>
+                <RowText text={habit.name} flex={3.5} maxLength={25} />
+                <StatsText
+                  day={dayPercentage !== null ? `${dayPercentage}%` : habitData && habitData.day ? habitData.day : 0}
+                  week={
+                    actualWeekPercentage !== null
+                      ? `${actualWeekPercentage}%`
+                      : habitData && habitData.week
+                      ? habitData.week
+                      : 0
+                  }
                 />
-              )}
-                           {actualWeekPercentage && (
-                <ProgressBar
-                  progress={actualWeekPercentage}
-                  color={MD3Colors.primary40}
-                  style={styles.progressBar}
-                />
-              )}
-            </View>
+              </View>
+            </Row>
           </Swipe>
         );
       })}
-    </DataTable>
+    </Section>
   );
 }
 
 const styles = StyleSheet.create({
-  rowContainer: {
-    marginBottom: 10,
-  },
-  progressBar: {
-    marginHorizontal: 16,
-    marginTop: 4,
+  rowLayout: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'space-between',
   },
 });

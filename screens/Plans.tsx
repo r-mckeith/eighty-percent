@@ -44,7 +44,7 @@ export default function Plans() {
             label={'Show Completed'}
             style={{ justifyContent: 'flex-end', paddingBottom: 30 }}
           />
-          <SectionTitle title='Recent'>
+          <SectionTitle title='Recent Plans'>
             <AddButton parentId={0} depth={0} type={'plan'} />
           </SectionTitle>
           <PlanSection plans={planRoots} setSelected={setSelectedPlan} />

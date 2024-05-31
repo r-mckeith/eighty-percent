@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Button, useColorScheme } from 'react-native';
+import { View, useColorScheme } from 'react-native';
 import ReviewModal from '../reviews/ReviewModal';
 import { getColors } from '../../src/colors';
+import { Button } from 'react-native-paper';
 
 export default function ReviewButton() {
   const [showModal, setShowModal] = useState(false);
@@ -11,9 +12,9 @@ export default function ReviewButton() {
 
   return (
     <View>
-      <TouchableOpacity activeOpacity={0.2} style={colors.reviewButton}>
-        <Button title={'Weekly review'} onPress={() => setShowModal(true)} color={'white'} />
-      </TouchableOpacity>
+      <Button mode='contained' style={{ marginTop: 10 }} onPress={() => setShowModal(true)}>
+        Weekly review
+      </Button>
       <ReviewModal visible={showModal} onClose={() => setShowModal(false)} />
     </View>
   );
