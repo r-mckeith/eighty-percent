@@ -3,15 +3,15 @@ import { View, StyleSheet, Text, useColorScheme } from 'react-native';
 import { getColors } from '../../src/colors';
 import { AddButton } from '../shared';
 
-export default function StatsHeader() {
+export default function StatsHeader({ groupId }: { groupId: number }) {
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
   return (
-    <View style={[styles.statsHeader, colors.background, colors.border]}>
+    <View style={[{ flexDirection: 'row', alignItems: 'center', paddingBottom: 10 }, colors.background]}>
       <View style={styles.headerCellHabitName}>
-      <Text style={[colors.text, styles.text, {paddingRight: 10}]}>Habits</Text>
-      <AddButton sectionName='habits' type='habit' groupId={0} />
+        <Text style={[colors.text, styles.text, { paddingRight: 10 }]}>Habits</Text>
+        <AddButton sectionName='habits' type='habit' groupId={groupId} />
       </View>
 
       <Text style={[styles.headerCell, colors.text]}>Day</Text>
@@ -36,11 +36,10 @@ const styles = StyleSheet.create({
     flex: 3.5,
     flexDirection: 'row',
     alignItems: 'center',
-
   },
   text: {
     fontSize: 25,
     fontWeight: 'bold',
     textTransform: 'capitalize',
-  }
+  },
 });

@@ -28,6 +28,7 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
   const handleAction = habit ? handleAddHabit : plan ? handleAddPlan : handleAddGroup;
 
   async function handleAddHabit(name: string, target: { times: number; timeframe: string } | null): Promise<void> {
+    console.log(sectionName, groupId)
     if (sectionName && groupId) {
       const newTarget: any = target ? target : null;
       const newHabit: NewHabitProps = {

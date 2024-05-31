@@ -37,11 +37,12 @@ export default function App() {
                 <NoteProvider>
                   <ReviewProvider>
                     <InitializeApp>
-                      <PaperProvider>
                         <SafeAreaView style={[styles.container, colors.background]}>
                           <StatusBar style='light' />
                           <MenuProvider>
                             <GestureHandlerRootView style={{ flex: 1 }}>
+                      <PaperProvider>
+
                               {session && session.user ? (
                                 <NavigationContainer>
                                   <MyTabs />
@@ -49,10 +50,11 @@ export default function App() {
                               ) : (
                                 <Auth />
                               )}
+                      </PaperProvider>
+
                             </GestureHandlerRootView>
                           </MenuProvider>
                         </SafeAreaView>
-                      </PaperProvider>
                     </InitializeApp>
                   </ReviewProvider>
                 </NoteProvider>

@@ -1,10 +1,9 @@
 import React from 'react';
-import { Modal, StyleSheet, KeyboardAvoidingView, Platform, View, useColorScheme } from 'react-native';
-import ModalHeader from './ModalHeader';
+import { View, KeyboardAvoidingView, Platform } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { getColors } from '../../src/colors';
+import { Modal, Portal, Button } from 'react-native-paper';
 
-type SmallModal = {
+type Modal = {
   children: any;
   placeholder: string;
   visible: boolean;
@@ -14,60 +13,26 @@ type SmallModal = {
   onSave: () => void;
 };
 
-export default function SmallModal({ children, placeholder, visible, size, disabled, onClose, onSave }: SmallModal) {
-  const scheme = useColorScheme();
-  const colors = getColors(scheme);
-
-  const modalSize = size === 'large' ? styles.large : styles.small;
+export default function SmallModal({ children, visible, disabled, onClose, onSave }: Modal) {
+  const containerStyle = { backgroundColor: 'white', padding: 20 };
 
   return (
-    <Modal animationType='slide' transparent={true} visible={visible} onRequestClose={onClose}>
-      <KeyboardAvoidingView style={styles.centeredView} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <View style={[styles.modalView, modalSize, colors.modal, colors.shadow]}>
-          <ModalHeader placeholder={placeholder} onSave={onSave} onClose={onClose} disabled={disabled} />
-
-          <ScrollView
-            style={{ width: '100%', marginTop: 30 }}
-            showsVerticalScrollIndicator={false}
-            automaticallyAdjustKeyboardInsets={true}>
+    <Portal>
+      <Modal visible={visible} onDismiss={onClose} contentContainerStyle={containerStyle}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <ScrollView showsVerticalScrollIndicator={false} automaticallyAdjustKeyboardInsets={true}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+              <Button onPress={onClose} textColor='red'>
+                Cancel
+              </Button>
+              <Button onPress={onSave} disabled={disabled} textColor='blue'>
+                Done
+              </Button>
+            </View>
             {children}
           </ScrollView>
-        </View>
-      </KeyboardAvoidingView>
-    </Modal>
+        </KeyboardAvoidingView>
+      </Modal>
+    </Portal>
   );
 }
-
-const styles = StyleSheet.create({
-  modalView: {
-    marginHorizontal: 20,
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  small: {
-    width: '100%',
-    height: '60%',
-    position: 'absolute',
-  },
-  large: {
-    width: '100%',
-    height: '100%',
-  },
-  largeScroll: {
-    width: '100%',
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 50,
-  },
-});

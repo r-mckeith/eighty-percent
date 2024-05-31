@@ -128,7 +128,7 @@ export default function Actions() {
         {renderFocus()}
         {renderPlanSectionTitle()}
         {renderPlanSection()}
-        <StatsHeader />
+        <StatsHeader groupId={groupId} />
         <HabitSection habits={habitSection} sectionName='habits' groupId={groupId} />
         <WeeklyReviewButton />
       </Scroll>
