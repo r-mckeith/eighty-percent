@@ -59,26 +59,42 @@ export default function Habits({ habits }: Habits) {
         const { habitData, target } = habit;
 
         const dayPercentage =
-          target && habitData && target.timeframe === 'day' ? calculatePercentage(habitData.day, target.times) : null;
+          target && habitData && target.timeframe === 'day'
+            ? calculatePercentage(habitData.day, target.times)
+            : target && habitData && target.timeframe === 'week'
+            ? calculatePercentage(habitData.day, target.times / 7)
+            : 0;
 
         const weeklyTargetFromDaily = target && target.timeframe === 'day' ? target.times * 7 : null;
-        const weekPercentage =
-          target && habitData && weeklyTargetFromDaily && target.timeframe === 'day'
-            ? calculatePercentage(habitData.week, weeklyTargetFromDaily)
-            : null;
 
-        const actualWeekPercentage =
+        const weekPercentage =
           target && habitData && target.timeframe === 'week'
             ? calculatePercentage(habitData.week, target.times)
-            : weekPercentage;
+            : target && habitData && weeklyTargetFromDaily
+            ? calculatePercentage(habitData.week, weeklyTargetFromDaily)
+            : 0;
 
-        const weekAverage = actualWeekPercentage || 0;
-        const dayAverage = dayPercentage || 0;
+        // const dayPercentage =
+        //   target && habitData && target.timeframe === 'day' ? calculatePercentage(habitData.day, target.times) : null;
+
+        // const weeklyTargetFromDaily = target && target.timeframe === 'day' ? target.times * 7 : null;
+        // const weekPercentage =
+        //   target && habitData && weeklyTargetFromDaily && target.timeframe === 'day'
+        //     ? calculatePercentage(habitData.week, weeklyTargetFromDaily)
+        //     : null;
+
+        // const actualWeekPercentage =
+        //   target && habitData && target.timeframe === 'week'
+        //     ? calculatePercentage(habitData.week, target.times)
+        //     : weekPercentage;
+
+        // const weekAverage = actualWeekPercentage || 0;
+        // const dayAverage = dayPercentage || 0;
 
         return (
           <>
             <Swipe
-              key={index}
+              key={habit.id}
               swipeableRow={swipeableRow}
               renderRightActions={() => (
                 <RightSwipe
@@ -97,8 +113,8 @@ export default function Habits({ habits }: Habits) {
                 <DataTable.Cell style={{ flex: 0.5 }}>{habitData?.week ? habitData.week : 0}</DataTable.Cell>
               </DataTable.Row>
             </Swipe>
-            <ProgressBar progress={dayAverage} color={MD3Colors.error50} style={styles.progressBar} />
-            <ProgressBar progress={weekAverage} color={MD3Colors.primary40} style={styles.progressBar} />
+            <ProgressBar progress={dayPercentage} color={MD3Colors.error50} style={styles.progressBar} />
+            <ProgressBar progress={weekPercentage} color={MD3Colors.primary40} style={styles.progressBar} />
           </>
         );
       })}

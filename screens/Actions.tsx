@@ -86,7 +86,7 @@ export default function Actions() {
     if (lastReview?.improve) {
       return (
         <View style={{ paddingBottom: 30 }}>
-          <Card mode={'outlined'}>
+          <Card mode={'outlined'} style={colors.background}>
             <Card.Content>
               <Text variant='bodyMedium'>{lastReview.improve}</Text>
             </Card.Content>
