@@ -72,10 +72,13 @@ export default function Habits({ habits }: Habits) {
             ? calculatePercentage(habitData.week, target.times)
             : weekPercentage;
 
+        const weekAverage = actualWeekPercentage || 0;
+        const dayAverage = dayPercentage || 0;
+
         return (
           <>
             <Swipe
-              key={habit.id}
+              key={index}
               swipeableRow={swipeableRow}
               renderRightActions={() => (
                 <RightSwipe
@@ -94,20 +97,8 @@ export default function Habits({ habits }: Habits) {
                 <DataTable.Cell style={{ flex: 0.5 }}>{habitData?.week ? habitData.week : 0}</DataTable.Cell>
               </DataTable.Row>
             </Swipe>
-            {habitData && target && (
-              <ProgressBar
-                progress={
-                  calculatePercentage(habitData.day, target.times) > 0
-                    ? calculatePercentage(habitData.day, target.times)
-                    : 0
-                }
-                color={MD3Colors.error50}
-                style={styles.progressBar}
-              />
-            )}
-            {/* {actualWeekPercentage && (
-                <ProgressBar progress={actualWeekPercentage > 0 ? actualWeekPercentage : 0} color={MD3Colors.primary40} style={styles.progressBar} />
-              )} */}
+            <ProgressBar progress={dayAverage} color={MD3Colors.error50} style={styles.progressBar} />
+            <ProgressBar progress={weekAverage} color={MD3Colors.primary40} style={styles.progressBar} />
           </>
         );
       })}
