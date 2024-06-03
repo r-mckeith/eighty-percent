@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import { useColorScheme } from 'react-native';
 import { addReview } from '../../src/api/Reviews';
 import { useAggregatedData } from '../../src/hooks/aggregateData';
 import { useDateContext, useReviewContext } from '../../src/contexts';
 import { Grid, ReviewQuestion, Summary } from '../reviews';
 import Modal from '../shared/Modal'
-import { Section } from '../layout';
+import { Section, SectionTitle } from '../layout';
+import { Card, Divider, Text, TextInput } from 'react-native-paper';
+import { getColors } from '../../src/colors';
+import { color } from 'react-native-elements/dist/helpers';
 
 type ReviewModal = {
   visible: boolean;
@@ -21,6 +25,9 @@ export default function ReviewModal({ visible, onClose }: ReviewModal) {
   const { selectedDate } = useDateContext();
   const { habitGridData, projectTableData } = useAggregatedData();
   const { reviews, dispatch } = useReviewContext();
+
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
 
   const lastReview = reviews && reviews[0]?.response;
   const isAnswered = answer.good !== '' || answer.bad !== '' || answer.improve !== '';
@@ -53,19 +60,30 @@ export default function ReviewModal({ visible, onClose }: ReviewModal) {
 
   return (
     <Modal
-      placeholder={'Weekly Review'}
       visible={visible}
       onClose={handleCancel}
       onSave={handleSaveReview}
-      size={'large'}
       disabled={!isAnswered}>
+      <SectionTitle title='Last week'/>
+
       {lastReview && <Summary lastReview={lastReview} />}
+
 
       {projectTableData.length > 0 && <Grid data={projectTableData} name={'Plans'} selectedDate={selectedDate} />}
 
       {habitGridData.length > 0 && <Grid data={habitGridData} name={'Habits'} selectedDate={selectedDate} />}
-      <Section title={'Review your week:'}>
-        <ReviewQuestion
+      <SectionTitle title={'Review your week:'} />
+      <TextInput         placeholder='What went well?'
+        value={answer.good}
+        mode='flat'
+        dense={true}
+        onChangeText={e => handleChange('good', e)}
+        autoFocus={true}
+        multiline={true}
+        numberOfLines={4}
+        returnKeyType='done'/>
+      
+        {/* <ReviewQuestion
           value={answer.good}
           question={'What went well?'}
           handleChange={handleChange}
@@ -82,8 +100,8 @@ export default function ReviewModal({ visible, onClose }: ReviewModal) {
           question={"What's your plan to improve?"}
           handleChange={handleChange}
           category={'improve'}
-        />
-      </Section>
+        /> */}
+      {/* </Section> */}
     </Modal>
   );
 }

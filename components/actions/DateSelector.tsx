@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, useColorScheme } from 'react-native';
 import { addDays } from 'date-fns';
-import { Appbar, Text } from 'react-native-paper';
+import { Appbar } from 'react-native-paper';
 import { getColors } from '../../src/colors';
 
 type DateSelector = {

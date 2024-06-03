@@ -12,8 +12,7 @@ import { getColors } from '../src/colors';
 import { PlanProps } from '../src/types/shared';
 import { WeeklyReviewButton } from '../components/shared';
 import { Scroll, SectionTitle } from '../components/layout';
-import { DateSelector, HabitSection, PlanSection } from '../components/actions';
-import StatsHeader from '../components/actions/StatsHeader';
+import { DateSelector, HabitSection, HabitSectionTitle, PlanSection } from '../components/actions';
 import { Appbar, Card, Text } from 'react-native-paper';
 
 export default function Actions() {
@@ -128,7 +127,7 @@ export default function Actions() {
         {renderFocus()}
         {renderPlanSectionTitle()}
         {renderPlanSection()}
-        <StatsHeader groupId={groupId} />
+        <HabitSectionTitle groupId={groupId} />
         <HabitSection habits={habitSection} sectionName='habits' groupId={groupId} />
         <WeeklyReviewButton />
       </Scroll>

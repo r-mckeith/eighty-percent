@@ -1,14 +1,14 @@
 import React, { useRef } from 'react';
-import { View, StyleSheet, useColorScheme } from 'react-native';
+import { StyleSheet, useColorScheme } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
+import { DataTable, ProgressBar, MD3Colors } from 'react-native-paper';
+import { getColors } from '../../src/colors';
 import { HabitProps } from '../../src/types/shared';
 import { selectHabit } from '../../src/api/Habits';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
 import { useAggregatedData } from '../../src/hooks/aggregateData';
 import { Swipe } from '../layout';
 import RightSwipe from '../rightSwipe/RightSwipe';
-import { DataTable, ProgressBar, MD3Colors } from 'react-native-paper';
-import { getColors } from '../../src/colors';
 
 type Habits = {
   habits: HabitProps[];
@@ -55,7 +55,7 @@ export default function Habits({ habits }: Habits) {
 
   return (
     <DataTable>
-      {sortedHabits.map((habit, index) => {
+      {sortedHabits.map((habit) => {
         const { habitData, target } = habit;
 
         const dayPercentage =
@@ -73,23 +73,6 @@ export default function Habits({ habits }: Habits) {
             : target && habitData && weeklyTargetFromDaily
             ? calculatePercentage(habitData.week, weeklyTargetFromDaily)
             : 0;
-
-        // const dayPercentage =
-        //   target && habitData && target.timeframe === 'day' ? calculatePercentage(habitData.day, target.times) : null;
-
-        // const weeklyTargetFromDaily = target && target.timeframe === 'day' ? target.times * 7 : null;
-        // const weekPercentage =
-        //   target && habitData && weeklyTargetFromDaily && target.timeframe === 'day'
-        //     ? calculatePercentage(habitData.week, weeklyTargetFromDaily)
-        //     : null;
-
-        // const actualWeekPercentage =
-        //   target && habitData && target.timeframe === 'week'
-        //     ? calculatePercentage(habitData.week, target.times)
-        //     : weekPercentage;
-
-        // const weekAverage = actualWeekPercentage || 0;
-        // const dayAverage = dayPercentage || 0;
 
         return (
           <>

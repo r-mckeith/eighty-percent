@@ -8,38 +8,41 @@ export default function StatsHeader({ groupId }: { groupId: number }) {
   const colors = getColors(scheme);
 
   return (
-    <View style={[{ flexDirection: 'row', alignItems: 'center', paddingBottom: 10 }, colors.background]}>
-      <View style={styles.headerCellHabitName}>
-        <Text style={[colors.text, styles.text, { paddingRight: 10 }]}>Habits</Text>
+    <View style={[styles.header, colors.background]}>
+      <View style={styles.title}>
+        <Text style={[colors.text, styles.text]}>Habits</Text>
         <AddButton sectionName='habits' type='habit' groupId={groupId} />
       </View>
 
-      <Text style={[styles.headerCell, colors.text]}>Day</Text>
-      <Text style={[styles.headerCell, colors.text]}>Week</Text>
+      <Text style={[styles.cell, colors.text]}>Day</Text>
+      <Text style={[styles.cell, colors.text]}>Week</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  statsHeader: {
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingBottom: 10,
   },
-  headerCell: {
+  title: {
+    flex: 3.5,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cell: {
     flex: 1,
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 12,
   },
-  headerCellHabitName: {
-    flex: 3.5,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   text: {
-    fontSize: 25,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontWeight: '400',
+    lineHeight: 32,
+    letterSpacing: 0.18,
     textTransform: 'capitalize',
+    paddingRight: 5
   },
 });

@@ -19,7 +19,7 @@ export default function TextBox({ value, question, category, handleChange }: Tex
       <RowText text={question} style={{ marginLeft: 10, marginBottom: 10 }} />
       <TextInput
         style={[styles.textInput, colors.text, colors.border]}
-        placeholderTextColor='white'
+        placeholderTextColor={colors.text.color}
         value={value}
         onChangeText={e => handleChange(category, e)}
         autoFocus={false}

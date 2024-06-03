@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, useColorScheme } from 'react-native';
-import { getColors } from '../../src/colors';
+import { View} from 'react-native';
 import { PlanProps } from '../../src/types/shared';
 import { markPlanAsComplete } from '../../src/api/Plans';
 import { usePlanContext, useDateContext } from '../../src/contexts';
@@ -15,9 +14,6 @@ export default function PlanSection({ plans }: Plans) {
 
   const { selectedDate } = useDateContext();
   const { dispatch } = usePlanContext();
-
-  const scheme = useColorScheme();
-  const colors = getColors(scheme);
 
   async function handleToggleCompleted(plan: PlanProps, selectedDate: Date, dispatch: React.Dispatch<any>) {
     handleToggle(plan.name);

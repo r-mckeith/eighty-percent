@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
 import { Section, Row, RowText } from '../layout';
 import { getColors } from '../../src/colors';
+import { DataTable } from 'react-native-paper';
 
 type Grid = {
   data: any;
