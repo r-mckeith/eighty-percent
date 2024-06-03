@@ -24,9 +24,11 @@ const styles = StyleSheet.create({
   sectionName: {
     flexDirection: 'row',
     marginBottom: 5,
-    paddingBottom: 10
+    paddingBottom: 10,
+    alignItems: 'center'
   },
   children: {
     paddingRight: 5,
+    
   },
 });

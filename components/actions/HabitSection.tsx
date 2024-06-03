@@ -12,8 +12,8 @@ import RightSwipe from '../rightSwipe/RightSwipe';
 
 type Habits = {
   habits: HabitProps[];
-  sectionName: string;
-  groupId: number;
+  sectionName?: string;
+  groupId?: number;
 };
 
 export default function Habits({ habits }: Habits) {
@@ -55,7 +55,7 @@ export default function Habits({ habits }: Habits) {
 
   return (
     <DataTable>
-      {sortedHabits.map((habit) => {
+      {sortedHabits.map(habit => {
         const { habitData, target } = habit;
 
         const dayPercentage =
@@ -65,13 +65,11 @@ export default function Habits({ habits }: Habits) {
             ? calculatePercentage(habitData.day, target.times / 7)
             : 0;
 
-        const weeklyTargetFromDaily = target && target.timeframe === 'day' ? target.times * 7 : null;
-
         const weekPercentage =
           target && habitData && target.timeframe === 'week'
             ? calculatePercentage(habitData.week, target.times)
-            : target && habitData && weeklyTargetFromDaily
-            ? calculatePercentage(habitData.week, weeklyTargetFromDaily)
+            : target && habitData && target.timeframe === 'day'
+            ? calculatePercentage(habitData.week, target.times * 7)
             : 0;
 
         return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, useColorScheme } from 'react-native';
+import { useColorScheme } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getColors } from '../../src/colors';
 
@@ -14,18 +14,12 @@ export default function Scroll({ children, stickyIndices }: Scroll) {
 
   return (
     <ScrollView
-      style={[styles.scrollView, colors.background]}
+      style={[{ paddingHorizontal: 16 }, colors.background]}
       keyboardShouldPersistTaps='handled'
       showsVerticalScrollIndicator={false}
+      automaticallyAdjustKeyboardInsets={true}
       stickyHeaderIndices={stickyIndices}>
       {children}
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-});

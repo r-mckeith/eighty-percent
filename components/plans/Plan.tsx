@@ -29,13 +29,13 @@ export default function Plan({ plan, rootPlanId, first, last, setSelected }: Pla
         left={props => <List.Icon {...props} icon={plan.inScopeDay ? 'radiobox-marked' : 'radiobox-blank'} />}
         right={props => <List.Icon {...props} icon='plus' />}
       /> */}
-                <RadioButton.Item
-            key={plan.id}
-            label={plan.name}
-            value={plan.name}
-            // onPress={() => setSelected(plan.id)}
-            disabled={plan.completed ? true : false}
-          />
+      <RadioButton.Item
+        key={plan.id}
+        label={plan.name}
+        value={plan.name}
+        // onPress={() => setSelected(plan.id)}
+        disabled={plan.completed ? true : false}
+      />
       {/* <Row
         opacity={rootPlanId ? 1 : 0.2}
         onPress={() => setSelected && setSelected(plan.id)}

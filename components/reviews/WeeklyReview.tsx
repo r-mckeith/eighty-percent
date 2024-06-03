@@ -3,19 +3,19 @@ import { useColorScheme } from 'react-native';
 import { addReview } from '../../src/api/Reviews';
 import { useAggregatedData } from '../../src/hooks/aggregateData';
 import { useDateContext, useReviewContext } from '../../src/contexts';
-import { Grid, ReviewQuestion, Summary } from '../reviews';
-import Modal from '../shared/Modal'
-import { Section, SectionTitle } from '../layout';
-import { Card, Divider, Text, TextInput } from 'react-native-paper';
+import { Grid, Summary } from '.';
+import Modal from '../shared/Modal';
+import { SectionTitle } from '../layout';
+import { TextInput, Button } from 'react-native-paper';
 import { getColors } from '../../src/colors';
-import { color } from 'react-native-elements/dist/helpers';
+import GridHeader from './GridHeader';
 
-type ReviewModal = {
+type WeeklyReview = {
   visible: boolean;
   onClose: () => void;
 };
 
-export default function ReviewModal({ visible, onClose }: ReviewModal) {
+export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
   const [answer, setAnswer] = useState<{ good: string; bad: string; improve: string }>({
     good: '',
     bad: '',
@@ -63,17 +63,21 @@ export default function ReviewModal({ visible, onClose }: ReviewModal) {
       visible={visible}
       onClose={handleCancel}
       onSave={handleSaveReview}
-      disabled={!isAnswered}>
-      <SectionTitle title='Last week'/>
-
+      disabled={!isAnswered}
+      stickyIndices={[0, 2, 4, 6]}>
+      {lastReview && <SectionTitle title='Last week' />}
       {lastReview && <Summary lastReview={lastReview} />}
 
+      {projectTableData.length > 0 && <GridHeader title='Plans' selectedDate={selectedDate} />}
+      {projectTableData.length > 0 && <Grid data={projectTableData} />}
 
-      {projectTableData.length > 0 && <Grid data={projectTableData} name={'Plans'} selectedDate={selectedDate} />}
+      {habitGridData.length > 0 && <GridHeader title='Habits' selectedDate={selectedDate} />}
+      {habitGridData.length > 0 && <Grid data={habitGridData} />}
 
-      {habitGridData.length > 0 && <Grid data={habitGridData} name={'Habits'} selectedDate={selectedDate} />}
-      <SectionTitle title={'Review your week:'} />
-      <TextInput         placeholder='What went well?'
+      <SectionTitle title={'Review'} />
+      <TextInput
+        style={{ marginBottom: 10 }}
+        placeholder='What went well?'
         value={answer.good}
         mode='flat'
         dense={true}
@@ -81,27 +85,35 @@ export default function ReviewModal({ visible, onClose }: ReviewModal) {
         autoFocus={true}
         multiline={true}
         numberOfLines={4}
-        returnKeyType='done'/>
-      
-        {/* <ReviewQuestion
-          value={answer.good}
-          question={'What went well?'}
-          handleChange={handleChange}
-          category={'good'}
-        />
-        <ReviewQuestion
-          value={answer.bad}
-          question={"What didn't go well?"}
-          handleChange={handleChange}
-          category={'bad'}
-        />
-        <ReviewQuestion
-          value={answer.improve}
-          question={"What's your plan to improve?"}
-          handleChange={handleChange}
-          category={'improve'}
-        /> */}
-      {/* </Section> */}
+        returnKeyType='done'
+      />
+      <TextInput
+        style={{ marginBottom: 10 }}
+        placeholder="What didn't go went well?"
+        value={answer.bad}
+        mode='flat'
+        dense={true}
+        onChangeText={e => handleChange('bad', e)}
+        autoFocus={true}
+        multiline={true}
+        numberOfLines={4}
+        returnKeyType='done'
+      />
+      <TextInput
+        style={{ marginBottom: 10 }}
+        placeholder="What's your plan to improve?"
+        value={answer.improve}
+        mode='flat'
+        dense={true}
+        onChangeText={e => handleChange('improve', e)}
+        autoFocus={true}
+        multiline={true}
+        numberOfLines={4}
+        returnKeyType='done'
+      />
+      <Button mode='contained' style={{ marginTop: 10 }} onPress={handleSaveReview}>
+        Submit
+      </Button>
     </Modal>
   );
 }

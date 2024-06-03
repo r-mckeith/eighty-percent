@@ -57,10 +57,15 @@ export default function DateSelector({ selectedDate, onDateChange }: DateSelecto
   return (
     <>
       <View style={[{ paddingBottom: 10 }, colors.background]}>
-        <Appbar mode='center-aligned' style={[colors.background, colors.border, { borderBottomWidth: 1}]}>
+        <Appbar mode='center-aligned' style={[colors.background, colors.border, { borderBottomWidth: 1 }]}>
           <Appbar.Action icon='chevron-left' style={{ paddingLeft: 35 }} onPress={decrementDate} />
           <Appbar.Content title={dayDisplay} />
-          <Appbar.Action icon='chevron-right' style={{ paddingRight: 35 }} onPress={incrementDate} />
+          <Appbar.Action
+            icon='chevron-right'
+            style={{ paddingRight: 35 }}
+            onPress={incrementDate}
+            disabled={dayDisplay === 'Today' ? true : false}
+          />
         </Appbar>
       </View>
     </>

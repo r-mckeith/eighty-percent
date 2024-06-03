@@ -10,10 +10,10 @@ import {
 } from '../src/contexts';
 import { getColors } from '../src/colors';
 import { PlanProps } from '../src/types/shared';
-import { WeeklyReviewButton } from '../components/shared';
+import { WeeklyReviewButton, AddButton } from '../components/shared';
 import { Scroll, SectionTitle } from '../components/layout';
 import { DateSelector, HabitSection, HabitSectionTitle, PlanSection } from '../components/actions';
-import { Appbar, Card, Text } from 'react-native-paper';
+import { Card, Text } from 'react-native-paper';
 
 export default function Actions() {
   const { selectedDate, setSelectedDate } = useDateContext();
@@ -109,29 +109,27 @@ export default function Actions() {
 
   function getStickyIndices() {
     if (lastReview && plansWithBreadcrumbs.length > 0) {
-      return [0, 2, 4];
+      return [1, 3, 5];
     } else if (lastReview && plansWithBreadcrumbs.length === 0) {
-      return [0, 1];
+      return [1, 3];
     } else if (!lastReview && plansWithBreadcrumbs.length > 0) {
-      return [0, 2];
+      return [1, 3];
     } else if (!lastReview && plansWithBreadcrumbs.length === 0) {
-      return [0];
+      return [1];
     }
   }
 
   return (
-    <>
+    <Scroll stickyIndices={getStickyIndices()}>
       <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
-      <Scroll stickyIndices={getStickyIndices()}>
-        {renderFocusTitle()}
-        {renderFocus()}
-        {renderPlanSectionTitle()}
-        {renderPlanSection()}
-        <HabitSectionTitle groupId={groupId} />
-        <HabitSection habits={habitSection} sectionName='habits' groupId={groupId} />
-        <WeeklyReviewButton />
-      </Scroll>
-    </>
+      {renderFocusTitle()}
+      {renderFocus()}
+      {renderPlanSectionTitle()}
+      {renderPlanSection()}
+      <HabitSectionTitle groupId={groupId} />
+      <HabitSection habits={habitSection} />
+      <WeeklyReviewButton />
+    </Scroll>
   );
 }
 
