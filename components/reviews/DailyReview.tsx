@@ -249,7 +249,7 @@ export default function DailyReview({ habits, plans, visible, onClose }: DailyRe
         autoFocus={true}
         multiline={true}
         numberOfLines={4}
-        // returnKeyType='done'
+        returnKeyType='done'
       />
       <Button mode='contained' style={{ marginTop: 10 }} onPress={handleSaveReview}>
         Submit
