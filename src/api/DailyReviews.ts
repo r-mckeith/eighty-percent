@@ -14,7 +14,6 @@ export async function getDailyReviews() {
 }
 
 export async function addDailyReview(review: any, date: string): Promise<any> {
-  console.log('adding review', review, date)
   let { data: reviewData, error: reviewError } = await supabase
     .from('daily_reviews')
     .insert({ response: review, date: date })

@@ -30,15 +30,15 @@ export type AggregatedPlanData = {
   };
 };
 
-export function useAggregatedData() {
+export function useAggregatedData(selectedDate: Date) {
   const [habitsTableData, setHabitsTableData] = useState<AggregatedHabitData[]>([]);
   const [habitGridData, setHabitGridData] = useState<any>([]);
   const [projectTableData, setProjectTableData] = useState<any>([]);
 
-  const { selectedDate } = useDateContext();
+  // const { selectedDate } = useDateContext();
   const { habits } = useHabitContext();
   const { habitData } = useHabitDataContext();
-  const { plans } = usePlanContext()
+  const { plans } = usePlanContext();
 
   useEffect(() => {
     const fetchData = async () => {

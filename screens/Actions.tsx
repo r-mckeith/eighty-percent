@@ -31,15 +31,20 @@ export default function Actions() {
   const colors = getColors(scheme);
 
   const selectedDateString = selectedDate.toLocaleDateString('en-CA');
+  const yesterday = new Date(selectedDate);
+  yesterday.setDate(yesterday.getDate() - 1);
   const habitGroup = groups.filter(group => group.name === 'habits');
   const groupId = habitGroup && habitGroup[0]?.id;
   const planSection = filterPlans(plans, selectedDateString);
   const habitSection = habits.filter(habit => habit.section === 'habits');
-  const lastReview = reviews && reviews[0]?.response ? reviews[0]?.response : null;
-  const lastDailyReview = dailyReviews && dailyReviews[0]?.created_at === selectedDateString;
+  const lastWeekReview = reviews && reviews[0]?.response ? reviews[0]?.response : null;
+  const lastDailyReview =
+    (dailyReviews && dailyReviews[0]?.date.toString() === selectedDateString) ||
+    dailyReviews[0]?.date.toString() === yesterday.toLocaleDateString('en-CA');
 
-  const [dailyReview, setDailyReview] = useState(false)
+  const [dailyReview, setDailyReview] = useState(false);
   const [dailyReviewBanner, setDailyReviewBaner] = useState(!lastDailyReview);
+  console.log(!!lastDailyReview)
 
   function filterPlans(plans: any, selectedDateString: string) {
     return plans.filter((plan: any) => {
@@ -83,18 +88,18 @@ export default function Actions() {
   }
 
   function renderFocusTitle() {
-    if (lastReview?.improve) {
+    if (lastWeekReview?.improve) {
       return <SectionTitle title='Focus' />;
     }
   }
 
   function renderFocus() {
-    if (lastReview?.improve) {
+    if (lastWeekReview?.improve) {
       return (
         <View style={{ paddingBottom: 30 }}>
           <Card mode={'outlined'} style={colors.background}>
             <Card.Content>
-              <Text variant='bodyMedium'>{lastReview.improve}</Text>
+              <Text variant='bodyMedium'>{lastWeekReview.improve}</Text>
             </Card.Content>
           </Card>
         </View>
@@ -120,13 +125,13 @@ export default function Actions() {
   }
 
   function getStickyIndices() {
-    if (lastReview && plansWithBreadcrumbs.length > 0) {
+    if (lastWeekReview && plansWithBreadcrumbs.length > 0) {
       return [1, 3, 5];
-    } else if (lastReview && plansWithBreadcrumbs.length === 0) {
+    } else if (lastWeekReview && plansWithBreadcrumbs.length === 0) {
       return [1, 3];
-    } else if (!lastReview && plansWithBreadcrumbs.length > 0) {
+    } else if (!lastWeekReview && plansWithBreadcrumbs.length > 0) {
       return [1, 3];
-    } else if (!lastReview && plansWithBreadcrumbs.length === 0) {
+    } else if (!lastWeekReview && plansWithBreadcrumbs.length === 0) {
       return [1];
     }
   }
@@ -160,7 +165,12 @@ export default function Actions() {
           <WeeklyReviewButton />
         </View>
       </View>
-      <DailyReview visible={dailyReview} onClose={() => setDailyReview(false)} habits={habitSection} plans={planSection}/>
+      <DailyReview
+        visible={dailyReview}
+        onClose={() => setDailyReview(false)}
+        habits={habitSection}
+        plans={planSection}
+      />
     </Scroll>
   );
 }

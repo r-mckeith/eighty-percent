@@ -85,7 +85,6 @@ export default function DailyReview({ habits, plans, visible, onClose }: DailyRe
       return acc;
     }, {})
   );
-  console.log(habitCounts)
 
   const scheme = useColorScheme();
   const colors = getColors(scheme);

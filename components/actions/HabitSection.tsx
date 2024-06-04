@@ -18,8 +18,9 @@ type Habits = {
 
 export default function Habits({ habits }: Habits) {
   const { dispatch: habitDataDispatch } = useHabitDataContext();
-  const { habitsTableData } = useAggregatedData();
   const { selectedDate } = useDateContext();
+  const { habitsTableData } = useAggregatedData(selectedDate);
+
 
   const swipeableRow = useRef<Swipeable | null>(null);
 
