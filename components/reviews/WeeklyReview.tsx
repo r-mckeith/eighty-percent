@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { useColorScheme } from 'react-native';
 import { addReview } from '../../src/api/Reviews';
 import { useAggregatedData } from '../../src/hooks/aggregateData';
 import { useDateContext, useReviewContext } from '../../src/contexts';
 import { Grid, Summary } from '.';
-import Modal from '../shared/Modal';
+import { Modal } from '../shared';
 import { SectionTitle } from '../layout';
 import { TextInput, Button } from 'react-native-paper';
-import { getColors } from '../../src/colors';
 import GridHeader from './GridHeader';
 
 type WeeklyReview = {
@@ -25,9 +23,6 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
   const { selectedDate } = useDateContext();
   const { habitGridData, projectTableData } = useAggregatedData();
   const { reviews, dispatch } = useReviewContext();
-
-  const scheme = useColorScheme();
-  const colors = getColors(scheme);
 
   const lastReview = reviews && reviews[0]?.response;
   const isAnswered = answer.good !== '' || answer.bad !== '' || answer.improve !== '';

@@ -68,6 +68,8 @@ export type GroupProps = {
 
 export type ReviewProps = any;
 
+export type DailyReviewProps = any;
+
 export type NoteProps = any;
 
 export type NewNoteProps = any;

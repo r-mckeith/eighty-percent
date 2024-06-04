@@ -5,6 +5,7 @@ export { useHabitContext } from './habits/UseHabitContext';
 export { useNoteContext } from './notes/UseNoteContext';
 export { usePlanContext } from './plans/UsePlanContext'
 export { useReviewContext } from './reviews/UseReviewContext';
+export { useDailyReviewContext } from './dailyReviews/UseDailyReviewContext';
 export { useUser, useUserId, useSession } from './sessions/UseSessionHook';
 export { useTaskContext } from './tasks/UseTaskContext';
 
@@ -15,4 +16,5 @@ export { default as HabitProvider } from './habits/HabitProvider';
 export { default as NoteProvider } from './notes/NoteProvider';
 export { default as PlanProvider } from './plans/PlanProvider'
 export { default as ReviewProvider } from './reviews/ReviewProvider';
+export { default as DailyReviewProvider } from './dailyReviews/DailyReviewProvider';
 export { default as TaskProvider } from './tasks/TaskProvider';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import WeeklyReview from '../reviews/WeeklyReview';
+import ReviewModal from '../reviews/WeeklyReview';
 import { Button } from 'react-native-paper';
 
 export default function ReviewButton() {
@@ -11,7 +11,7 @@ export default function ReviewButton() {
       <Button mode='contained' style={{ marginTop: 10 }} onPress={() => setShowModal(true)}>
         Weekly review
       </Button>
-      <WeeklyReview visible={showModal} onClose={() => setShowModal(false)} />
+      <ReviewModal visible={showModal} onClose={() => setShowModal(false)} />
     </View>
   );
 }

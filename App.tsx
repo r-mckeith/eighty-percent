@@ -8,6 +8,7 @@ import { MenuProvider } from 'react-native-popup-menu';
 import 'react-native-url-polyfill/auto';
 import Auth from './components/auth/Auth';
 import {
+  DailyReviewProvider,
   DateProvider,
   GroupProvider,
   HabitDataProvider,
@@ -35,28 +36,28 @@ export default function App() {
             <HabitDataProvider>
               <PlanProvider>
                 <NoteProvider>
-                  <ReviewProvider>
-                    <InitializeApp>
+                  <DailyReviewProvider>
+                    <ReviewProvider>
+                      <InitializeApp>
                         <SafeAreaView style={[styles.container, colors.background]}>
                           <StatusBar style='light' />
                           <MenuProvider>
                             <GestureHandlerRootView style={{ flex: 1 }}>
-                      <PaperProvider>
-
-                              {session && session.user ? (
-                                <NavigationContainer>
-                                  <MyTabs />
-                                </NavigationContainer>
-                              ) : (
-                                <Auth />
-                              )}
-                      </PaperProvider>
-
+                              <PaperProvider>
+                                {session && session.user ? (
+                                  <NavigationContainer>
+                                    <MyTabs />
+                                  </NavigationContainer>
+                                ) : (
+                                  <Auth />
+                                )}
+                              </PaperProvider>
                             </GestureHandlerRootView>
                           </MenuProvider>
                         </SafeAreaView>
-                    </InitializeApp>
-                  </ReviewProvider>
+                      </InitializeApp>
+                    </ReviewProvider>
+                  </DailyReviewProvider>
                 </NoteProvider>
               </PlanProvider>
             </HabitDataProvider>
