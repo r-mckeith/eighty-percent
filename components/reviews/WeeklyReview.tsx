@@ -26,6 +26,7 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
 
   const lastReview = reviews && reviews[0]?.response;
   const isAnswered = answer.good !== '' || answer.bad !== '' || answer.improve !== '';
+  console.log(answer)
 
   async function handleSaveReview(): Promise<void> {
     const dateString = selectedDate.toISOString().split('T')[0];

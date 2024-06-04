@@ -20,7 +20,7 @@ type DailyReview = {
 };
 
 export default function DailyReview({ habits, plans, visible, onClose }: DailyReview) {
-  const [answer, setAnswer] = useState<string>('');
+  const [answer, setAnswer] = useState('');
 
   const { selectedDate } = useDateContext();
   const { dailyReviews, dispatch } = useDailyReviewContext();
@@ -34,6 +34,59 @@ export default function DailyReview({ habits, plans, visible, onClose }: DailyRe
     habitData: habitsTableData.find(data => data.tag_id === habit.id),
   }));
 
+  const [changedHabits, setChangedHabits] = useState({});
+
+  const handleIncrement = (habitId: number) => {
+    setHabitCounts((prevCounts: number[]) => ({
+      ...prevCounts,
+      [habitId]: prevCounts[habitId] + 1,
+    }));
+    setChangedHabits((prevChanges) => ({
+      ...prevChanges,
+      [habitId]: true,
+    }));
+  };
+
+  const handleDecrement = (habitId: number) => {
+    setHabitCounts((prevCounts: number[]) => ({
+      ...prevCounts,
+      [habitId]: Math.max(0, prevCounts[habitId] - 1),
+    }));
+    setChangedHabits((prevChanges) => ({
+      ...prevChanges,
+      [habitId]: true,
+    }));
+  };
+
+  const handleUpdate = async () => {
+    const updates = Object.keys(changedHabits).map(async (habitId) => {
+      const habit = habitsWithData.find(habit => habit.id === Number(habitId));
+      const updatedCount = habitCounts[habitId];
+      if (habit) {
+        try {
+          await editHabitData(habit, selectedDate, updatedCount);
+        } catch (error) {
+          console.error(`Failed to update habit with ID ${habitId}`, error);
+        }
+      }
+    });
+
+    try {
+      await Promise.all(updates);
+      setChangedHabits({});
+    } catch (error) {
+      console.error('Failed to update some habits', error);
+    }
+  };
+
+  const [habitCounts, setHabitCounts] = useState(
+    habitsWithData.reduce((acc: any, habit) => {
+      acc[habit.id] = habit.habitData ? habit.habitData.day : 0;
+      return acc;
+    }, {})
+  );
+  console.log(habitCounts)
+
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
@@ -43,7 +96,7 @@ export default function DailyReview({ habits, plans, visible, onClose }: DailyRe
   const incompletePlans = plans.filter(plan => !plan.completed);
 
   async function handleSaveReview(): Promise<void> {
-    console.log('save review')
+    handleUpdate()
     const dateString = selectedDate.toISOString().split('T')[0];
 
     if (answer) {
@@ -100,9 +153,8 @@ export default function DailyReview({ habits, plans, visible, onClose }: DailyRe
       disabled={!isAnswered}
       stickyIndices={[0, 2, 4, 6]}>
       {lastReview && <SectionTitle title='Yesterday' />}
-      {lastReview && <Summary lastReview={lastReview} />}
       {lastReview && (
-        <Card mode='outlined' style={[{ paddingBottom: 30 }]}>
+        <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
           <Card.Content style={{ paddingBottom: 10 }}>
             <Text variant='bodyMedium' style={{ paddingBottom: 10 }}>
               {lastReview}
@@ -167,17 +219,15 @@ export default function DailyReview({ habits, plans, visible, onClose }: DailyRe
       {habitsWithData.length > 0 && (
         <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
           {habitsWithData.map(habit => {
-            const { habitData } = habit;
-
             return (
               <>
                 <Card.Content>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text variant='bodyMedium'>{habit.name}</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                      <IconButton icon='minus' iconColor={MD3Colors.error50} />
-                      <Text>{habitData && habitData.day}</Text>
-                      <IconButton icon='plus' iconColor={MD3Colors.primary40} />
+                      <IconButton icon='minus' iconColor={MD3Colors.error50} onPress={() => handleDecrement(habit.id)} />
+                      <Text>{habitCounts[habit.id]}</Text>
+                      <IconButton icon='plus' iconColor={MD3Colors.primary40} onPress={() => handleIncrement(habit.id)} />
                     </View>
                   </View>
                 </Card.Content>
@@ -195,11 +245,11 @@ export default function DailyReview({ habits, plans, visible, onClose }: DailyRe
         value={answer}
         mode='flat'
         dense={true}
-        onChangeText={e => handleChange(e)}
+        onChangeText={setAnswer}
         autoFocus={true}
         multiline={true}
         numberOfLines={4}
-        returnKeyType='done'
+        // returnKeyType='done'
       />
       <Button mode='contained' style={{ marginTop: 10 }} onPress={handleSaveReview}>
         Submit
