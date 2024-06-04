@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { StyleSheet, useColorScheme } from 'react-native';
+import { StyleSheet, useColorScheme, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { DataTable, ProgressBar, MD3Colors } from 'react-native-paper';
 import { getColors } from '../../src/colors';
@@ -74,9 +74,8 @@ export default function Habits({ habits }: Habits) {
             : 0;
 
         return (
-          <>
+          <View key={habit.id}>
             <Swipe
-              key={habit.id}
               swipeableRow={swipeableRow}
               renderRightActions={() => (
                 <RightSwipe
@@ -97,7 +96,7 @@ export default function Habits({ habits }: Habits) {
             </Swipe>
             <ProgressBar progress={dayPercentage} color={MD3Colors.error50} style={styles.progressBar} />
             <ProgressBar progress={weekPercentage} color={MD3Colors.primary40} style={styles.progressBar} />
-          </>
+          </View>
         );
       })}
     </DataTable>

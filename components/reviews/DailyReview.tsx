@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useColorScheme, View } from 'react-native';
 import { addDailyReview } from '../../src/api/DailyReviews';
 import { useDateContext, useDailyReviewContext, usePlanContext, useHabitDataContext } from '../../src/contexts';
@@ -16,27 +16,44 @@ type DailyReview = {
   habits: HabitProps[];
   plans: PlanProps[];
   visible: boolean;
+  isToday: boolean;
   onClose: () => void;
 };
 
-export default function DailyReview({ habits, plans, visible, onClose }: DailyReview) {
+export default function DailyReview({ habits, plans, visible, isToday, onClose }: DailyReview) {
   const [answer, setAnswer] = useState('');
+  const [habitCounts, setHabitCounts] = useState<any>({});
+  const [changedHabits, setChangedHabits] = useState({});
 
   const { selectedDate } = useDateContext();
   const { dailyReviews, dispatch } = useDailyReviewContext();
+  const { habitsTableData } = useAggregatedData(selectedDate);
   const { dispatch: planDispatch } = usePlanContext();
   const { dispatch: habitDataDispatch } = useHabitDataContext();
 
-  const { habitsTableData } = useAggregatedData();
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
 
+  const lastReview = dailyReviews && dailyReviews[0]?.response;
+  const isAnswered = answer !== '';
+  const completedPlans = plans.filter(plan => plan.completed);
+  const incompletePlans = plans.filter(plan => !plan.completed);
+  
   const habitsWithData = habits.map(habit => ({
     ...habit,
     habitData: habitsTableData.find(data => data.tag_id === habit.id),
   }));
 
-  const [changedHabits, setChangedHabits] = useState({});
+  useEffect(() => {
+    const updatedHabitCounts: any = {};
+    habitsWithData.forEach(habit => {
+      updatedHabitCounts[habit.id] = habit.habitData ? habit.habitData.day : 0;
+    });
+    setHabitCounts(updatedHabitCounts);
+  }, []);
 
-  const handleIncrement = (habitId: number) => {
+
+  function handleIncrement(habitId: number) {
     setHabitCounts((prevCounts: number[]) => ({
       ...prevCounts,
       [habitId]: prevCounts[habitId] + 1,
@@ -47,7 +64,7 @@ export default function DailyReview({ habits, plans, visible, onClose }: DailyRe
     }));
   };
 
-  const handleDecrement = (habitId: number) => {
+  function handleDecrement(habitId: number) {
     setHabitCounts((prevCounts: number[]) => ({
       ...prevCounts,
       [habitId]: Math.max(0, prevCounts[habitId] - 1),
@@ -58,13 +75,16 @@ export default function DailyReview({ habits, plans, visible, onClose }: DailyRe
     }));
   };
 
-  const handleUpdate = async () => {
+  async function handleUpdate() {
+    const yesterday = new Date(selectedDate);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const date = isToday ? selectedDate : yesterday
     const updates = Object.keys(changedHabits).map(async (habitId) => {
       const habit = habitsWithData.find(habit => habit.id === Number(habitId));
       const updatedCount = habitCounts[habitId];
       if (habit) {
         try {
-          await editHabitData(habit, selectedDate, updatedCount);
+          await editHabitData(habit, date, updatedCount);
         } catch (error) {
           console.error(`Failed to update habit with ID ${habitId}`, error);
         }
@@ -78,22 +98,7 @@ export default function DailyReview({ habits, plans, visible, onClose }: DailyRe
       console.error('Failed to update some habits', error);
     }
   };
-
-  const [habitCounts, setHabitCounts] = useState(
-    habitsWithData.reduce((acc: any, habit) => {
-      acc[habit.id] = habit.habitData ? habit.habitData.day : 0;
-      return acc;
-    }, {})
-  );
-
-  const scheme = useColorScheme();
-  const colors = getColors(scheme);
-
-  const lastReview = dailyReviews && dailyReviews[0]?.response;
-  const isAnswered = answer !== '';
-  const completedPlans = plans.filter(plan => plan.completed);
-  const incompletePlans = plans.filter(plan => !plan.completed);
-
+  
   async function handleSaveReview(): Promise<void> {
     handleUpdate()
     const dateString = selectedDate.toISOString().split('T')[0];
@@ -151,7 +156,7 @@ export default function DailyReview({ habits, plans, visible, onClose }: DailyRe
       onSave={handleSaveReview}
       disabled={!isAnswered}
       stickyIndices={[0, 2, 4, 6]}>
-      {lastReview && <SectionTitle title='Yesterday' />}
+      {lastReview && <SectionTitle title='Last review' />}
       {lastReview && (
         <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
           <Card.Content style={{ paddingBottom: 10 }}>
@@ -217,9 +222,9 @@ export default function DailyReview({ habits, plans, visible, onClose }: DailyRe
       {habitsWithData.length > 0 && <SectionTitle title='Habits' />}
       {habitsWithData.length > 0 && (
         <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
-          {habitsWithData.map(habit => {
+          {habitsWithData.map((habit:any, index: number) => {
             return (
-              <>
+              <View key={index}>
                 <Card.Content>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text variant='bodyMedium'>{habit.name}</Text>
@@ -231,7 +236,7 @@ export default function DailyReview({ habits, plans, visible, onClose }: DailyRe
                   </View>
                 </Card.Content>
                 <Divider />
-              </>
+              </View>
             );
           })}
         </Card>

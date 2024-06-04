@@ -21,7 +21,7 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
   });
 
   const { selectedDate } = useDateContext();
-  const { habitGridData, projectTableData } = useAggregatedData();
+  const { habitGridData, projectTableData } = useAggregatedData(selectedDate);
   const { reviews, dispatch } = useReviewContext();
 
   const lastReview = reviews && reviews[0]?.response;

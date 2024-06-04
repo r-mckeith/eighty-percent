@@ -35,7 +35,6 @@ export function useAggregatedData(selectedDate: Date) {
   const [habitGridData, setHabitGridData] = useState<any>([]);
   const [projectTableData, setProjectTableData] = useState<any>([]);
 
-  // const { selectedDate } = useDateContext();
   const { habits } = useHabitContext();
   const { habitData } = useHabitDataContext();
   const { plans } = usePlanContext();

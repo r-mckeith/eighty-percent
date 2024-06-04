@@ -22,7 +22,7 @@ export default function GridHeader({ title, selectedDate }: { title: string; sel
       </Text>
       <View style={{ flexDirection: 'row', flex: 6, justifyContent: 'space-evenly', paddingRight: 20 }}>
         {generateDayHeaders().map((header, index) => (
-          <DataTable.Title>
+          <DataTable.Title key={index}>
             <Text variant='bodyMedium' style={{ flex: 4 }}>
               {header}
             </Text>

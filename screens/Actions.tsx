@@ -38,13 +38,12 @@ export default function Actions() {
   const planSection = filterPlans(plans, selectedDateString);
   const habitSection = habits.filter(habit => habit.section === 'habits');
   const lastWeekReview = reviews && reviews[0]?.response ? reviews[0]?.response : null;
-  const lastDailyReview =
-    (dailyReviews && dailyReviews[0]?.date.toString() === selectedDateString) ||
-    dailyReviews[0]?.date.toString() === yesterday.toLocaleDateString('en-CA');
+  const todayReview = dailyReviews && dailyReviews[0]?.date.toString() === selectedDateString;
+  const yesterdayReview = dailyReviews[0]?.date.toString() === yesterday.toLocaleDateString('en-CA');
+  const lastDailyReview = todayReview || yesterdayReview;
 
   const [dailyReview, setDailyReview] = useState(false);
   const [dailyReviewBanner, setDailyReviewBaner] = useState(!lastDailyReview);
-  console.log(!!lastDailyReview)
 
   function filterPlans(plans: any, selectedDateString: string) {
     return plans.filter((plan: any) => {
@@ -170,6 +169,7 @@ export default function Actions() {
         onClose={() => setDailyReview(false)}
         habits={habitSection}
         plans={planSection}
+        isToday={todayReview}
       />
     </Scroll>
   );
