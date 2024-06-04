@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getHabitData } from '../api/Habits';
-import { HabitProps, HabitDataProps, PlanProps } from '../types/shared';
-import { useDateContext, useHabitContext, useHabitDataContext, usePlanContext } from '../contexts';
+import { HabitDataProps, PlanProps } from '../types/shared';
+import { useHabitContext, useHabitDataContext, usePlanContext } from '../contexts';
 
 export type AggregatedHabitData = {
   tag_id: number;

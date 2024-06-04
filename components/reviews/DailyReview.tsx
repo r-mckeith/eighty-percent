@@ -3,7 +3,6 @@ import { useColorScheme, View } from 'react-native';
 import { addDailyReview } from '../../src/api/DailyReviews';
 import { useDateContext, useDailyReviewContext, usePlanContext, useHabitDataContext } from '../../src/contexts';
 import { markPlanAsComplete } from '../../src/api/Plans';
-import { Summary } from '.';
 import { SectionTitle } from '../layout';
 import { Modal } from '../shared';
 import { useAggregatedData } from '../../src/hooks/aggregateData';
@@ -16,18 +15,21 @@ type DailyReview = {
   habits: HabitProps[];
   plans: PlanProps[];
   visible: boolean;
-  isToday: boolean;
+  yesterdayReview: boolean;
   onClose: () => void;
 };
 
-export default function DailyReview({ habits, plans, visible, isToday, onClose }: DailyReview) {
+export default function DailyReview({ habits, plans, visible, yesterdayReview, onClose }: DailyReview) {
   const [answer, setAnswer] = useState('');
   const [habitCounts, setHabitCounts] = useState<any>({});
   const [changedHabits, setChangedHabits] = useState({});
 
-  const { selectedDate } = useDateContext();
   const { dailyReviews, dispatch } = useDailyReviewContext();
-  const { habitsTableData } = useAggregatedData(selectedDate);
+  const { selectedDate } = useDateContext();
+  const yesterday = new Date(selectedDate);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const reviewDate = yesterdayReview ? selectedDate : yesterday
+  const { habitsTableData } = useAggregatedData(reviewDate);
   const { dispatch: planDispatch } = usePlanContext();
   const { dispatch: habitDataDispatch } = useHabitDataContext();
 
@@ -38,53 +40,58 @@ export default function DailyReview({ habits, plans, visible, isToday, onClose }
   const isAnswered = answer !== '';
   const completedPlans = plans.filter(plan => plan.completed);
   const incompletePlans = plans.filter(plan => !plan.completed);
-  
+
   const habitsWithData = habits.map(habit => ({
     ...habit,
-    habitData: habitsTableData.find(data => data.tag_id === habit.id),
+    habitData: habitsTableData.find((data: any) => data.tag_id === habit.id),
   }));
 
+  const sortedHabits = habitsWithData.sort((a, b) => {
+    const weekA = a.habitData ? a.habitData.day : 0;
+    const weekB = b.habitData ? b.habitData.day : 0;
+    return weekB - weekA;
+  });
+
   useEffect(() => {
+    if (habitsWithData.length === 0) return;
+    console.log('in use effect')
+
     const updatedHabitCounts: any = {};
     habitsWithData.forEach(habit => {
       updatedHabitCounts[habit.id] = habit.habitData ? habit.habitData.day : 0;
     });
     setHabitCounts(updatedHabitCounts);
-  }, []);
-
+  }, [habitsTableData]);
 
   function handleIncrement(habitId: number) {
     setHabitCounts((prevCounts: number[]) => ({
       ...prevCounts,
       [habitId]: prevCounts[habitId] + 1,
     }));
-    setChangedHabits((prevChanges) => ({
+    setChangedHabits(prevChanges => ({
       ...prevChanges,
       [habitId]: true,
     }));
-  };
+  }
 
   function handleDecrement(habitId: number) {
     setHabitCounts((prevCounts: number[]) => ({
       ...prevCounts,
       [habitId]: Math.max(0, prevCounts[habitId] - 1),
     }));
-    setChangedHabits((prevChanges) => ({
+    setChangedHabits(prevChanges => ({
       ...prevChanges,
       [habitId]: true,
     }));
-  };
+  }
 
   async function handleUpdate() {
-    const yesterday = new Date(selectedDate);
-    yesterday.setDate(yesterday.getDate() - 1);
-    const date = isToday ? selectedDate : yesterday
-    const updates = Object.keys(changedHabits).map(async (habitId) => {
+    const updates = Object.keys(changedHabits).map(async habitId => {
       const habit = habitsWithData.find(habit => habit.id === Number(habitId));
       const updatedCount = habitCounts[habitId];
       if (habit) {
         try {
-          await editHabitData(habit, date, updatedCount);
+          await editHabitData(habit, reviewDate, updatedCount);
         } catch (error) {
           console.error(`Failed to update habit with ID ${habitId}`, error);
         }
@@ -97,11 +104,11 @@ export default function DailyReview({ habits, plans, visible, isToday, onClose }
     } catch (error) {
       console.error('Failed to update some habits', error);
     }
-  };
-  
+  }
+
   async function handleSaveReview(): Promise<void> {
-    handleUpdate()
-    const dateString = selectedDate.toISOString().split('T')[0];
+    handleUpdate();
+    const dateString = reviewDate.toISOString().split('T')[0];
 
     if (answer) {
       try {
@@ -119,14 +126,10 @@ export default function DailyReview({ habits, plans, visible, isToday, onClose }
     onClose();
   }
 
-  const handleChange = (value: string) => {
-    setAnswer(value);
-  };
-
   async function handleToggleCompleted(plan: PlanProps) {
-    planDispatch({ type: 'TOGGLE_COMPLETED', id: plan.id, selectedDate: selectedDate });
+    planDispatch({ type: 'TOGGLE_COMPLETED', id: plan.id, selectedDate: reviewDate });
     try {
-      const updatedPlan = await markPlanAsComplete(plan.id, selectedDate);
+      const updatedPlan = await markPlanAsComplete(plan.id, reviewDate);
 
       if (updatedPlan) {
       } else {
@@ -134,18 +137,6 @@ export default function DailyReview({ habits, plans, visible, isToday, onClose }
       }
     } catch (error) {
       console.error('Failed to toggle complete', error);
-    }
-  }
-
-  async function handleEditHabitData(habit: HabitProps, count: number) {
-    try {
-      const updatedHabitData = await editHabitData(habit, selectedDate, count);
-      habitDataDispatch({
-        type: 'UPDATE_HABIT_DATA',
-        payload: updatedHabitData,
-      });
-    } catch (error) {
-      console.error('Failed to edit habit data:', error);
     }
   }
 
@@ -219,19 +210,27 @@ export default function DailyReview({ habits, plans, visible, isToday, onClose }
         </Card>
       )}
 
-      {habitsWithData.length > 0 && <SectionTitle title='Habits' />}
-      {habitsWithData.length > 0 && (
+      {habitsWithData.length > 0 && Object.keys(habitCounts).length > 0 && <SectionTitle title='Habits' />}
+      {habitsWithData.length > 0 && Object.keys(habitCounts).length > 0 && (
         <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
-          {habitsWithData.map((habit:any, index: number) => {
+          {sortedHabits.map((habit: any, index: number) => {
             return (
-              <View key={index}>
+              <View key={habit.id}>
                 <Card.Content>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text variant='bodyMedium'>{habit.name}</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                      <IconButton icon='minus' iconColor={MD3Colors.error50} onPress={() => handleDecrement(habit.id)} />
+                      <IconButton
+                        icon='minus'
+                        iconColor={MD3Colors.error50}
+                        onPress={() => handleDecrement(habit.id)}
+                      />
                       <Text>{habitCounts[habit.id]}</Text>
-                      <IconButton icon='plus' iconColor={MD3Colors.primary40} onPress={() => handleIncrement(habit.id)} />
+                      <IconButton
+                        icon='plus'
+                        iconColor={MD3Colors.primary40}
+                        onPress={() => handleIncrement(habit.id)}
+                      />
                     </View>
                   </View>
                 </Card.Content>

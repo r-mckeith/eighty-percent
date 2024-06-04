@@ -169,7 +169,7 @@ export default function Actions() {
         onClose={() => setDailyReview(false)}
         habits={habitSection}
         plans={planSection}
-        isToday={todayReview}
+        yesterdayReview={yesterdayReview}
       />
     </Scroll>
   );
