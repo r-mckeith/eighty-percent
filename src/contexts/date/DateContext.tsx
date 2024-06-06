@@ -4,6 +4,8 @@ type DateContextType = {
   selectedDate: Date;
   setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
   selectedDateString: string;
+  todayDate: Date;
+  todayDateString: string;
   yesterday: Date;
   yesterdayDateString: string;
 };

@@ -6,7 +6,7 @@ import { selectHabit } from '../../src/api/Habits';
 import { getColors } from '../../src/colors';
 import { HabitProps } from '../../src/types';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
-import { useAggregatedData } from '../../src/hooks/aggregateData';
+import { useDailyHabitData } from '../../src/hooks/dailyHabitData';
 import { Swipe } from '../layout';
 import RightSwipe from '../rightSwipe/RightSwipe';
 
@@ -19,7 +19,7 @@ type Habits = {
 export default function Habits({ habits }: Habits) {
   const { dispatch: habitDataDispatch } = useHabitDataContext();
   const { selectedDate } = useDateContext();
-  const { habitsTableData } = useAggregatedData();
+  const { dailyHabitData } = useDailyHabitData();
 
   const swipeableRow = useRef<Swipeable | null>(null);
 
@@ -28,7 +28,7 @@ export default function Habits({ habits }: Habits) {
 
   const habitsWithData = habits.map(habit => ({
     ...habit,
-    habitData: habitsTableData.find(data => data.tag_id === habit.id),
+    habitData: dailyHabitData.find(data => data.tag_id === habit.id),
   }));
 
   const sortedHabits = habitsWithData.sort((a, b) => {

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { addReview } from '../../src/api/Reviews';
-import { useAggregatedData } from '../../src/hooks/aggregateData';
+import { useWeeklyHabitData } from '../../src/hooks/weeklyHabitData';
 import { useDateContext, useReviewContext } from '../../src/contexts';
 import { Grid, Summary } from '.';
 import Modal from '../shared/Modal';
 import { SectionTitle } from '../layout';
 import { TextInput, Button } from 'react-native-paper';
 import GridHeader from './GridHeader';
+import { useWeeklyPlanData } from '../../src/hooks/weeklyPlanData';
 
 type WeeklyReview = {
   visible: boolean;
@@ -21,8 +22,9 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
   });
 
   const { selectedDate, selectedDateString } = useDateContext();
-  const { habitGridData, projectTableData } = useAggregatedData();
+  const { weeklyHabitData } = useWeeklyHabitData();
   const { reviews, dispatch } = useReviewContext();
+  const { weeklyPlanData } = useWeeklyPlanData();
 
   const lastReview = reviews && reviews[0]?.response;
   const isAnswered = answer.good !== '' || answer.bad !== '' || answer.improve !== '';
@@ -61,11 +63,11 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
       {lastReview && <SectionTitle title='Last week' />}
       {lastReview && <Summary lastReview={lastReview} />}
 
-      {projectTableData.length > 0 && <GridHeader title='Plans' selectedDate={selectedDate} />}
-      {projectTableData.length > 0 && <Grid data={projectTableData} />}
+      {weeklyPlanData.length > 0 && <GridHeader title='Plans' selectedDate={selectedDate} />}
+      {weeklyPlanData.length > 0 && <Grid data={weeklyPlanData} />}
 
-      {habitGridData.length > 0 && <GridHeader title='Habits' selectedDate={selectedDate} />}
-      {habitGridData.length > 0 && <Grid data={habitGridData} />}
+      {weeklyHabitData.length > 0 && <GridHeader title='Habits' selectedDate={selectedDate} />}
+      {weeklyHabitData.length > 0 && <Grid data={weeklyHabitData} />}
 
       <SectionTitle title={'Review'} />
       <TextInput

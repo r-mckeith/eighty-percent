@@ -50,7 +50,6 @@
 //   return <DateContext.Provider value={value}>{children}</DateContext.Provider>;
 // };
 
-
 import React, { useState, useEffect, ReactNode } from 'react';
 import DateContext from './DateContext';
 import { AppState, AppStateStatus } from 'react-native';
@@ -64,10 +63,12 @@ const DateProvider = ({ children }: DateProviderProps) => {
 
   const selectedDateString = selectedDate.toISOString().split('T')[0];
 
+  const todayDate = new Date();
+  const todayDateString = todayDate.toISOString().split('T')[0];
+
   const yesterday = new Date(selectedDate);
   yesterday.setDate(selectedDate.getDate() - 1);
   const yesterdayDateString = yesterday.toISOString().split('T')[0];
-
 
   useEffect(() => {
     const setToday = () => {
@@ -90,7 +91,20 @@ const DateProvider = ({ children }: DateProviderProps) => {
     };
   }, []);
 
-  return <DateContext.Provider value={{ selectedDate, setSelectedDate, selectedDateString, yesterday, yesterdayDateString }}>{children}</DateContext.Provider>;
+  return (
+    <DateContext.Provider
+      value={{
+        selectedDate,
+        setSelectedDate,
+        selectedDateString,
+        todayDate,
+        todayDateString,
+        yesterday,
+        yesterdayDateString,
+      }}>
+      {children}
+    </DateContext.Provider>
+  );
 };
 
 export default DateProvider;

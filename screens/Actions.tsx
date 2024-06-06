@@ -17,7 +17,9 @@ import { DateSelector, HabitSection, HabitSectionTitle, PlanSection } from '../c
 import { DailyReview, DailyReviewButton } from '../components/reviews';
 
 export default function Actions() {
-  const { selectedDate, setSelectedDate, selectedDateString, yesterdayDateString } = useDateContext();
+  const [dailyReview, setDailyReview] = useState(false);
+
+  const { selectedDate, setSelectedDate, selectedDateString, todayDateString, yesterdayDateString } = useDateContext();
   const { groups } = useGroupContext();
   const { habits } = useHabitContext();
   const { plans } = usePlanContext();
@@ -33,8 +35,8 @@ export default function Actions() {
   const habitSection = habits.filter(habit => habit.section === 'habits');
   const lastWeekReview = reviews && reviews[0]?.response ? reviews[0]?.response : null;
   const yesterdayReview = dailyReviews.filter(review => review.date.toString() === yesterdayDateString);
+  const incompleteYesterdayReview = yesterdayReview.length === 0 && selectedDateString === todayDateString
 
-  const [dailyReview, setDailyReview] = useState(false);
 
   function filterPlans(plans: any, selectedDateString: string) {
     return plans.filter((plan: any) => {
@@ -129,7 +131,7 @@ export default function Actions() {
     <Scroll stickyIndices={getStickyIndices()}>
       <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
       <Banner
-        visible={yesterdayReview.length === 0}
+        visible={incompleteYesterdayReview}
         actions={[
           {
             label: 'Complete',
@@ -138,15 +140,15 @@ export default function Actions() {
         ]}>
         Complete yesterday's review
       </Banner>
-      <View style={{ opacity: yesterdayReview.length === 0 ? 0.25 : 1 }}>
-        <View pointerEvents={yesterdayReview.length === 0 ? 'none' : 'auto'}>
+      <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
+        <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>
           {renderFocusTitle()}
           {renderFocus()}
           {renderPlanSectionTitle()}
           {renderPlanSection()}
           <HabitSectionTitle groupId={groupId} />
           <HabitSection habits={habitSection} />
-          <DailyReviewButton habits={habitSection} plans={planSection} isYesterdayReview={yesterdayReview.length === 0} />
+          <DailyReviewButton habits={habitSection} plans={planSection} isYesterdayReview={incompleteYesterdayReview} />
           <WeeklyReviewButton />
         </View>
       </View>
@@ -155,7 +157,7 @@ export default function Actions() {
         onClose={() => setDailyReview(false)}
         habits={habitSection}
         plans={planSection}
-        isYesterdayReview={yesterdayReview.length === 0}
+        isYesterdayReview={incompleteYesterdayReview}
       />
     </Scroll>
   );

@@ -5,7 +5,7 @@ import { useDateContext, useDailyReviewContext, usePlanContext, useHabitDataCont
 import { markPlanAsComplete } from '../../src/api/Plans';
 import { SectionTitle } from '../layout';
 import { Modal } from '../shared';
-import { useAggregatedData } from '../../src/hooks/aggregateData';
+import { useDailyHabitData } from '../../src/hooks/dailyHabitData';
 import { TextInput, Button, Card, List, Divider, IconButton, MD3Colors, Text } from 'react-native-paper';
 import { HabitProps, PlanProps } from '../../src/types';
 import { getColors } from '../../src/colors';
@@ -27,7 +27,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
   const { dailyReviews, dispatch } = useDailyReviewContext();
   const { selectedDate, yesterday} = useDateContext();
   const reviewDate = isYesterdayReview ? yesterday : selectedDate;
-  const { habitsTableData } = useAggregatedData();
+  const { dailyHabitData } = useDailyHabitData();
   const { dispatch: planDispatch } = usePlanContext();
   // still have to dispatch habit data updates
   const { dispatch: habitDataDispatch } = useHabitDataContext();
@@ -42,7 +42,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
 
   const habitsWithData = habits.map(habit => ({
     ...habit,
-    habitData: habitsTableData.find((data: any) => data.tag_id === habit.id),
+    habitData: dailyHabitData.find((data: any) => data.tag_id === habit.id),
   }));
 
   const sortedHabits = habitsWithData.sort((a, b) => {
@@ -61,7 +61,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
         : {};
     });
     setHabitCounts(updatedHabitCounts);
-  }, [habitsTableData]);
+  }, [dailyHabitData]);
 
   function handleIncrement(habitId: number) {
     setHabitCounts((prevCounts: any) => ({
