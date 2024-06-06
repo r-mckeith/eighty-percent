@@ -3,7 +3,7 @@ import { Swipeable } from 'react-native-gesture-handler';
 import { deleteHabit } from '../../src/api/Habits';
 import { deletePlan } from '../../src/api/Plans';
 import RightSwipeButton from './RightSwipeButton';
-import { HabitProps, PlanProps } from '../../src/types/shared';
+import { HabitProps, PlanProps } from '../../src/types';
 import { usePlanContext, useHabitContext } from '../../src/contexts';
 
 type Delete = {

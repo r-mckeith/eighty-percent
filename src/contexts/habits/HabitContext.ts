@@ -1,6 +1,6 @@
 import React from 'react';
 import { Action } from '../../reducers/HabitReducer';
-import { HabitProps } from '../../types/shared';
+import { HabitProps } from '../../types';
 
 type HabitContextType = {
   habits: HabitProps[];

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Content, HowToUse } from '../components/content';
 import { Scroll, Section, SectionTitle } from '../components/layout';
+import { View } from 'react-native';
 
 const videos = ['How to use the app', 'Habits', 'Plans'];
 const templates = ['Set up app', 'Start a business', 'Buy a house'];
@@ -24,7 +25,7 @@ export default function ContentSection() {
       <Scroll>
         {sections.map((section, index) => {
           return (
-            <>
+            <View key={index}>
               <SectionTitle title={section.name} />
               <Section key={index}>
                 {section.content.map((content, index) => {
@@ -40,7 +41,7 @@ export default function ContentSection() {
                   );
                 })}
               </Section>
-            </>
+            </View>
           );
         })}
       </Scroll>

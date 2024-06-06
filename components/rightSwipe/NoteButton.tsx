@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Swipeable } from 'react-native-gesture-handler';
 import { addNote } from '../../src/api/Notes';
 import { useDateContext, useNoteContext } from '../../src/contexts';
-import { NoteProps } from '../../src/types/shared';
+import { NoteProps } from '../../src/types';
 import { AddModal } from '../shared';
 import RightSwipeButton from './RightSwipeButton';
+import { View } from 'react-native';
 
 type NoteButton = {
   type: string;
@@ -40,10 +41,10 @@ export default function NoteButton({ type, itemId, swipeableRow }: NoteButton) {
   }
 
   return (
-    <>
+    <View>
       <RightSwipeButton icon='book' backgroundColor='blue' text='Note' onPress={() => setShowAddModal(true)}/>
 
       <AddModal visible={showAddModal} onClose={handleClose} onSave={handleAddNote} displayName='Note' />
-    </>
+    </View>
   );
 }

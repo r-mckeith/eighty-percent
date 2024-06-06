@@ -1,6 +1,6 @@
 import React from 'react';
 import { Action } from '../../reducers/TaskReducer';
-import { TaskProps } from '../../types/shared';
+import { TaskProps } from '../../types';
 
 type TaskContextType = {
   tasks: TaskProps[];

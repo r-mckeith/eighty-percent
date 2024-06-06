@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { SegmentedButtons } from 'react-native-paper';
 
 type TargetSelector = {
@@ -11,7 +11,7 @@ type TargetSelector = {
 
 export default function TargetSelector({ times, timeframe, setTimes, setTimeframe }: TargetSelector) {
   return (
-    <>
+    <View>
       <SegmentedButtons
         style={{ paddingVertical: 10 }}
         value={times.toString()}
@@ -28,6 +28,6 @@ export default function TargetSelector({ times, timeframe, setTimes, setTimefram
           { label: 'Week', value: 'week' },
         ]}
       />
-    </>
+    </View>
   );
 }

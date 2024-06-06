@@ -1,4 +1,4 @@
-import { GroupProps } from '../types/shared';
+import { GroupProps } from '../types';
 
 export type Action =
   | { type: 'INITIALIZE_GROUPS'; payload: GroupProps[] }

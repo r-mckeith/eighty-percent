@@ -20,7 +20,7 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
     improve: '',
   });
 
-  const { selectedDate } = useDateContext();
+  const { selectedDate, selectedDateString } = useDateContext();
   const { habitGridData, projectTableData } = useAggregatedData();
   const { reviews, dispatch } = useReviewContext();
 
@@ -28,14 +28,12 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
   const isAnswered = answer.good !== '' || answer.bad !== '' || answer.improve !== '';
 
   async function handleSaveReview(): Promise<void> {
-    const dateString = selectedDate.toISOString().split('T')[0];
-
     if (answer) {
+      onClose();
       try {
-        const newReview = await addReview(answer, dateString);
-        dispatch({ type: 'ADD_REVIEW', payload: newReview, date: dateString });
+        const newReview = await addReview(answer, selectedDateString);
+        dispatch({ type: 'ADD_REVIEW', payload: newReview, date: selectedDateString });
         setAnswer({ good: '', bad: '', improve: '' });
-        onClose();
       } catch (error) {
         console.error('Failed to add review:', error);
       }

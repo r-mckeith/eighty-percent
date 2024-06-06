@@ -4,8 +4,9 @@ import { editHabit } from '../../src/api/Habits';
 import { editPlan } from '../../src/api/Plans';
 import EditModal from './EditModal';
 import RightSwipeButton from './RightSwipeButton';
-import { HabitProps, PlanProps } from '../../src/types/shared';
+import { HabitProps, PlanProps } from '../../src/types';
 import { usePlanContext, useHabitContext } from '../../src/contexts';
+import { View } from 'react-native';
 
 type Edit = {
   item: HabitProps | PlanProps;
@@ -51,7 +52,7 @@ export default function Edit({ item, swipeableRow, type }: Edit) {
   }
 
   return (
-    <>
+    <View>
       <RightSwipeButton
         icon={'square-edit-outline'}
         backgroundColor={'orange'}
@@ -67,6 +68,6 @@ export default function Edit({ item, swipeableRow, type }: Edit) {
         type={type}
         target={target}
       />
-    </>
+    </View>
   );
 }

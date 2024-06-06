@@ -55,7 +55,7 @@ export default function DateSelector({ selectedDate, onDateChange }: DateSelecto
   const dayDisplay = formatDateRelative(selectedDate);
 
   return (
-    <>
+    <View>
       <View style={[{ paddingBottom: 10 }, colors.background]}>
         <Appbar mode='center-aligned' style={[colors.background, colors.border, { borderBottomWidth: 1 }]}>
           <Appbar.Action icon='chevron-left' style={{ paddingLeft: 35 }} onPress={decrementDate} />
@@ -68,6 +68,6 @@ export default function DateSelector({ selectedDate, onDateChange }: DateSelecto
           />
         </Appbar>
       </View>
-    </>
+    </View>
   );
 }

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import DailyReview from '../reviews/DailyReview';
+import DailyReview from './DailyReview';
 import { Button } from 'react-native-paper';
-import { HabitProps, PlanProps } from '../../src/types/shared';
+import { HabitProps, PlanProps } from '../../src/types';
 
 type DailyReviewButton = {
   habits: HabitProps[];

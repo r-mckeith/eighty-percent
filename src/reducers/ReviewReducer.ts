@@ -1,4 +1,4 @@
-import { ReviewProps } from '../types/shared';
+import { ReviewProps } from '../types';
 
 export type Action =
   | { type: 'INITIALIZE_REVIEWS'; payload: ReviewProps[] }

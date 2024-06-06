@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getHabitData } from '../api/Habits';
-import { HabitDataProps, PlanProps } from '../types/shared';
+import { HabitDataProps, PlanProps } from '../types';
 import { useDateContext, useHabitContext, useHabitDataContext, usePlanContext } from '../contexts';
 
 export type AggregatedHabitData = {

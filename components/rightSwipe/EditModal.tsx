@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 import { Modal, TargetSelector } from '../shared';
-import { HabitProps, PlanProps } from '../../src/types/shared';
+import { HabitProps, PlanProps } from '../../src/types';
 import { Switch, TextInput } from 'react-native-paper';
 
 type EditModal = {

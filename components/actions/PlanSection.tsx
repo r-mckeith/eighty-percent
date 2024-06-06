@@ -1,22 +1,19 @@
-import React, { useState } from 'react';
-import { View} from 'react-native';
-import { PlanProps } from '../../src/types/shared';
+import React from 'react';
+import { Divider, RadioButton } from 'react-native-paper';
+import { View } from 'react-native';
 import { markPlanAsComplete } from '../../src/api/Plans';
 import { usePlanContext, useDateContext } from '../../src/contexts';
-import { Divider, RadioButton } from 'react-native-paper';
+import { PlanProps } from '../../src/types';
 
 type Plans = {
   plans: (PlanProps & { breadcrumb: string })[];
 };
 
 export default function PlanSection({ plans }: Plans) {
-  const [checkedValues, setCheckedValues] = useState(new Set());
-
-  const { selectedDate } = useDateContext();
+  const { selectedDate, selectedDateString } = useDateContext();
   const { dispatch } = usePlanContext();
 
   async function handleToggleCompleted(plan: PlanProps, selectedDate: Date, dispatch: React.Dispatch<any>) {
-    handleToggle(plan.name);
     if (plan.name === 'Weekly review') {
     } else {
       dispatch({ type: 'TOGGLE_COMPLETED', id: plan.id, selectedDate: selectedDate });
@@ -33,21 +30,11 @@ export default function PlanSection({ plans }: Plans) {
     }
   }
 
-  const handleToggle = (planName: string) => {
-    const updatedCheckedValues = new Set(checkedValues);
-    if (updatedCheckedValues.has(planName)) {
-      updatedCheckedValues.delete(planName);
-    } else {
-      updatedCheckedValues.add(planName);
-    }
-    setCheckedValues(updatedCheckedValues);
-  };
-
   return (
     <View style={{ marginBottom: 30 }}>
       {plans.map((plan, index) => {
-        const isSelected = plan.completed ? plan.completed === selectedDate.toISOString().split('T')[0] : false;
-        const isSelectedLater = plan.completed ? plan.completed > selectedDate.toISOString().split('T')[0] : false;
+        const isSelected = plan.completed ? plan.completed === selectedDateString : false;
+        const isSelectedLater = plan.completed ? plan.completed > selectedDateString : false;
         const breadcrumb = plan.breadcrumb;
 
         return (

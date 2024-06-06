@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { Swipeable } from 'react-native-gesture-handler';
 import AddButton from '../shared/AddButton';
 import Scope from './Scope';
-import { PlanProps } from '../../src/types/shared';
+import { PlanProps } from '../../src/types';
 import { Row, RowText, Swipe } from '../layout';
 import RightSwipe from '../rightSwipe/RightSwipe';
 import { List, Checkbox, RadioButton } from 'react-native-paper';

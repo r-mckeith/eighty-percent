@@ -1,4 +1,4 @@
-import { PlanProps, NewPlanProps } from '../types/shared';
+import { PlanProps, NewPlanProps } from '../types';
 import { supabase } from './Client';
 
 export async function getPlans() {

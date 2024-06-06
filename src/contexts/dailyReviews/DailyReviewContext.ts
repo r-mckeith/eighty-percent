@@ -1,6 +1,6 @@
 import React from 'react';
 import { Action } from '../../reducers/ReviewReducer';
-import { DailyReviewProps } from '../../types/shared';
+import { DailyReviewProps } from '../../types';
 
 export interface DailyReviewContextType {
   dailyReviews: DailyReviewProps[];

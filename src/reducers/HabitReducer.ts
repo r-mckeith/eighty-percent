@@ -1,4 +1,4 @@
-import { HabitProps } from '../types/shared';
+import { HabitProps } from '../types';
 
 export type Action =
   | { type: 'INITIALIZE_TAGS'; payload: HabitProps[] }

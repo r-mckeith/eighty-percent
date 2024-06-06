@@ -4,14 +4,14 @@ import { Button } from 'react-native-paper';
 import { Scroll } from '../layout';
 export default function Account({session}: any) {
   return (
-    <>
+    <View>
       <Scroll>
         <View style={styles.container}>
           <View style={styles.verticallySpaced}></View>
         </View>
       </Scroll>
       <Button onPress={() => supabase.auth.signOut()}>Sign out</Button>
-    </>
+    </View>
   );
 }
 

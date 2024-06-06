@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { PlanProps } from '../../src/types/shared';
+import { PlanProps } from '../../src/types';
 import { Divider, List, RadioButton } from 'react-native-paper';
 
 type PlanSection = {

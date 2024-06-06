@@ -3,8 +3,9 @@ import { Swipeable } from 'react-native-gesture-handler';
 import { editHabitData } from '../../src/api/Habits';
 import DataModal from './DataModal';
 import RightSwipeButton from './RightSwipeButton';
-import { HabitProps } from '../../src/types/shared';
+import { HabitProps } from '../../src/types';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
+import { View } from 'react-native';
 
 type EditDataButton = {
   item: HabitProps;
@@ -41,7 +42,7 @@ export default function EditDataButton({ item, habitData, swipeableRow }: EditDa
   }
 
   return (
-    <>
+    <View>
     <RightSwipeButton icon='table-edit' backgroundColor='green' text='Edit day' onPress={() => setShowEditDataModal(true)}/>
       <DataModal
         visible={showEditDataModal}
@@ -50,6 +51,6 @@ export default function EditDataButton({ item, habitData, swipeableRow }: EditDa
         placeholder={'Edit Day'}
         habitData={habitData}
       />
-    </>
+    </View>
   );
 }

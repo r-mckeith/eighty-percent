@@ -1,4 +1,4 @@
-import { NoteProps, NewNoteProps } from '../types/shared';
+import { NoteProps, NewNoteProps } from '../types';
 import { supabase } from './Client'
 
 export async function getNotes () {

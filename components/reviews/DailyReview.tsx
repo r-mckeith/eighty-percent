@@ -7,7 +7,7 @@ import { SectionTitle } from '../layout';
 import { Modal } from '../shared';
 import { useAggregatedData } from '../../src/hooks/aggregateData';
 import { TextInput, Button, Card, List, Divider, IconButton, MD3Colors, Text } from 'react-native-paper';
-import { HabitProps, PlanProps } from '../../src/types/shared';
+import { HabitProps, PlanProps } from '../../src/types';
 import { getColors } from '../../src/colors';
 import { editHabitData } from '../../src/api/Habits';
 
@@ -25,12 +25,11 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
   const [changedHabits, setChangedHabits] = useState({});
 
   const { dailyReviews, dispatch } = useDailyReviewContext();
-  const { selectedDate } = useDateContext();
-  const yesterday = new Date(selectedDate);
-  yesterday.setDate(yesterday.getDate() - 1);
+  const { selectedDate, yesterday} = useDateContext();
   const reviewDate = isYesterdayReview ? yesterday : selectedDate;
   const { habitsTableData } = useAggregatedData();
   const { dispatch: planDispatch } = usePlanContext();
+  // still have to dispatch habit data updates
   const { dispatch: habitDataDispatch } = useHabitDataContext();
 
   const scheme = useColorScheme();
@@ -40,10 +39,6 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
   const isAnswered = answer.answer !== '' || Object.keys(changedHabits).length > 0;
   const completedPlans = plans.filter(plan => plan.completed);
   const incompletePlans = plans.filter(plan => !plan.completed);
-
-  function isEmpty(obj: any) {
-    return Object.keys(obj).length === 0;
-  }
 
   const habitsWithData = habits.map(habit => ({
     ...habit,

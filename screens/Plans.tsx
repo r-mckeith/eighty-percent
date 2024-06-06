@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import { usePlanContext } from '../src/contexts';
-import { PlanProps } from '../src/types/shared';
+import { PlanProps } from '../src/types';
 import { PlanSection, NestedList, ToggleAndBack } from '../components/plans';
 import { SectionTitle, Scroll } from '../components/layout';
 import { AddButton, Toggle } from '../components/shared';
@@ -37,7 +37,7 @@ export default function Plans() {
       )}
 
       {!selectedPlan && (
-        <>
+        <View>
           <Toggle
             onToggle={setShowCompleted}
             value={showCompleted}
@@ -48,7 +48,7 @@ export default function Plans() {
             <AddButton parentId={0} depth={0} type={'plan'} />
           </SectionTitle>
           <PlanSection plans={planRoots} setSelected={setSelectedPlan} />
-        </>
+        </View>
       )}
     </Scroll>
   );

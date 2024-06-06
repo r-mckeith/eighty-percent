@@ -2,9 +2,9 @@ import React, { useRef } from 'react';
 import { StyleSheet, useColorScheme, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { DataTable, ProgressBar, MD3Colors } from 'react-native-paper';
-import { getColors } from '../../src/colors';
-import { HabitProps } from '../../src/types/shared';
 import { selectHabit } from '../../src/api/Habits';
+import { getColors } from '../../src/colors';
+import { HabitProps } from '../../src/types';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
 import { useAggregatedData } from '../../src/hooks/aggregateData';
 import { Swipe } from '../layout';
@@ -20,7 +20,6 @@ export default function Habits({ habits }: Habits) {
   const { dispatch: habitDataDispatch } = useHabitDataContext();
   const { selectedDate } = useDateContext();
   const { habitsTableData } = useAggregatedData();
-
 
   const swipeableRow = useRef<Swipeable | null>(null);
 

@@ -14,10 +14,10 @@ export default function Section({ title, children, style }: Section) {
   const colors = getColors(scheme);
 
   return (
-    <>
+    <View>
       {title && <SectionTitle title={title} />}
       <View style={[styles.section, colors.border, style]}>{children}</View>
-    </>
+    </View>
   );
 }
 

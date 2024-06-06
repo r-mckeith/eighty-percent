@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ActivityIndicator, View, StyleSheet, useColorScheme } from 'react-native';
+import { Banner, Card, Text } from 'react-native-paper';
 import {
   useDailyReviewContext,
   useDateContext,
@@ -7,45 +8,33 @@ import {
   useHabitContext,
   usePlanContext,
   useReviewContext,
-  useTaskContext,
 } from '../src/contexts';
 import { getColors } from '../src/colors';
-import { PlanProps } from '../src/types/shared';
+import { PlanProps } from '../src/types';
 import { WeeklyReviewButton } from '../components/shared';
 import { Scroll, SectionTitle } from '../components/layout';
 import { DateSelector, HabitSection, HabitSectionTitle, PlanSection } from '../components/actions';
-import { Banner, Card, Text } from 'react-native-paper';
-import DailyReview from '../components/reviews/DailyReview';
-import DailyReviewButton from '../components/shared/DailyReviewButton';
+import { DailyReview, DailyReviewButton } from '../components/reviews';
 
 export default function Actions() {
-  const { selectedDate, setSelectedDate } = useDateContext();
+  const { selectedDate, setSelectedDate, selectedDateString, yesterdayDateString } = useDateContext();
   const { groups } = useGroupContext();
   const { habits } = useHabitContext();
   const { plans } = usePlanContext();
   const { reviews } = useReviewContext();
   const { dailyReviews } = useDailyReviewContext();
-  const { tasks } = useTaskContext();
 
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
-  const selectedDateString = selectedDate.toLocaleDateString('en-CA');
-  const yesterday = new Date(selectedDate);
-  yesterday.setDate(yesterday.getDate() - 1);
   const habitGroup = groups.filter(group => group.name === 'habits');
   const groupId = habitGroup && habitGroup[0]?.id;
   const planSection = filterPlans(plans, selectedDateString);
   const habitSection = habits.filter(habit => habit.section === 'habits');
   const lastWeekReview = reviews && reviews[0]?.response ? reviews[0]?.response : null;
-  const yesterdayReview = dailyReviews.filter(
-    review => review.date.toString() === yesterday.toLocaleDateString('en-CA')
-  );
-
-  const missingYesterdayReview = yesterdayReview.length === 0;
+  const yesterdayReview = dailyReviews.filter(review => review.date.toString() === yesterdayDateString);
 
   const [dailyReview, setDailyReview] = useState(false);
-  const [dailyReviewBanner, setDailyReviewBaner] = useState(missingYesterdayReview);
 
   function filterPlans(plans: any, selectedDateString: string) {
     return plans.filter((plan: any) => {
@@ -121,7 +110,6 @@ export default function Actions() {
   }
 
   function handleCompleteDailyReview() {
-    setDailyReviewBaner(false);
     setDailyReview(true);
   }
 
@@ -141,29 +129,24 @@ export default function Actions() {
     <Scroll stickyIndices={getStickyIndices()}>
       <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
       <Banner
-        visible={dailyReviewBanner}
+        visible={yesterdayReview.length === 0}
         actions={[
           {
             label: 'Complete',
             onPress: () => handleCompleteDailyReview(),
           },
-          // {
-          //   label: 'Skip',
-          //   onPress: () => setDailyReviewBaner(false),
-          // },
         ]}>
         Complete yesterday's review
       </Banner>
-      <View style={{ opacity: dailyReviewBanner ? 0.25 : 1 }}>
-        <View pointerEvents={dailyReviewBanner ? 'none' : 'auto'}>
+      <View style={{ opacity: yesterdayReview.length === 0 ? 0.25 : 1 }}>
+        <View pointerEvents={yesterdayReview.length === 0 ? 'none' : 'auto'}>
           {renderFocusTitle()}
           {renderFocus()}
           {renderPlanSectionTitle()}
           {renderPlanSection()}
           <HabitSectionTitle groupId={groupId} />
           <HabitSection habits={habitSection} />
-          <DailyReviewButton habits={habitSection} plans={planSection} isYesterdayReview={missingYesterdayReview} />
-
+          <DailyReviewButton habits={habitSection} plans={planSection} isYesterdayReview={yesterdayReview.length === 0} />
           <WeeklyReviewButton />
         </View>
       </View>
@@ -172,7 +155,7 @@ export default function Actions() {
         onClose={() => setDailyReview(false)}
         habits={habitSection}
         plans={planSection}
-        isYesterdayReview={missingYesterdayReview}
+        isYesterdayReview={yesterdayReview.length === 0}
       />
     </Scroll>
   );

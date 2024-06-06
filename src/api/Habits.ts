@@ -1,4 +1,4 @@
-import { NewHabitProps, HabitProps, HabitDataProps } from '../types/shared';
+import { NewHabitProps, HabitProps, HabitDataProps } from '../types';
 import { supabase } from './Client';
 
 export async function getHabits() {
