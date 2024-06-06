@@ -5,9 +5,17 @@ type DateContextType = {
   setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
   selectedDateString: string;
   todayDate: Date;
-  todayDateString: string;
+  todayString: string;
   yesterday: Date;
-  yesterdayDateString: string;
+  yesterdayString: string;
+  oneWeekAgo: Date;
+  oneWeekAgoString: string;
+  oneMonthAgo: Date;
+  oneMonthAgoString: string;
+  oneYearAgo: Date;
+  oneYearAgoString: string;
+  tomorrow: Date;
+  tomorrowString: string;
 };
 
 export const DateContext = React.createContext<DateContextType | undefined>(undefined);

@@ -15,7 +15,7 @@ const emptyPlanData = [{
 export function useWeeklyPlanData() {
   const [weeklyPlanData, setWeeklyPlanData] = useState<WeeklyPlanData>(emptyPlanData);
 
-  const { selectedDate, todayDate, todayDateString, yesterday, yesterdayDateString } = useDateContext();
+  const { selectedDate, todayDate, todayString, yesterday, yesterdayString } = useDateContext();
   const { plans } = usePlanContext();
 
   useEffect(() => {

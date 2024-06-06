@@ -13,11 +13,19 @@ export type dailyHabitData = {
 };
 
 export function useDailyHabitData() {
-  const [dailyHabitData, setDailyHabitData] = useState<dailyHabitData[]>([]);
-
-  const { selectedDate, selectedDateString } = useDateContext();
+  const {
+    selectedDate,
+    selectedDateString,
+    yesterdayString,
+    oneWeekAgoString,
+    oneMonthAgoString,
+    oneYearAgoString,
+    tomorrowString,
+  } = useDateContext();
   const { habits } = useHabitContext();
   const { habitData } = useHabitDataContext();
+  
+  const [dailyHabitData, setDailyHabitData] = useState<dailyHabitData[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,61 +45,37 @@ export function useDailyHabitData() {
   function aggregateHabitData(data: HabitDataProps[]): dailyHabitData[] {
     const habitMap: Record<string, dailyHabitData> = {};
 
-    const startDay = new Date(
-        Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth(), selectedDate.getUTCDate())
-    );
-
-    // Calculate yesterday's start and end
-    const yesterday = new Date(selectedDate);
-    yesterday.setDate(selectedDate.getDate() - 1);
-    const startOfYesterday = new Date(
-        Date.UTC(yesterday.getUTCFullYear(), yesterday.getUTCMonth(), yesterday.getUTCDate())
-    );
-    const endOfYesterday = new Date(
-        Date.UTC(yesterday.getUTCFullYear(), yesterday.getUTCMonth(), yesterday.getUTCDate(), 23, 59, 59, 999)
-    );
-
-    const startWeek = new Date(startDay);
-    startWeek.setUTCDate(startDay.getUTCDate() - 6);
-    const startMonth = new Date(startDay);
-    startMonth.setUTCDate(startDay.getUTCDate() - 29);
-    const startYear = new Date(startDay);
-    startYear.setUTCDate(startDay.getUTCDate() - 364);
-
     data.forEach(habit => {
-        const completedDate = new Date(habit.date);
-        console.log(typeof habit.date)
+      if (!habitMap[habit.tag_id]) {
+        habitMap[habit.tag_id] = {
+          tag_id: habit.tag_id,
+          day: 0,
+          yesterday: 0,
+          week: 0,
+          month: 0,
+          year: 0,
+        };
+      }
 
-        if (!habitMap[habit.tag_id]) {
-            habitMap[habit.tag_id] = {
-                tag_id: habit.tag_id,
-                day: 0,
-                yesterday: 0,
-                week: 0,
-                month: 0,
-                year: 0,
-            };
-        }
-
-        if (habit.date === selectedDateString) {
-            habitMap[habit.tag_id].day += habit.count;
-        }
-        if (completedDate >= startOfYesterday && completedDate < new Date(startOfYesterday.getTime() + 86400000)) {
-            habitMap[habit.tag_id].yesterday += habit.count;
-        }
-        if (completedDate >= startWeek && completedDate < new Date(startDay.getTime() + 86400000)) {
-            habitMap[habit.tag_id].week += habit.count;
-        }
-        if (completedDate >= startMonth && completedDate < new Date(startDay.getTime() + 86400000)) {
-            habitMap[habit.tag_id].month += habit.count;
-        }
-        if (completedDate >= startYear && completedDate < new Date(startDay.getTime() + 86400000)) {
-            habitMap[habit.tag_id].year += habit.count;
-        }
+      if (habit.date === selectedDateString) {
+        habitMap[habit.tag_id].day += habit.count;
+      }
+      if (habit.date === yesterdayString) {
+        habitMap[habit.tag_id].yesterday += habit.count;
+      }
+      if (habit.date >= oneWeekAgoString && habit.date < tomorrowString) {
+        habitMap[habit.tag_id].week += habit.count;
+      }
+      if (habit.date >= oneMonthAgoString && habit.date < tomorrowString) {
+        habitMap[habit.tag_id].month += habit.count;
+      }
+      if (habit.date >= oneYearAgoString && habit.date < tomorrowString) {
+        habitMap[habit.tag_id].year += habit.count;
+      }
     });
 
     return Object.values(habitMap).filter(habit => habit.month > 0);
-}
+  }
 
   return { dailyHabitData };
 }

@@ -19,7 +19,7 @@ import { DailyReview, DailyReviewButton } from '../components/reviews';
 export default function Actions() {
   const [dailyReview, setDailyReview] = useState(false);
 
-  const { selectedDate, setSelectedDate, selectedDateString, todayDateString, yesterdayDateString } = useDateContext();
+  const { selectedDate, setSelectedDate, selectedDateString, todayString, yesterdayString } = useDateContext();
   const { groups } = useGroupContext();
   const { habits } = useHabitContext();
   const { plans } = usePlanContext();
@@ -34,8 +34,8 @@ export default function Actions() {
   const planSection = filterPlans(plans, selectedDateString);
   const habitSection = habits.filter(habit => habit.section === 'habits');
   const lastWeekReview = reviews && reviews[0]?.response ? reviews[0]?.response : null;
-  const yesterdayReview = dailyReviews.filter(review => review.date.toString() === yesterdayDateString);
-  const incompleteYesterdayReview = yesterdayReview.length === 0 && selectedDateString === todayDateString
+  const yesterdayReview = dailyReviews.filter(review => review.date.toString() === yesterdayString);
+  const incompleteYesterdayReview = yesterdayReview.length === 0 && selectedDateString === todayString
 
 
   function filterPlans(plans: any, selectedDateString: string) {
