@@ -3,7 +3,7 @@ import { addReview } from '../../src/api/Reviews';
 import { useAggregatedData } from '../../src/hooks/aggregateData';
 import { useDateContext, useReviewContext } from '../../src/contexts';
 import { Grid, Summary } from '.';
-import { Modal } from '../shared';
+import Modal from '../shared/Modal';
 import { SectionTitle } from '../layout';
 import { TextInput, Button } from 'react-native-paper';
 import GridHeader from './GridHeader';
@@ -21,7 +21,7 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
   });
 
   const { selectedDate } = useDateContext();
-  const { habitGridData, projectTableData } = useAggregatedData(selectedDate);
+  const { habitGridData, projectTableData } = useAggregatedData();
   const { reviews, dispatch } = useReviewContext();
 
   const lastReview = reviews && reviews[0]?.response;

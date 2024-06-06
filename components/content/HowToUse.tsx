@@ -8,7 +8,7 @@ export default function HowToUse({ handlePressBack }: { handlePressBack: () => v
   const [status, setStatus] = React.useState<any>({});
 
   return (
-    <>
+    <View>
       <View style={styles.backButton}>
         <TouchableOpacity onPress={() => {}}>
           <MaterialCommunityIcons name='chevron-left' size={30} color={'white'} onPress={handlePressBack} />
@@ -36,7 +36,7 @@ export default function HowToUse({ handlePressBack }: { handlePressBack: () => v
           </View>
         </View>
       </ScrollView>
-    </>
+    </View>
   );
 }
 

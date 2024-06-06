@@ -7,9 +7,10 @@ import { HabitProps, PlanProps } from '../../src/types/shared';
 type DailyReviewButton = {
   habits: HabitProps[];
   plans: PlanProps[];
+  isYesterdayReview: boolean;
 };
 
-export default function DailyReviewButton({ habits, plans }: DailyReviewButton) {
+export default function DailyReviewButton({ habits, plans, isYesterdayReview }: DailyReviewButton) {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -17,7 +18,7 @@ export default function DailyReviewButton({ habits, plans }: DailyReviewButton) 
       <Button mode='contained' style={{ marginTop: 10 }} onPress={() => setShowModal(true)}>
         Daily review
       </Button>
-      <DailyReview habits={habits} plans={plans} visible={showModal} onClose={() => setShowModal(false)} />
+      <DailyReview habits={habits} plans={plans} visible={showModal} onClose={() => setShowModal(false)} isYesterdayReview={isYesterdayReview}/>
     </View>
   );
 }

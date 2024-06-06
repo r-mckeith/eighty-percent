@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, StyleSheet, View, useColorScheme } from 'react-native';
 import { supabase } from '../../src/api/Client';
-import { Button, Input } from 'react-native-elements';
+import { Button, TextInput } from 'react-native-paper';
 import { getColors } from '../../src/colors';
 
 export default function Auth() {
@@ -38,22 +38,20 @@ export default function Auth() {
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Input
+        <TextInput
           style={colors.text}
           label='Email'
-          leftIcon={{ type: 'font-awesome', name: 'envelope', color: colors.text.color }}
-          onChangeText={text => setEmail(text)}
+          onChangeText={(text: string) => setEmail(text)}
           value={email}
           placeholder='email@address.com'
           autoCapitalize={'none'}
         />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input
+        <TextInput
           style={colors.text}
           label='Password'
-          leftIcon={{ type: 'font-awesome', name: 'lock', color: colors.text.color }}
-          onChangeText={text => setPassword(text)}
+          onChangeText={(text: string) => setPassword(text)}
           value={password}
           secureTextEntry={true}
           placeholder='Password'
@@ -61,10 +59,10 @@ export default function Auth() {
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title='Sign in' disabled={loading} onPress={() => signInWithEmail()} />
+        <Button disabled={loading} onPress={() => signInWithEmail()}>Sign in</Button>
       </View>
       <View style={styles.verticallySpaced}>
-        <Button title='Sign up' disabled={loading} onPress={() => signUpWithEmail()} />
+        <Button disabled={loading} onPress={() => signUpWithEmail()}>Sign up</Button>
       </View>
     </View>
   );

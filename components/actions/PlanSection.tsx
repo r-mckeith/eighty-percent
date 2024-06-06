@@ -51,9 +51,8 @@ export default function PlanSection({ plans }: Plans) {
         const breadcrumb = plan.breadcrumb;
 
         return (
-          <>
+          <View key={index}>
             <RadioButton.Item
-              key={index}
               label={`${breadcrumb ? breadcrumb : ''} ${plan.name}`}
               value={plan.name}
               labelVariant='bodyMedium'
@@ -62,7 +61,7 @@ export default function PlanSection({ plans }: Plans) {
               disabled={isSelectedLater}
             />
             <Divider />
-          </>
+          </View>
         );
       })}
     </View>

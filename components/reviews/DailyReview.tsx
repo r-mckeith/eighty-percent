@@ -15,12 +15,12 @@ type DailyReview = {
   habits: HabitProps[];
   plans: PlanProps[];
   visible: boolean;
-  yesterdayReview: boolean;
+  isYesterdayReview: boolean;
   onClose: () => void;
 };
 
-export default function DailyReview({ habits, plans, visible, yesterdayReview, onClose }: DailyReview) {
-  const [answer, setAnswer] = useState('');
+export default function DailyReview({ habits, plans, visible, isYesterdayReview, onClose }: DailyReview) {
+  const [answer, setAnswer] = useState({ answer: '' });
   const [habitCounts, setHabitCounts] = useState<any>({});
   const [changedHabits, setChangedHabits] = useState({});
 
@@ -28,8 +28,8 @@ export default function DailyReview({ habits, plans, visible, yesterdayReview, o
   const { selectedDate } = useDateContext();
   const yesterday = new Date(selectedDate);
   yesterday.setDate(yesterday.getDate() - 1);
-  const reviewDate = yesterdayReview ? selectedDate : yesterday
-  const { habitsTableData } = useAggregatedData(reviewDate);
+  const reviewDate = isYesterdayReview ? yesterday : selectedDate;
+  const { habitsTableData } = useAggregatedData();
   const { dispatch: planDispatch } = usePlanContext();
   const { dispatch: habitDataDispatch } = useHabitDataContext();
 
@@ -37,9 +37,13 @@ export default function DailyReview({ habits, plans, visible, yesterdayReview, o
   const colors = getColors(scheme);
 
   const lastReview = dailyReviews && dailyReviews[0]?.response;
-  const isAnswered = answer !== '';
+  const isAnswered = answer.answer !== '' || Object.keys(changedHabits).length > 0;
   const completedPlans = plans.filter(plan => plan.completed);
   const incompletePlans = plans.filter(plan => !plan.completed);
+
+  function isEmpty(obj: any) {
+    return Object.keys(obj).length === 0;
+  }
 
   const habitsWithData = habits.map(habit => ({
     ...habit,
@@ -54,19 +58,24 @@ export default function DailyReview({ habits, plans, visible, yesterdayReview, o
 
   useEffect(() => {
     if (habitsWithData.length === 0) return;
-    console.log('in use effect')
 
     const updatedHabitCounts: any = {};
     habitsWithData.forEach(habit => {
-      updatedHabitCounts[habit.id] = habit.habitData ? habit.habitData.day : 0;
+      updatedHabitCounts[habit.id] = habit.habitData
+        ? { day: habit.habitData.day, yesterday: habit.habitData.yesterday }
+        : {};
     });
     setHabitCounts(updatedHabitCounts);
   }, [habitsTableData]);
 
   function handleIncrement(habitId: number) {
-    setHabitCounts((prevCounts: number[]) => ({
+    setHabitCounts((prevCounts: any) => ({
       ...prevCounts,
-      [habitId]: prevCounts[habitId] + 1,
+      [habitId]: {
+        ...prevCounts[habitId],
+        [isYesterdayReview ? 'yesterday' : 'day']:
+          (prevCounts[habitId]?.[isYesterdayReview ? 'yesterday' : 'day'] || 0) + 1,
+      },
     }));
     setChangedHabits(prevChanges => ({
       ...prevChanges,
@@ -75,10 +84,17 @@ export default function DailyReview({ habits, plans, visible, yesterdayReview, o
   }
 
   function handleDecrement(habitId: number) {
-    setHabitCounts((prevCounts: number[]) => ({
+    setHabitCounts((prevCounts: any) => ({
       ...prevCounts,
-      [habitId]: Math.max(0, prevCounts[habitId] - 1),
+      [habitId]: {
+        ...prevCounts[habitId],
+        [isYesterdayReview ? 'yesterday' : 'day']: Math.max(
+          0,
+          (prevCounts[habitId]?.[isYesterdayReview ? 'yesterday' : 'day'] || 0) - 1
+        ),
+      },
     }));
+
     setChangedHabits(prevChanges => ({
       ...prevChanges,
       [habitId]: true,
@@ -88,7 +104,7 @@ export default function DailyReview({ habits, plans, visible, yesterdayReview, o
   async function handleUpdate() {
     const updates = Object.keys(changedHabits).map(async habitId => {
       const habit = habitsWithData.find(habit => habit.id === Number(habitId));
-      const updatedCount = habitCounts[habitId];
+      const updatedCount = habitCounts[habitId]?.[isYesterdayReview ? 'yesterday' : 'day'];
       if (habit) {
         try {
           await editHabitData(habit, reviewDate, updatedCount);
@@ -107,14 +123,15 @@ export default function DailyReview({ habits, plans, visible, yesterdayReview, o
   }
 
   async function handleSaveReview(): Promise<void> {
+    onClose();
     handleUpdate();
     const dateString = reviewDate.toISOString().split('T')[0];
 
     if (answer) {
       try {
-        const newReview = await addDailyReview(answer, dateString);
+        const newReview = await addDailyReview(answer.answer, dateString);
         dispatch({ type: 'ADD_REVIEW', payload: newReview, date: dateString });
-        setAnswer('');
+        setAnswer({ answer: '' });
         onClose();
       } catch (error) {
         console.error('Failed to add review:', error);
@@ -140,6 +157,13 @@ export default function DailyReview({ habits, plans, visible, yesterdayReview, o
     }
   }
 
+  const handleChange = (key: string, value: string) => {
+    setAnswer(prev => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
   return (
     <Modal
       visible={visible}
@@ -163,10 +187,10 @@ export default function DailyReview({ habits, plans, visible, yesterdayReview, o
         <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
           {completedPlans.map((plan, index) => {
             return (
-              <>
-                <List.Item key={index} title={plan.name} style={{ paddingVertical: 15 }} />
+              <View key={index}>
+                <List.Item title={plan.name} style={{ paddingVertical: 15 }} />
                 <Divider />
-              </>
+              </View>
             );
           })}
         </Card>
@@ -177,9 +201,8 @@ export default function DailyReview({ habits, plans, visible, yesterdayReview, o
         <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
           {incompletePlans.map((plan, index) => {
             return (
-              <>
+              <View key={index}>
                 <List.Item
-                  key={index}
                   titleStyle={{ textAlign: 'center' }}
                   title={plan.name}
                   left={props => (
@@ -204,7 +227,7 @@ export default function DailyReview({ habits, plans, visible, yesterdayReview, o
                   )}
                 />
                 <Divider />
-              </>
+              </View>
             );
           })}
         </Card>
@@ -215,7 +238,7 @@ export default function DailyReview({ habits, plans, visible, yesterdayReview, o
         <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
           {sortedHabits.map((habit: any, index: number) => {
             return (
-              <View key={habit.id}>
+              <View key={index}>
                 <Card.Content>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text variant='bodyMedium'>{habit.name}</Text>
@@ -225,7 +248,7 @@ export default function DailyReview({ habits, plans, visible, yesterdayReview, o
                         iconColor={MD3Colors.error50}
                         onPress={() => handleDecrement(habit.id)}
                       />
-                      <Text>{habitCounts[habit.id]}</Text>
+                      <Text>{isYesterdayReview ? habitCounts[habit.id].yesterday : habitCounts[habit.id].day}</Text>
                       <IconButton
                         icon='plus'
                         iconColor={MD3Colors.primary40}
@@ -245,12 +268,12 @@ export default function DailyReview({ habits, plans, visible, yesterdayReview, o
       <TextInput
         style={{ marginBottom: 10 }}
         placeholder='Notes'
-        value={answer}
+        value={answer.answer}
         mode='flat'
         dense={true}
-        onChangeText={setAnswer}
+        onChangeText={e => handleChange('answer', e)}
         autoFocus={true}
-        multiline={true}
+        // multiline={true}
         numberOfLines={4}
         returnKeyType='done'
       />

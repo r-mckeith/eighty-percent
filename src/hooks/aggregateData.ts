@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { getHabitData } from '../api/Habits';
 import { HabitDataProps, PlanProps } from '../types/shared';
-import { useHabitContext, useHabitDataContext, usePlanContext } from '../contexts';
+import { useDateContext, useHabitContext, useHabitDataContext, usePlanContext } from '../contexts';
 
 export type AggregatedHabitData = {
   tag_id: number;
+  yesterday: number;
   day: number;
   week: number;
   month: number;
@@ -30,11 +31,12 @@ export type AggregatedPlanData = {
   };
 };
 
-export function useAggregatedData(selectedDate: Date) {
+export function useAggregatedData() {
   const [habitsTableData, setHabitsTableData] = useState<AggregatedHabitData[]>([]);
   const [habitGridData, setHabitGridData] = useState<any>([]);
   const [projectTableData, setProjectTableData] = useState<any>([]);
 
+  const { selectedDate } = useDateContext();
   const { habits } = useHabitContext();
   const { habitData } = useHabitDataContext();
   const { plans } = usePlanContext();
@@ -63,8 +65,19 @@ export function useAggregatedData(selectedDate: Date) {
     const habitMap: Record<string, AggregatedHabitData> = {};
 
     const startDay = new Date(
-      Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth(), selectedDate.getUTCDate())
+        Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth(), selectedDate.getUTCDate())
     );
+
+    // Calculate yesterday's start and end
+    const yesterday = new Date(selectedDate);
+    yesterday.setDate(selectedDate.getDate() - 1);
+    const startOfYesterday = new Date(
+        Date.UTC(yesterday.getUTCFullYear(), yesterday.getUTCMonth(), yesterday.getUTCDate())
+    );
+    const endOfYesterday = new Date(
+        Date.UTC(yesterday.getUTCFullYear(), yesterday.getUTCMonth(), yesterday.getUTCDate(), 23, 59, 59, 999)
+    );
+
     const startWeek = new Date(startDay);
     startWeek.setUTCDate(startDay.getUTCDate() - 6);
     const startMonth = new Date(startDay);
@@ -73,34 +86,99 @@ export function useAggregatedData(selectedDate: Date) {
     startYear.setUTCDate(startDay.getUTCDate() - 364);
 
     yearData.forEach(habit => {
-      const completedDate = new Date(habit.date);
+        const completedDate = new Date(habit.date);
 
-      if (!habitMap[habit.tag_id]) {
-        habitMap[habit.tag_id] = {
-          tag_id: habit.tag_id,
-          day: 0,
-          week: 0,
-          month: 0,
-          year: 0,
-        };
-      }
+        if (!habitMap[habit.tag_id]) {
+            habitMap[habit.tag_id] = {
+                tag_id: habit.tag_id,
+                day: 0,
+                yesterday: 0,
+                week: 0,
+                month: 0,
+                year: 0,
+            };
+        }
 
-      if (completedDate >= startDay && completedDate < new Date(startDay.getTime() + 86400000)) {
-        habitMap[habit.tag_id].day += habit.count;
-      }
-      if (completedDate >= startWeek && completedDate < new Date(startDay.getTime() + 86400000)) {
-        habitMap[habit.tag_id].week += habit.count;
-      }
-      if (completedDate >= startMonth && completedDate < new Date(startDay.getTime() + 86400000)) {
-        habitMap[habit.tag_id].month += habit.count;
-      }
-      if (completedDate >= startYear && completedDate < new Date(startDay.getTime() + 86400000)) {
-        habitMap[habit.tag_id].year += habit.count;
-      }
+        if (completedDate >= startDay && completedDate < new Date(startDay.getTime() + 86400000)) {
+            habitMap[habit.tag_id].day += habit.count;
+        }
+        if (completedDate >= startOfYesterday && completedDate < new Date(startOfYesterday.getTime() + 86400000)) {
+            habitMap[habit.tag_id].yesterday += habit.count;
+        }
+        if (completedDate >= startWeek && completedDate < new Date(startDay.getTime() + 86400000)) {
+            habitMap[habit.tag_id].week += habit.count;
+        }
+        if (completedDate >= startMonth && completedDate < new Date(startDay.getTime() + 86400000)) {
+            habitMap[habit.tag_id].month += habit.count;
+        }
+        if (completedDate >= startYear && completedDate < new Date(startDay.getTime() + 86400000)) {
+            habitMap[habit.tag_id].year += habit.count;
+        }
     });
 
     return Object.values(habitMap).filter(habit => habit.month > 0);
-  }
+}
+
+
+  // function aggregateHabitData(yearData: HabitDataProps[]): AggregatedHabitData[] {
+  //   const habitMap: Record<string, AggregatedHabitData> = {};
+
+  //   const startDay = new Date(
+  //     Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth(), selectedDate.getUTCDate())
+  //   );
+  //   const yesterday = new Date(selectedDate);
+  //   yesterday.setDate(selectedDate.getDate() - 1);
+  //   const startOfYesterday = new Date(yesterday.getFullYear(), yesterday.getUTCMonth(), yesterday.getUTCDate());
+  //   const endOfYesterday = new Date(
+  //     yesterday.getFullYear(),
+  //     yesterday.getMonth(),
+  //     yesterday.getDate(),
+  //     23,
+  //     59,
+  //     59,
+  //     999
+  //   );
+
+  //   const startWeek = new Date(startDay);
+  //   startWeek.setUTCDate(startDay.getUTCDate() - 6);
+  //   const startMonth = new Date(startDay);
+  //   startMonth.setUTCDate(startDay.getUTCDate() - 29);
+  //   const startYear = new Date(startDay);
+  //   startYear.setUTCDate(startDay.getUTCDate() - 364);
+
+  //   yearData.forEach(habit => {
+  //     const completedDate = new Date(habit.date);
+
+  //     if (!habitMap[habit.tag_id]) {
+  //       habitMap[habit.tag_id] = {
+  //         tag_id: habit.tag_id,
+  //         day: 0,
+  //         yesterday: 0,
+  //         week: 0,
+  //         month: 0,
+  //         year: 0,
+  //       };
+  //     }
+
+  //     if (completedDate >= startDay && completedDate < new Date(startDay.getTime() + 86400000)) {
+  //       habitMap[habit.tag_id].day += habit.count;
+  //     }
+  //     if (completedDate >= startOfYesterday && completedDate < new Date(startOfYesterday.getTime() + 86400000)) {
+  //       habitMap[habit.tag_id].yesterday += habit.count;
+  //     }
+  //     if (completedDate >= startWeek && completedDate < new Date(startDay.getTime() + 86400000)) {
+  //       habitMap[habit.tag_id].week += habit.count;
+  //     }
+  //     if (completedDate >= startMonth && completedDate < new Date(startDay.getTime() + 86400000)) {
+  //       habitMap[habit.tag_id].month += habit.count;
+  //     }
+  //     if (completedDate >= startYear && completedDate < new Date(startDay.getTime() + 86400000)) {
+  //       habitMap[habit.tag_id].year += habit.count;
+  //     }
+  //   });
+
+  //   return Object.values(habitMap).filter(habit => habit.month > 0);
+  // }
 
   function aggregateHabitGridData(gridData: HabitDataProps[]) {
     const habitGridMap: any = {};

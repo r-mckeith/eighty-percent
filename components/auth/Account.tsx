@@ -1,6 +1,6 @@
 import { supabase } from '../../src/api/Client';
 import { StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button } from 'react-native-paper';
 import { Scroll } from '../layout';
 export default function Account({session}: any) {
   return (
@@ -10,7 +10,7 @@ export default function Account({session}: any) {
           <View style={styles.verticallySpaced}></View>
         </View>
       </Scroll>
-      <Button title='Sign Out' onPress={() => supabase.auth.signOut()} />
+      <Button onPress={() => supabase.auth.signOut()}>Sign out</Button>
     </>
   );
 }

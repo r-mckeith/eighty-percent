@@ -38,12 +38,14 @@ export default function Actions() {
   const planSection = filterPlans(plans, selectedDateString);
   const habitSection = habits.filter(habit => habit.section === 'habits');
   const lastWeekReview = reviews && reviews[0]?.response ? reviews[0]?.response : null;
-  const todayReview = dailyReviews && dailyReviews[0]?.date.toString() === selectedDateString;
-  const yesterdayReview = dailyReviews[0]?.date.toString() === yesterday.toLocaleDateString('en-CA');
-  const lastDailyReview = todayReview || yesterdayReview;
+  const yesterdayReview = dailyReviews.filter(
+    review => review.date.toString() === yesterday.toLocaleDateString('en-CA')
+  );
+
+  const missingYesterdayReview = yesterdayReview.length === 0;
 
   const [dailyReview, setDailyReview] = useState(false);
-  const [dailyReviewBanner, setDailyReviewBaner] = useState(!lastDailyReview);
+  const [dailyReviewBanner, setDailyReviewBaner] = useState(missingYesterdayReview);
 
   function filterPlans(plans: any, selectedDateString: string) {
     return plans.filter((plan: any) => {
@@ -145,10 +147,10 @@ export default function Actions() {
             label: 'Complete',
             onPress: () => handleCompleteDailyReview(),
           },
-          {
-            label: 'Skip',
-            onPress: () => setDailyReviewBaner(false),
-          },
+          // {
+          //   label: 'Skip',
+          //   onPress: () => setDailyReviewBaner(false),
+          // },
         ]}>
         Complete yesterday's review
       </Banner>
@@ -160,7 +162,8 @@ export default function Actions() {
           {renderPlanSection()}
           <HabitSectionTitle groupId={groupId} />
           <HabitSection habits={habitSection} />
-          <DailyReviewButton habits={habitSection} plans={planSection} />
+          <DailyReviewButton habits={habitSection} plans={planSection} isYesterdayReview={missingYesterdayReview} />
+
           <WeeklyReviewButton />
         </View>
       </View>
@@ -169,7 +172,7 @@ export default function Actions() {
         onClose={() => setDailyReview(false)}
         habits={habitSection}
         plans={planSection}
-        yesterdayReview={yesterdayReview}
+        isYesterdayReview={missingYesterdayReview}
       />
     </Scroll>
   );

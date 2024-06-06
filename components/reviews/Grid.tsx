@@ -15,10 +15,10 @@ export default function Grid({ data }: Grid) {
     <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
       <DataTable style={{ flex: 12 }}>
         {data &&
-          data.map((data: any) => {
+          data.map((data: any, index: number) => {
             return (
-              <>
-                <DataTable.Row key={data.id}>
+              <View key={index}>
+                <DataTable.Row>
                   <DataTable.Cell style={{ flex: 4, paddingRight: 20 }}>{data.name}</DataTable.Cell>
                   <View style={{ flexDirection: 'row', flex: 8, justifyContent: 'space-evenly' }}>
                     {data.days.map((day: any, index: number) => {
@@ -33,7 +33,7 @@ export default function Grid({ data }: Grid) {
                   </View>
                 </DataTable.Row>
                 <Divider />
-              </>
+              </View>
             );
           })}
       </DataTable>
