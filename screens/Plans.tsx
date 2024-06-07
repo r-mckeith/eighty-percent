@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import { usePlanContext } from '../src/contexts';
 import { PlanProps } from '../src/types';
-import { PlanSection, NestedList, ToggleAndBack } from '../components/plans';
+import { RootPlans, NestedList, ToggleAndBack } from '../components/plans';
 import { SectionTitle, Scroll } from '../components/layout';
 import { AddButton, Toggle } from '../components/shared';
 
@@ -47,7 +47,7 @@ export default function Plans() {
           <SectionTitle title='Recent Plans'>
             <AddButton parentId={0} depth={0} type={'plan'} />
           </SectionTitle>
-          <PlanSection plans={planRoots} setSelected={setSelectedPlan} />
+          <RootPlans plans={planRoots} setSelected={setSelectedPlan} />
         </View>
       )}
     </Scroll>

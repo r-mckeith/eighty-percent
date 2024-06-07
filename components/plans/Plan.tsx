@@ -29,14 +29,14 @@ export default function Plan({ plan, rootPlanId, first, last, setSelected }: Pla
         left={props => <List.Icon {...props} icon={plan.inScopeDay ? 'radiobox-marked' : 'radiobox-blank'} />}
         right={props => <List.Icon {...props} icon='plus' />}
       /> */}
-      <RadioButton.Item
+      {/* <RadioButton.Item
         key={plan.id}
         label={plan.name}
         value={plan.name}
         // onPress={() => setSelected(plan.id)}
         disabled={plan.completed ? true : false}
-      />
-      {/* <Row
+      /> */}
+      <Row
         opacity={rootPlanId ? 1 : 0.2}
         onPress={() => setSelected && setSelected(plan.id)}
         disabled={!!plan.completed}
@@ -49,7 +49,7 @@ export default function Plan({ plan, rootPlanId, first, last, setSelected }: Pla
         {rootPlanId && !plan.completed && (
           <AddButton parentId={plan.id} depth={plan.depth ? plan.depth : 0} type={'plan'} />
         )}
-      </Row> */}
+      </Row>
     </Swipe>
   );
 }

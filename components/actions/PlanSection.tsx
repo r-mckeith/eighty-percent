@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
   description: {
     fontWeight: '400',
     fontSize: 12,
+    color: 'grey',
     letterSpacing: 0.5,
   },
 });
