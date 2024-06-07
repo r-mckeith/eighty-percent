@@ -3,19 +3,21 @@ import { PlanProps } from '../types';
 import { useDateContext, usePlanContext } from '../contexts';
 
 export type WeeklyPlanData = {
-  name: string; 
-  days: { day: string; status: string; icon: string; color: string; }[]
+  name: string;
+  days: { day: string; status: string; icon: string; color: string }[];
 }[];
 
-const emptyPlanData = [{
-  name: '',
-  days:[{ day: '', status: '', icon: '', color: '' }]
-}];
+const emptyPlanData = [
+  {
+    name: '',
+    days: [{ day: '', status: '', icon: '', color: '' }],
+  },
+];
 
 export function useWeeklyPlanData() {
   const [weeklyPlanData, setWeeklyPlanData] = useState<WeeklyPlanData>(emptyPlanData);
 
-  const { selectedDate, todayDate, todayString, yesterday, yesterdayString } = useDateContext();
+  const { selectedDate } = useDateContext();
   const { plans } = usePlanContext();
 
   useEffect(() => {
@@ -49,7 +51,7 @@ export function useWeeklyPlanData() {
       }))
       .filter(
         plan =>
-          (plan.inScopeDay && plan.inScopeDay >= startDay && plan.inScopeDay <= endDay) ||
+          (plan.inScopeDay && !plan.completed && plan.inScopeDay <= endDay) ||
           (plan.completedDay && plan.completedDay >= startDay && plan.completedDay <= endDay)
       )
       .map(plan => {

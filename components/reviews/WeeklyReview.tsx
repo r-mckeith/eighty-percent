@@ -71,7 +71,7 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
 
       <SectionTitle title={'Review'} />
       <TextInput
-        style={{ marginBottom: 10 }}
+        style={{ marginBottom: 10, height: 100 }}
         placeholder='What went well?'
         value={answer.good}
         mode='flat'
@@ -83,25 +83,25 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
         returnKeyType='done'
       />
       <TextInput
-        style={{ marginBottom: 10 }}
+        style={{ marginBottom: 10, height: 100 }}
         placeholder="What didn't go went well?"
         value={answer.bad}
         mode='flat'
         dense={true}
         onChangeText={e => handleChange('bad', e)}
-        autoFocus={true}
+        autoFocus={false}
         multiline={true}
         numberOfLines={4}
         returnKeyType='done'
       />
       <TextInput
-        style={{ marginBottom: 10 }}
+        style={{ marginBottom: 10, height: 100 }}
         placeholder="What's your plan to improve?"
         value={answer.improve}
         mode='flat'
         dense={true}
         onChangeText={e => handleChange('improve', e)}
-        autoFocus={true}
+        autoFocus={false}
         multiline={true}
         numberOfLines={4}
         returnKeyType='done'

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Divider, RadioButton } from 'react-native-paper';
-import { View } from 'react-native';
+import { Divider, List } from 'react-native-paper';
+import { View, StyleSheet } from 'react-native';
 import { markPlanAsComplete } from '../../src/api/Plans';
 import { usePlanContext, useDateContext } from '../../src/contexts';
 import { PlanProps } from '../../src/types';
@@ -39,13 +39,17 @@ export default function PlanSection({ plans }: Plans) {
 
         return (
           <View key={index}>
-            <RadioButton.Item
-              label={`${breadcrumb ? breadcrumb : ''} ${plan.name}`}
-              value={plan.name}
-              labelVariant='bodyMedium'
-              status={isSelected || isSelectedLater ? 'checked' : 'unchecked'}
-              onPress={!isSelectedLater ? () => handleToggleCompleted(plan, selectedDate, dispatch) : () => {}}
+            <List.Item
+              title={breadcrumb ? breadcrumb : ''}
+              description={plan.name}
+              titleStyle={styles.description}
+              descriptionStyle={styles.title}
               disabled={isSelectedLater}
+              style={{opacity: isSelected || isSelectedLater ? 0.25 : 1}}
+              onPress={!isSelectedLater ? () => handleToggleCompleted(plan, selectedDate, dispatch) : () => {}}
+              right={props => (
+                <List.Icon {...props} icon={isSelected ? 'check' : isSelectedLater ? 'arrow-right' : ''} />
+              )}
             />
             <Divider />
           </View>
@@ -54,3 +58,16 @@ export default function PlanSection({ plans }: Plans) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  title: {
+    fontWeight: '500',
+    fontSize: 16,
+    letterSpacing: 0.15,
+  },
+  description: {
+    fontWeight: '400',
+    fontSize: 12,
+    letterSpacing: 0.5,
+  },
+});

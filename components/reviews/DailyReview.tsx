@@ -20,12 +20,16 @@ type DailyReview = {
 };
 
 export default function DailyReview({ habits, plans, visible, isYesterdayReview, onClose }: DailyReview) {
-  const [answer, setAnswer] = useState({ answer: '' });
+  const [answer, setAnswer] = useState<{ day: string; feel: string }>({
+    day: '',
+    feel: '',
+  });
+
   const [habitCounts, setHabitCounts] = useState<any>({});
   const [changedHabits, setChangedHabits] = useState({});
 
   const { dailyReviews, dispatch } = useDailyReviewContext();
-  const { selectedDate, yesterday} = useDateContext();
+  const { selectedDate, yesterday } = useDateContext();
   const reviewDate = isYesterdayReview ? yesterday : selectedDate;
   const { dailyHabitData } = useDailyHabitData();
   const { dispatch: planDispatch } = usePlanContext();
@@ -36,7 +40,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
   const colors = getColors(scheme);
 
   const lastReview = dailyReviews && dailyReviews[0]?.response;
-  const isAnswered = answer.answer !== '' || Object.keys(changedHabits).length > 0;
+  const isAnswered = answer.day !== '' || answer.feel !== '' || Object.keys(changedHabits).length > 0;
   const completedPlans = plans.filter(plan => plan.completed);
   const incompletePlans = plans.filter(plan => !plan.completed);
 
@@ -124,9 +128,9 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
 
     if (answer) {
       try {
-        const newReview = await addDailyReview(answer.answer, dateString);
+        const newReview = await addDailyReview(answer, dateString);
         dispatch({ type: 'ADD_REVIEW', payload: newReview, date: dateString });
-        setAnswer({ answer: '' });
+        setAnswer({ day: '', feel: '' });
         onClose();
       } catch (error) {
         console.error('Failed to add review:', error);
@@ -171,7 +175,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
         <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
           <Card.Content style={{ paddingBottom: 10 }}>
             <Text variant='bodyMedium' style={{ paddingBottom: 10 }}>
-              {lastReview}
+              {lastReview.day}
             </Text>
           </Card.Content>
         </Card>
@@ -262,17 +266,25 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
       <SectionTitle title={'Review'} />
       <TextInput
         style={{ marginBottom: 10 }}
-        placeholder='Notes'
-        value={answer.answer}
+        placeholder='How was your day?'
+        value={answer.day}
         mode='flat'
         dense={true}
-        onChangeText={e => handleChange('answer', e)}
+        onChangeText={e => handleChange('day', e)}
         autoFocus={true}
-        // multiline={true}
-        numberOfLines={4}
         returnKeyType='done'
       />
-      <Button mode='contained' style={{ marginTop: 10 }} onPress={handleSaveReview}>
+      <TextInput
+        style={{ marginBottom: 10 }}
+        placeholder='How do you feel?'
+        value={answer.feel}
+        mode='flat'
+        dense={true}
+        onChangeText={e => handleChange('feel', e)}
+        autoFocus={true}
+        returnKeyType='done'
+      />
+      <Button mode='contained' style={{ marginTop: 10, marginBottom: 20 }} onPress={handleSaveReview}>
         Submit
       </Button>
     </Modal>
