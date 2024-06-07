@@ -70,5 +70,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: 'grey',
     letterSpacing: 0.5,
+    paddingBottom: 2
   },
 });
