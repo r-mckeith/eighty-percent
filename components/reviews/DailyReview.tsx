@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useColorScheme, View } from 'react-native';
+import { useColorScheme, View, TouchableOpacity, Vibration } from 'react-native';
 import { addDailyReview } from '../../src/api/DailyReviews';
 import { useDateContext, useDailyReviewContext, usePlanContext, useHabitDataContext } from '../../src/contexts';
 import { markPlanAsComplete } from '../../src/api/Plans';
 import { SectionTitle } from '../layout';
 import { Modal } from '../shared';
 import { useDailyHabitData } from '../../src/hooks/dailyHabitData';
-import { TextInput, Button, Card, List, Divider, IconButton, MD3Colors, Text } from 'react-native-paper';
+import { TextInput, Button, Card, List, Divider, IconButton, MD3Colors, Text, Icon } from 'react-native-paper';
 import { HabitProps, PlanProps } from '../../src/types';
 import { getColors } from '../../src/colors';
 import { editHabitData } from '../../src/api/Habits';
@@ -46,7 +46,9 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
 
   const habitsWithData = habits.map(habit => ({
     ...habit,
-    habitData: dailyHabitData.find((data: any) => data.tag_id === habit.id),
+    habitData: dailyHabitData.find((data: any) => data.tag_id === habit.id)
+      ? dailyHabitData.find((data: any) => data.tag_id === habit.id)
+      : { day: 0, yesterday: 0 },
   }));
 
   const sortedHabits = habitsWithData.sort((a, b) => {
@@ -61,7 +63,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
     const updatedHabitCounts: any = {};
     habitsWithData.forEach(habit => {
       updatedHabitCounts[habit.id] = habit.habitData
-        ? { day: habit.habitData.day, yesterday: habit.habitData.yesterday }
+        ? { day: habit.habitData?.day, yesterday: habit.habitData?.yesterday }
         : {};
     });
     setHabitCounts(updatedHabitCounts);
@@ -172,18 +174,14 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
       stickyIndices={[0, 2, 4, 6]}>
       {lastReview && <SectionTitle title='Last review' />}
       {lastReview && (
-        <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
-          <Card.Content style={{ paddingBottom: 10 }}>
-            <Text variant='bodyMedium' style={{ paddingBottom: 10 }}>
-              {lastReview.day}
-            </Text>
-          </Card.Content>
-        </Card>
+        <View style={{ paddingBottom: 30 }}>
+          <List.Item title={lastReview.day} />
+        </View>
       )}
 
       {completedPlans.length > 0 && <SectionTitle title='Completed plans' />}
       {completedPlans.length > 0 && (
-        <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
+        <View style={{ paddingBottom: 30 }}>
           {completedPlans.map((plan, index) => {
             return (
               <View key={index}>
@@ -192,75 +190,63 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
               </View>
             );
           })}
-        </Card>
+        </View>
       )}
 
       {incompletePlans.length > 0 && <SectionTitle title='Incomplete plans' />}
       {incompletePlans.length > 0 && (
-        <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
+        <View style={{ paddingBottom: 30 }}>
           {incompletePlans.map((plan, index) => {
             return (
               <View key={index}>
                 <List.Item
-                  titleStyle={{ textAlign: 'center' }}
                   title={plan.name}
-                  left={props => (
-                    <IconButton
-                      {...props}
-                      style={{ paddingLeft: 20 }}
-                      icon='check'
-                      iconColor={MD3Colors.primary40}
-                      size={20}
-                      onPress={() => handleToggleCompleted(plan)}
-                    />
-                  )}
                   right={props => (
-                    <IconButton
-                      {...props}
-                      style={{ paddingRight: 20 }}
-                      icon='arrow-right'
-                      iconColor={MD3Colors.error50}
-                      size={20}
-                      onPress={() => {}}
-                    />
+                    <>
+                      <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => handleToggleCompleted(plan)}>
+                        <Icon {...props} source='check' color={MD3Colors.primary40} size={20} />
+                      </TouchableOpacity>
+                      <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => {}}>
+                        <Icon {...props} source='arrow-right' color={MD3Colors.error50} size={20} />
+                      </TouchableOpacity>
+                    </>
                   )}
                 />
                 <Divider />
               </View>
             );
           })}
-        </Card>
+        </View>
       )}
 
       {habitsWithData.length > 0 && Object.keys(habitCounts).length > 0 && <SectionTitle title='Habits' />}
       {habitsWithData.length > 0 && Object.keys(habitCounts).length > 0 && (
-        <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
+        <View style={{ paddingBottom: 30 }}>
           {sortedHabits.map((habit: any, index: number) => {
             return (
               <View key={index}>
-                <Card.Content>
-                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text variant='bodyMedium'>{habit.name}</Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                      <IconButton
-                        icon='minus'
-                        iconColor={MD3Colors.error50}
-                        onPress={() => handleDecrement(habit.id)}
-                      />
-                      <Text>{isYesterdayReview ? habitCounts[habit.id].yesterday : habitCounts[habit.id].day}</Text>
-                      <IconButton
-                        icon='plus'
-                        iconColor={MD3Colors.primary40}
-                        onPress={() => handleIncrement(habit.id)}
-                      />
-                    </View>
-                  </View>
-                </Card.Content>
+                <List.Item
+                  title={habit.name}
+                  right={props => (
+                    <>
+                      <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => {handleDecrement(habit.id); Vibration.vibrate(100)}}>
+                        <Icon {...props} source='minus' color={MD3Colors.error50} size={20} />
+                      </TouchableOpacity>
+                      <Text style={{ paddingLeft: 10 }}>
+                        {isYesterdayReview ? habitCounts[habit.id]?.yesterday : habitCounts[habit.id]?.day}
+                      </Text>
+
+                      <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => handleIncrement(habit.id)}>
+                        <Icon {...props} source='plus' color={MD3Colors.primary40} size={20} />
+                      </TouchableOpacity>
+                    </>
+                  )}
+                />
                 <Divider />
               </View>
             );
           })}
-        </Card>
+        </View>
       )}
 
       <SectionTitle title={'Review'} />

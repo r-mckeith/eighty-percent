@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, Button, ScrollView, TouchableOpacity } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
+import { IconButton } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function HowToUse({ handlePressBack }: { handlePressBack: () => void }) {
@@ -8,7 +9,7 @@ export default function HowToUse({ handlePressBack }: { handlePressBack: () => v
   const [status, setStatus] = React.useState<any>({});
 
   return (
-    <View>
+    <>
       <View style={styles.backButton}>
         <TouchableOpacity onPress={() => {}}>
           <MaterialCommunityIcons name='chevron-left' size={30} color={'white'} onPress={handlePressBack} />
@@ -20,7 +21,7 @@ export default function HowToUse({ handlePressBack }: { handlePressBack: () => v
             ref={video}
             style={styles.video}
             source={{
-              uri: 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+              uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
             }}
             useNativeControls
             resizeMode={ResizeMode.CONTAIN}
@@ -36,7 +37,7 @@ export default function HowToUse({ handlePressBack }: { handlePressBack: () => v
           </View>
         </View>
       </ScrollView>
-    </View>
+    </>
   );
 }
 
