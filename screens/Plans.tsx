@@ -8,7 +8,7 @@ import { AddButton, Toggle } from '../components/shared';
 
 export default function Plans() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
-  const [planRoots, setPlanRoots] = useState<PlanProps[]>([]);
+  const [rootPlans, setRootPlans] = useState<PlanProps[]>([]);
   const [filteredPlans, setFilteredPlans] = useState<PlanProps[]>([]);
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
 
@@ -19,7 +19,7 @@ export default function Plans() {
     setFilteredPlans(filteredPlans);
 
     const planRoots = filteredPlans.filter(plan => plan.parentId === 0);
-    setPlanRoots(planRoots);
+    setRootPlans(planRoots);
   }, [showCompleted, plans, selectedPlan]);
 
   function handlePressBack() {
@@ -47,7 +47,7 @@ export default function Plans() {
           <SectionTitle title='Recent Plans'>
             <AddButton parentId={0} depth={0} type={'plan'} />
           </SectionTitle>
-          <RootPlans plans={planRoots} setSelected={setSelectedPlan} />
+          <RootPlans rootPlans={rootPlans} plans={plans} setSelected={setSelectedPlan} />
         </View>
       )}
     </Scroll>
