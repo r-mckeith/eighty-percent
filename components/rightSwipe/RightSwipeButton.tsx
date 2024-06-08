@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Icon } from '../shared';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Icon } from 'react-native-paper';
 
 type RightSwipeButton = {
   backgroundColor: string;
@@ -12,14 +12,9 @@ type RightSwipeButton = {
 export default function RightSwipeButton({ backgroundColor, icon, text, onPress }: RightSwipeButton) {
   return (
     <View style={{ flexDirection: 'column', backgroundColor: backgroundColor }}>
-      <Icon
-        name={icon}
-        size={24}
-        color='white'
-        opacity={0.2}
-        opacityStyle={[styles.rightSwipeItem]}
-        onPress={onPress}
-      />
+      <TouchableOpacity onPress={onPress} style={styles.rightSwipeItem}>
+        <Icon source={icon} size={20} />
+      </TouchableOpacity>
       <Text style={{ fontSize: 10, textAlign: 'center', color: 'white' }}>{text}</Text>
     </View>
   );

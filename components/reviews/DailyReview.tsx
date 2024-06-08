@@ -166,7 +166,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
       onClose={handleCancel}
       onSave={handleSaveReview}
       disabled={!isAnswered}
-      stickyIndices={[0, 2, 4, 6]}>
+      stickyIndices={[0, 2, 4, 6, 8]}>
       {lastReview && <SectionTitle title='Last review' />}
       {lastReview && (
         <View style={{ paddingBottom: 30 }}>
@@ -199,10 +199,10 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
                   right={props => (
                     <>
                       <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => handleToggleCompleted(plan)}>
-                        <Icon {...props} source='check' color={MD3Colors.primary40} size={20} />
+                        <Icon {...props} source='check' size={25} color='#0E5FFF' />
                       </TouchableOpacity>
                       <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => {}}>
-                        <Icon {...props} source='arrow-right' color={MD3Colors.error50} size={20} />
+                        <Icon {...props} source='arrow-right' size={25} color={MD3Colors.error50} />
                       </TouchableOpacity>
                     </>
                   )}
@@ -223,18 +223,18 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
                 <List.Item
                   title={habit.name}
                   right={props => (
-                    <>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => {handleDecrement(habit.id); Vibration.vibrate(100)}}>
-                        <Icon {...props} source='minus' color={MD3Colors.error50} size={20} />
+                        <Icon {...props} source='minus' size={25} color={MD3Colors.error50} />
                       </TouchableOpacity>
                       <Text style={{ paddingLeft: 10 }}>
                         {isYesterdayReview ? habitCounts[habit.id]?.yesterday : habitCounts[habit.id]?.day}
                       </Text>
 
                       <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => handleIncrement(habit.id)}>
-                        <Icon {...props} source='plus' color={MD3Colors.primary40} size={20} />
+                        <Icon {...props} source='plus' size={25} color='#0E5FFF' />
                       </TouchableOpacity>
-                    </>
+                    </View>
                   )}
                 />
                 <Divider />
@@ -252,6 +252,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
         mode='flat'
         dense={true}
         onChangeText={e => handleChange('day', e)}
+        autoFocus={false}
         returnKeyType='done'
       />
       <TextInput

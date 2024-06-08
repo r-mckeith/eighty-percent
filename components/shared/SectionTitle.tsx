@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, useColorScheme } from 'react-native';
 import { getColors } from '../../src/colors';
-import { Divider, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 
 type SectionTitle = {
   title: string;
@@ -13,14 +13,13 @@ export default function SectionTitle({ title, children }: SectionTitle) {
   const colors = getColors(scheme);
 
   return (
-    <View style={colors.background}>
-      <View style={[styles.sectionName, colors.background]}>
-        <Text variant='headlineMedium' style={{color: '#0E5FFF'}}>
+    <View style={[colors.background, {paddingVertical: 5}]}>
+      <View style={styles.sectionName}>
+        <Text variant='headlineSmall'>
           {title}
         </Text>
         <View style={styles.children}>{children}</View>
       </View>
-      <Divider bold={true} style={colors.background} />
     </View>
   );
 }

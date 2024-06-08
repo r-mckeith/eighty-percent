@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
+import { Icon } from 'react-native-paper';
 import { NewHabitProps } from '../../src/types';
 import { useGroupContext, useHabitContext, usePlanContext } from '../../src/contexts';
 import { addHabit } from '../../src/api/Habits';
 import { addPlan } from '../../src/api/Plans';
 import { addGroup } from '../../src/api/Groups';
 import AddModal from './AddModal';
-import Icon from './Icon';
-import { View } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 
 type AddButton = {
   type: string;
@@ -93,10 +93,12 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
     }
     return 'Group';
   }
-  
+
   return (
     <View>
-      <Icon name='plus' size={24} opacity={1} color='#0E5FFF' onPress={() => setShowModal(true)} />
+      <TouchableOpacity onPress={() => setShowModal(true)}>
+        <Icon source='plus' size={20} />
+      </TouchableOpacity>
       <AddModal
         visible={showModal}
         onClose={() => setShowModal(false)}

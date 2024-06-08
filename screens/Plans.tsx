@@ -18,8 +18,14 @@ export default function Plans() {
 
   const { plans } = usePlanContext();
 
+  const sortedPlans = plans.sort((a, b) => {
+    const planA = a.completed ? 1 : 0;
+    const planB = b.completed ? 1 : 0;
+    return planA - planB;
+  });
+
   useEffect(() => {
-    const filteredPlans = showCompleted ? plans : plans.filter(plan => !plan.completed);
+    const filteredPlans = showCompleted ? sortedPlans : sortedPlans.filter(plan => !plan.completed);
     setFilteredPlans(filteredPlans);
 
     const planRoots = filteredPlans.filter(plan => plan.parentId === 0);
@@ -28,7 +34,7 @@ export default function Plans() {
 
   return (
     <View style={[colors.background, { flex: 1 }]}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 5 }}>
         <Toggle
           onToggle={() => setShowCompleted(!showCompleted)}
           value={showCompleted}

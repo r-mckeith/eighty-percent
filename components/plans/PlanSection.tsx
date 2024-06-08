@@ -56,8 +56,8 @@ export default function RootPlans({ rootPlans, plans, expanded, setExpanded }: R
               )}
               right={props => (
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Scope plan={plan}/>
                   <AddButton parentId={plan.id} depth={plan.depth ? plan.depth : 0} type={'plan'} />
+                  <Scope plan={plan}/>
                 </View>
               )}
             />
@@ -78,15 +78,21 @@ export default function RootPlans({ rootPlans, plans, expanded, setExpanded }: R
           <View style={{ paddingBottom: 10 }}>
             <List.Item
               key={index}
-              style={{ backgroundColor: '#D3D3D3' }}
-              titleStyle={{color: 'black'}}
+              style={{ backgroundColor: rootPlan.completed? '#b1b1b3' : '#0E5FFF' }}
+              // titleStyle={rootPlan.completed ? { color: 'black'} : {}}
               title={rootPlan.name}
               left={props => (
                 <>
                   <TouchableOpacity style={{paddingLeft: 10}} onPress={() => handleSetExpanded(rootPlan.id)}>
-                    <Icon {...props} source={isExpanded ? 'chevron-down' : 'chevron-up'} color='black' size={20} />
+                    <Icon {...props} source={isExpanded ? 'chevron-down' : 'chevron-up'} size={20} />
                   </TouchableOpacity>
                 </>
+              )}
+              right={props => (
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <AddButton parentId={rootPlan.id} depth={rootPlan.depth ? rootPlan.depth : 0} type={'plan'} />
+                  <Scope plan={rootPlan}/>
+                </View>
               )}
             />
             <Divider bold={true} />

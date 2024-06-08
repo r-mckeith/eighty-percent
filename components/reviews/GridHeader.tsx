@@ -1,7 +1,7 @@
 import React from 'react';
 import { useColorScheme, View } from 'react-native';
 import { getColors } from '../../src/colors';
-import { Text, DataTable } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 
 export default function GridHeader({ title, selectedDate }: { title: string; selectedDate: any }) {
   const scheme = useColorScheme();
@@ -16,19 +16,20 @@ export default function GridHeader({ title, selectedDate }: { title: string; sel
   }
 
   return (
-    <View style={[colors.background, { flexDirection: 'row', alignItems: 'center', flex: 10 }]}>
-      <Text variant='headlineMedium' style={{ flex: 4, color: '#0E5FFF' }}>
+    <View>
+    <View style={[colors.background, { flexDirection: 'row', alignItems: 'center', flex: 10, paddingVertical: 5 }]}>
+      <Text variant='headlineSmall' style={{ flex: 4 }}>
         {title}
       </Text>
       <View style={{ flexDirection: 'row', flex: 6, justifyContent: 'space-evenly', paddingRight: 20 }}>
         {generateDayHeaders().map((header, index) => (
-          <DataTable.Title key={index}>
-            <Text variant='bodyMedium' style={{ flex: 4, color: '#0E5FFF' }}>
-              {header}
-            </Text>
-          </DataTable.Title>
+          <Text key={index} variant='bodyMedium' style={{ flex: 4 }}>
+            {header}
+          </Text>
         ))}
       </View>
     </View>
+    </View>
+
   );
 }

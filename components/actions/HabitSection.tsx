@@ -83,14 +83,14 @@ export default function Habits({ habits }: Habits) {
               )}>
               <DataTable.Row onPress={() => handleSelectHabit(habit)}>
                 <DataTable.Cell style={{ flex: 6 }}>{habit.name}</DataTable.Cell>
-                <DataTable.Cell style={{ flex: 1.5, paddingRight: 10 }}>
+                <DataTable.Cell style={{ flex: 1.5, paddingRight: 10 }} textStyle={{color: '#0E5FFF'}}>
                   {habitData?.day ? habitData.day : 0}
                 </DataTable.Cell>
-                <DataTable.Cell style={{ flex: 0.5 }}>{habitData?.week ? habitData.week : 0}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 0.5 }} textStyle={{color: MD3Colors.error50}}>{habitData?.week ? habitData.week : 0}</DataTable.Cell>
               </DataTable.Row>
             </Swipe>
-            <ProgressBar progress={dayPercentage} color={MD3Colors.error50} style={styles.progressBar} />
-            <ProgressBar progress={weekPercentage} color='#0E5FFF' style={styles.progressBar} />
+            <ProgressBar progress={dayPercentage} color={'#0E5FFF'} style={styles.progressBar} />
+            <ProgressBar progress={weekPercentage} color={MD3Colors.error50} style={styles.progressBar} />
           </View>
         );
       })}
