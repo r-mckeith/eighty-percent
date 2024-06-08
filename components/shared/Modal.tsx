@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, KeyboardAvoidingView, Platform, useColorScheme } from 'react-native';
 import { Modal, Portal, Button } from 'react-native-paper';
-import { Scroll } from '../layout';
+import { Scroll } from '../shared';
 import { getColors } from '../../src/colors';
 
 type Modal = {

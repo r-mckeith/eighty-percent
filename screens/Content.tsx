@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 import { List, Divider } from 'react-native-paper';
 import HowToUse from '../components/content/HowToUse';
-import { Scroll, SectionTitle } from '../components/layout';
+import { Scroll, SectionTitle } from '../components/shared';
 
 const videos = ['How to use the app', 'Habits', 'Plans'];
 const templates = ['Set up app', 'Start a business', 'Buy a house'];

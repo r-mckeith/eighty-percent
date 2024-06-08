@@ -11,8 +11,7 @@ import {
 } from '../src/contexts';
 import { getColors } from '../src/colors';
 import { PlanProps } from '../src/types';
-import { WeeklyReviewButton } from '../components/shared';
-import { Scroll, SectionTitle } from '../components/layout';
+import { WeeklyReviewButton, Scroll, SectionTitle } from '../components/shared';
 import { DateSelector, HabitSection, HabitSectionTitle, PlanSection } from '../components/actions';
 import { DailyReview, DailyReviewButton } from '../components/reviews';
 

@@ -5,7 +5,6 @@ import DataModal from './DataModal';
 import RightSwipeButton from './RightSwipeButton';
 import { HabitProps } from '../../src/types';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
-import { View } from 'react-native';
 
 type EditDataButton = {
   item: HabitProps;

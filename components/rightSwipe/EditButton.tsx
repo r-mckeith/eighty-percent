@@ -6,7 +6,6 @@ import EditModal from './EditModal';
 import RightSwipeButton from './RightSwipeButton';
 import { HabitProps, PlanProps } from '../../src/types';
 import { usePlanContext, useHabitContext } from '../../src/contexts';
-import { View } from 'react-native';
 
 type Edit = {
   item: HabitProps | PlanProps;

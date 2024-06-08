@@ -3,8 +3,7 @@ import { View } from 'react-native';
 import { usePlanContext } from '../src/contexts';
 import { PlanProps } from '../src/types';
 import { RootPlans } from '../components/plans';
-import { SectionTitle, Scroll } from '../components/layout';
-import { AddButton, Toggle } from '../components/shared';
+import { AddButton, Toggle, SectionTitle, Scroll } from '../components/shared';
 
 export default function Plans() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);

@@ -1,7 +1,8 @@
 import { supabase } from '../../src/api/Client';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
-import { Scroll } from '../layout';
+import { Scroll } from '../shared';
+
 export default function Account({session}: any) {
   return (
     <View>

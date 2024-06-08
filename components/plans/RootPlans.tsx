@@ -3,8 +3,7 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { Divider, List, Icon } from 'react-native-paper';
 import { PlanProps } from '../../src/types';
-import { AddButton } from '../shared';
-import { Swipe } from '../layout';
+import { AddButton , Swipe} from '../shared';
 import RightSwipe from '../rightSwipe/RightSwipe';
 import Scope from './Scope';
 

@@ -5,7 +5,6 @@ import { useDateContext, useNoteContext } from '../../src/contexts';
 import { NoteProps } from '../../src/types';
 import { AddModal } from '../shared';
 import RightSwipeButton from './RightSwipeButton';
-import { View } from 'react-native';
 
 type NoteButton = {
   type: string;

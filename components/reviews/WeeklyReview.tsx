@@ -3,8 +3,8 @@ import { addReview } from '../../src/api/Reviews';
 import { useWeeklyHabitData } from '../../src/hooks/weeklyHabitData';
 import { useDateContext, useReviewContext } from '../../src/contexts';
 import { Grid, Summary } from '.';
-import Modal from '../shared/Modal';
-import { SectionTitle } from '../layout';
+// import Modal from '../shared/Modal';
+import { SectionTitle, Modal } from '../shared';
 import { TextInput, Button } from 'react-native-paper';
 import GridHeader from './GridHeader';
 import { useWeeklyPlanData } from '../../src/hooks/weeklyPlanData';
@@ -71,39 +71,33 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
 
       <SectionTitle title={'Review'} />
       <TextInput
-        style={{ marginBottom: 10, height: 100 }}
+        style={{ marginBottom: 10 }}
         placeholder='What went well?'
         value={answer.good}
         mode='flat'
         dense={true}
         onChangeText={e => handleChange('good', e)}
         autoFocus={true}
-        multiline={true}
-        numberOfLines={4}
         returnKeyType='done'
       />
       <TextInput
-        style={{ marginBottom: 10, height: 100 }}
+        style={{ marginBottom: 10 }}
         placeholder="What didn't go went well?"
         value={answer.bad}
         mode='flat'
         dense={true}
         onChangeText={e => handleChange('bad', e)}
         autoFocus={false}
-        multiline={true}
-        numberOfLines={4}
         returnKeyType='done'
       />
       <TextInput
-        style={{ marginBottom: 10, height: 100 }}
+        style={{ marginBottom: 10 }}
         placeholder="What's your plan to improve?"
         value={answer.improve}
         mode='flat'
         dense={true}
         onChangeText={e => handleChange('improve', e)}
         autoFocus={false}
-        multiline={true}
-        numberOfLines={4}
         returnKeyType='done'
       />
       <Button mode='contained' style={{ marginTop: 10 }} onPress={handleSaveReview}>

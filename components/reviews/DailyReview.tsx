@@ -3,8 +3,7 @@ import { useColorScheme, View, TouchableOpacity, Vibration } from 'react-native'
 import { addDailyReview } from '../../src/api/DailyReviews';
 import { useDateContext, useDailyReviewContext, usePlanContext, useHabitDataContext } from '../../src/contexts';
 import { markPlanAsComplete } from '../../src/api/Plans';
-import { SectionTitle } from '../layout';
-import { Modal } from '../shared';
+import { Modal, SectionTitle } from '../shared';
 import { useDailyHabitData } from '../../src/hooks/dailyHabitData';
 import { TextInput, Button, Card, List, Divider, IconButton, MD3Colors, Text, Icon } from 'react-native-paper';
 import { HabitProps, PlanProps } from '../../src/types';

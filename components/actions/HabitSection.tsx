@@ -6,7 +6,7 @@ import { selectHabit } from '../../src/api/Habits';
 import { HabitProps } from '../../src/types';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
 import { useDailyHabitData } from '../../src/hooks/dailyHabitData';
-import { Swipe } from '../layout';
+import { Swipe } from '../shared';
 import RightSwipe from '../rightSwipe/RightSwipe';
 
 type Habits = {
