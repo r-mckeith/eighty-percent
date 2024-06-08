@@ -8,7 +8,7 @@ export default function ReviewButton() {
 
   return (
     <View>
-      <Button mode='contained' style={{ marginTop: 10 }} onPress={() => setShowModal(true)}>
+      <Button mode='contained' style={{ marginTop: 10 }} buttonColor={'#0E5FFF'} onPress={() => setShowModal(true)}>
         Weekly review
       </Button>
       <ReviewModal visible={showModal} onClose={() => setShowModal(false)} />

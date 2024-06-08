@@ -90,7 +90,7 @@ export default function Habits({ habits }: Habits) {
               </DataTable.Row>
             </Swipe>
             <ProgressBar progress={dayPercentage} color={MD3Colors.error50} style={styles.progressBar} />
-            <ProgressBar progress={weekPercentage} color={MD3Colors.primary40} style={styles.progressBar} />
+            <ProgressBar progress={weekPercentage} color='#0E5FFF' style={styles.progressBar} />
           </View>
         );
       })}

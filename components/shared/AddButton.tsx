@@ -93,10 +93,10 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
     }
     return 'Group';
   }
-
+  
   return (
     <View>
-      <Icon name='plus' size={24} opacity={1} onPress={() => setShowModal(true)} />
+      <Icon name='plus' size={24} opacity={1} color='#0E5FFF' onPress={() => setShowModal(true)} />
       <AddModal
         visible={showModal}
         onClose={() => setShowModal(false)}

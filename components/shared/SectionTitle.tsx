@@ -15,7 +15,7 @@ export default function SectionTitle({ title, children }: SectionTitle) {
   return (
     <View style={colors.background}>
       <View style={[styles.sectionName, colors.background]}>
-        <Text variant='headlineMedium' style={colors.text}>
+        <Text variant='headlineMedium' style={{color: '#0E5FFF'}}>
           {title}
         </Text>
         <View style={styles.children}>{children}</View>

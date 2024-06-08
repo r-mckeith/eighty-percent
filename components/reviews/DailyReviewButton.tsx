@@ -15,7 +15,7 @@ export default function DailyReviewButton({ habits, plans, isYesterdayReview }: 
 
   return (
     <View>
-      <Button mode='contained' style={{ marginTop: 10 }} onPress={() => setShowModal(true)}>
+      <Button mode='contained' style={{ marginTop: 10 }} buttonColor='#0E5FFF' onPress={() => setShowModal(true)}>
         Daily review
       </Button>
       <DailyReview habits={habits} plans={plans} visible={showModal} onClose={() => setShowModal(false)} isYesterdayReview={isYesterdayReview}/>

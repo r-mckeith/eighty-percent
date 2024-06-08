@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, View, StyleSheet, useColorScheme, TouchableWithoutFeedback } from 'react-native';
+import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { Banner, List } from 'react-native-paper';
 import {
   useDailyReviewContext,
@@ -9,7 +9,6 @@ import {
   usePlanContext,
   useReviewContext,
 } from '../src/contexts';
-import { getColors } from '../src/colors';
 import { PlanProps } from '../src/types';
 import { WeeklyReviewButton, Scroll, SectionTitle } from '../components/shared';
 import { DateSelector, HabitSection, HabitSectionTitle, PlanSection } from '../components/actions';
@@ -24,9 +23,6 @@ export default function Actions() {
   const { plans } = usePlanContext();
   const { reviews } = useReviewContext();
   const { dailyReviews } = useDailyReviewContext();
-
-  const scheme = useColorScheme();
-  const colors = getColors(scheme);
 
   const habitGroup = groups.filter(group => group.name === 'habits');
   const groupId = habitGroup && habitGroup[0]?.id;
@@ -48,21 +44,20 @@ export default function Actions() {
   function getBreadcrumbTrail(plan: PlanProps, planMap: { [key: string]: PlanProps }) {
     let breadcrumb = [];
     let currentPlan: PlanProps | undefined = plan;
-  
+
     while (currentPlan) {
       breadcrumb.unshift(currentPlan.name);
       currentPlan = currentPlan.parentId ? planMap[currentPlan.parentId] : undefined;
     }
-  
+
     breadcrumb.pop();
-  
+
     if (breadcrumb.length > 0) {
       breadcrumb[breadcrumb.length - 1] += ' > ';
     }
-  
+
     return breadcrumb.length > 0 ? breadcrumb.join(' > ') : null;
-}
-  
+  }
 
   const planMap = plans.reduce((acc: { [key: string]: PlanProps }, plan: PlanProps) => {
     acc[plan.id] = plan;
@@ -113,64 +108,67 @@ export default function Actions() {
   function handleCompleteDailyReview() {
     setDailyReview(true);
   }
+  // console.log(!!lastWeekReview)
 
   function getStickyIndices() {
     if (lastWeekReview && plansWithBreadcrumbs.length > 0) {
-      return [2, 4, 6];
+      return [1, 3, 5];
     } else if (lastWeekReview && plansWithBreadcrumbs.length === 0) {
-      return [1, 3];
-    } else if (!lastWeekReview && plansWithBreadcrumbs.length > 0) {
-      return [1, 3];
+      return [1, 3, 5];
+    } else if (lastWeekReview && plansWithBreadcrumbs.length > 0) {
+      return [1, 3, 5];
     } else if (!lastWeekReview && plansWithBreadcrumbs.length === 0) {
       return [1];
     }
   }
 
   return (
-    <Scroll stickyIndices={getStickyIndices()}>
+    <>
       <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
-      <Banner
-        visible={incompleteYesterdayReview}
-        actions={[
-          {
-            label: 'Complete',
-            onPress: () => handleCompleteDailyReview(),
-          },
-        ]}>
-        Complete yesterday's review
-      </Banner>
-      <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
-        <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>{renderFocusTitle()}</View>
-      </View>
-      <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
-        <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>{renderFocus()}</View>
-      </View>
-      <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
-        <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>{renderPlanSectionTitle()}</View>
-      </View>
-      <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
-        <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>{renderPlanSection()}</View>
-      </View>
-      <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
-        <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>
-          <HabitSectionTitle groupId={groupId} />
+      <Scroll stickyIndices={getStickyIndices()}>
+        <Banner
+          visible={incompleteYesterdayReview}
+          actions={[
+            {
+              label: 'Complete',
+              onPress: () => handleCompleteDailyReview(),
+            },
+          ]}>
+          Complete yesterday's review
+        </Banner>
+        <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
+          <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>{renderFocusTitle()}</View>
         </View>
-      </View>
-      <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
-        <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>
-          <HabitSection habits={habitSection} />
+        <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
+          <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>{renderFocus()}</View>
         </View>
-      </View>
-      <DailyReviewButton habits={habitSection} plans={planSection} isYesterdayReview={incompleteYesterdayReview} />
-      <WeeklyReviewButton />
-      <DailyReview
-        visible={dailyReview}
-        onClose={() => setDailyReview(false)}
-        habits={habitSection}
-        plans={planSection}
-        isYesterdayReview={incompleteYesterdayReview}
-      />
-    </Scroll>
+        <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
+          <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>{renderPlanSectionTitle()}</View>
+        </View>
+        <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
+          <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>{renderPlanSection()}</View>
+        </View>
+        <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
+          <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>
+            <HabitSectionTitle groupId={groupId} />
+          </View>
+        </View>
+        <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
+          <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>
+            <HabitSection habits={habitSection} />
+          </View>
+        </View>
+        <DailyReviewButton habits={habitSection} plans={planSection} isYesterdayReview={incompleteYesterdayReview} />
+        <WeeklyReviewButton />
+        <DailyReview
+          visible={dailyReview}
+          onClose={() => setDailyReview(false)}
+          habits={habitSection}
+          plans={planSection}
+          isYesterdayReview={incompleteYesterdayReview}
+        />
+      </Scroll>
+    </>
   );
 }
 

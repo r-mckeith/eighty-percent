@@ -11,12 +11,18 @@ export default function StatsHeader({ groupId }: { groupId: number }) {
   return (
     <View style={[styles.header, colors.background]}>
       <View style={styles.title}>
-        <Text variant='headlineMedium'>Habits</Text>
+        <Text variant='headlineMedium' style={{ color: '#0E5FFF', paddingRight: 10 }}>
+          Habits
+        </Text>
         <AddButton sectionName='habits' type='habit' groupId={groupId} />
       </View>
 
-      <Text variant='bodyMedium' style={styles.cell}>Day</Text>
-      <Text variant='bodyMedium' style={styles.cell}>Week</Text>
+      <Text variant='bodyMedium' style={[styles.cell, { color: '#0E5FFF' }]}>
+        Day
+      </Text>
+      <Text variant='bodyMedium' style={[styles.cell, { color: '#0E5FFF' }]}>
+        Week
+      </Text>
     </View>
   );
 }

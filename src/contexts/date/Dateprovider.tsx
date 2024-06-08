@@ -11,7 +11,8 @@ const DateProvider = ({ children }: DateProviderProps) => {
 
   const selectedDateString = selectedDate.toISOString().split('T')[0];
 
-  const todayDate = new Date();
+  const today = new Date();
+  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const todayString = todayDate.toISOString().split('T')[0];
 
   const yesterday = new Date(selectedDate);
