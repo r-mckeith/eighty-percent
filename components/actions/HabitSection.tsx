@@ -1,9 +1,8 @@
 import React, { useRef } from 'react';
-import { StyleSheet, useColorScheme, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { DataTable, ProgressBar, MD3Colors } from 'react-native-paper';
 import { selectHabit } from '../../src/api/Habits';
-import { getColors } from '../../src/colors';
 import { HabitProps } from '../../src/types';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
 import { useDailyHabitData } from '../../src/hooks/dailyHabitData';
@@ -22,9 +21,6 @@ export default function Habits({ habits }: Habits) {
   const { dailyHabitData } = useDailyHabitData();
 
   const swipeableRow = useRef<Swipeable | null>(null);
-
-  const scheme = useColorScheme();
-  const colors = getColors(scheme);
 
   const habitsWithData = habits.map(habit => ({
     ...habit,
@@ -85,7 +81,7 @@ export default function Habits({ habits }: Habits) {
                   type={'habit'}
                 />
               )}>
-              <DataTable.Row onPress={() => handleSelectHabit(habit)} style={colors.background}>
+              <DataTable.Row onPress={() => handleSelectHabit(habit)}>
                 <DataTable.Cell style={{ flex: 6 }}>{habit.name}</DataTable.Cell>
                 <DataTable.Cell style={{ flex: 1.5, paddingRight: 10 }}>
                   {habitData?.day ? habitData.day : 0}

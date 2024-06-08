@@ -4,37 +4,36 @@ import { useDateContext, usePlanContext } from '../../src/contexts';
 import { toggleScope } from '../../src/api/Plans';
 import { Icon } from '../shared';
 import { getColors } from '../../src/colors';
+import { PlanProps } from '../../src/types';
 
 type Scope = {
-  id: number;
-  inScopeDay: Date | string | null;
-  completed: string | null | undefined;
+plan: PlanProps;
 };
 
-export default function Scope({ id, inScopeDay, completed }: Scope) {
+export default function Scope({ plan }: Scope) {
   const [inScope, setInScope] = useState<any>();
   const { dispatch } = usePlanContext();
-  const { selectedDate } = useDateContext();
+  const { selectedDateString } = useDateContext();
 
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
   useEffect(() => {
-    setInScope(inScopeDay && inScopeDay <= selectedDate.toISOString().split('T')[0]);
-  }, [inScopeDay]);
+    setInScope(plan.inScopeDay && plan.inScopeDay <= selectedDateString)
+  }, [plan.inScopeDay]);
 
   async function handleToggleScope() {
-    if (completed) {
+    if (plan.completed) {
       return;
     }
     dispatch({
       type: 'TOGGLE_SCOPE',
-      id: id,
-      selectedDate: selectedDate.toISOString().split('T')[0],
+      id: plan.id,
+      selectedDate: selectedDateString,
     });
 
     try {
-      const updatedTask = await toggleScope(id, selectedDate.toISOString().split('T')[0]);
+      const updatedTask = await toggleScope(plan.id, selectedDateString);
 
       if (updatedTask) {
       } else {
@@ -48,11 +47,11 @@ export default function Scope({ id, inScopeDay, completed }: Scope) {
   return (
     <View>
       <Icon
-        opacity={completed ? 1 : 0.2}
+        opacity={plan.completed ? 1 : 0.2}
         name={inScope ? 'radiobox-marked' : 'radiobox-blank'}
         size={24}
         style={{ marginRight: 7 }}
-        color={completed ? 'grey' : colors.text.color}
+        color={plan.completed ? 'grey' : colors.text.color}
         onPress={handleToggleScope}
       />
     </View>

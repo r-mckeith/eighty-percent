@@ -1,68 +1,105 @@
-import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useRef } from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Swipeable } from 'react-native-gesture-handler';
+import { Divider, List, Icon } from 'react-native-paper';
 import { PlanProps } from '../../src/types';
-import { Divider, List } from 'react-native-paper';
 import { AddButton } from '../shared';
+import { Swipe } from '../layout';
+import RightSwipe from '../rightSwipe/RightSwipe';
 import Scope from './Scope';
 
 type RootPlans = {
   rootPlans: PlanProps[];
   plans: PlanProps[];
+  expanded: number[];
+  setExpanded: (arg0: any) => void;
 };
 
-export default function RootPlans({ rootPlans, plans }: RootPlans) {
-  const [expanded, setExpanded] = useState<number | null>(null);
+export default function RootPlans({ rootPlans, plans, expanded, setExpanded }: RootPlans) {
+  const swipeableRow = useRef<Swipeable | null>(null);
+
+  const handleSetExpanded = (planId: number) => {
+    setExpanded((prevExpanded: number[]) =>
+      prevExpanded.includes(planId) ? prevExpanded.filter((id: number) => id !== planId) : [...prevExpanded, planId]
+    );
+  };
 
   const renderPlansRecursively = (parentId: number) => {
     return plans
       .filter(plan => plan.parentId === parentId)
       .map((plan, index) => {
+        const hasChildPlans = plans.some(childPlan => childPlan.parentId === plan.id);
+        const isExpanded = expanded.includes(plan.id);
+
         return (
-        <View key={index} style={styles.childPlan}>
-          <List.Item
-            title={plan.name}
-            style={{opacity: plan.completed ? 0.25 : 1}}
-            left={props => (
-              <Scope id={plan.id} inScopeDay={plan.inScopeDay ? plan.inScopeDay : null} completed={plan.completed} />
-            )}
-            right={props => <AddButton parentId={plan.id} depth={plan.depth ? plan.depth : 0} type={'plan'} />}
-          />
-          {renderPlansRecursively(plan.id)}
-        </View>
-      )});
+          <Swipe
+          key={plan.id}
+          swipeableRow={swipeableRow}
+          renderRightActions={() => <RightSwipe item={plan} swipeableRow={swipeableRow} type={'plan'} />}>
+          <View key={plan.id} style={styles.childPlan}>
+            <List.Item
+              key={index}
+              title={plan.name}
+              style={{opacity: plan.completed ? 0.25 : 1 }}
+              disabled={!!plan.completed}
+              left={props => (
+                <>
+                  <TouchableOpacity
+                    onPress={() => handleSetExpanded(plan.id)}
+                    style={{ paddingLeft: hasChildPlans ? 0 : 22}}>
+                    <Icon
+                      {...props}
+                      source={hasChildPlans ? (isExpanded ? 'chevron-down' : 'chevron-up') : ''}
+                      size={20}
+                    />
+                  </TouchableOpacity>
+                </>
+              )}
+              right={props => (
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Scope plan={plan}/>
+                  <AddButton parentId={plan.id} depth={plan.depth ? plan.depth : 0} type={'plan'} />
+                </View>
+              )}
+            />
+            <Divider />
+            {isExpanded && renderPlansRecursively(plan.id)}
+          </View>
+          </Swipe>
+        );
+      });
   };
 
-  function handleSetExpanded(rootPlanId: number) {
-    setExpanded(expanded === rootPlanId ? null : rootPlanId);
-  }
-
   return (
-    <List.Section title='Recent'>
+    <View style={{marginBottom: 30}}>
       {rootPlans.map((rootPlan, index) => {
+        const isExpanded = expanded.includes(rootPlan.id);
+
         return (
-          <View>
-            <List.Accordion
+          <View style={{ paddingBottom: 10 }}>
+            <List.Item
               key={index}
-              onPress={() => handleSetExpanded(rootPlan.id)}
+              style={{ backgroundColor: '#D3D3D3' }}
               title={rootPlan.name}
-              expanded={expanded === rootPlan.id}>
-                <View style={{flexDirection: 'row', justifyContent: 'flex-end', paddingRight: 25, paddingVertical: 10}}>
-                <AddButton parentId={rootPlan.id} depth={rootPlan.depth ? rootPlan.depth : 0} type={'plan'} />
-
-                </View>
-
-              {renderPlansRecursively(rootPlan.id)}
-            </List.Accordion>
-            <Divider />
+              left={props => (
+                <>
+                  <TouchableOpacity style={{paddingLeft: 10}} onPress={() => handleSetExpanded(rootPlan.id)}>
+                    <Icon {...props} source={isExpanded ? 'chevron-down' : 'chevron-up'} size={20} />
+                  </TouchableOpacity>
+                </>
+              )}
+            />
+            <Divider bold={true} />
+            {isExpanded && renderPlansRecursively(rootPlan.id)}
           </View>
         );
       })}
-    </List.Section>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   childPlan: {
-    paddingLeft: 20,
+    paddingLeft: 10,
   },
 });

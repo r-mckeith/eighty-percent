@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { View } from 'react-native';
 import { usePlanContext } from '../src/contexts';
 import { PlanProps } from '../src/types';
 import { RootPlans } from '../components/plans';
@@ -9,6 +10,8 @@ export default function Plans() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
   const [rootPlans, setRootPlans] = useState<PlanProps[]>([]);
   const [filteredPlans, setFilteredPlans] = useState<PlanProps[]>([]);
+  const [expanded, setExpanded] = useState<number[]>([]);
+
 
   const { plans } = usePlanContext();
 
@@ -18,20 +21,22 @@ export default function Plans() {
 
     const planRoots = filteredPlans.filter(plan => plan.parentId === 0);
     setRootPlans(planRoots);
-  }, [plans]);
+  }, [plans, showCompleted]);
 
   return (
-    <Scroll stickyIndices={[0]}>
+    <View>
       <Toggle
         onToggle={() => setShowCompleted(!showCompleted)}
         value={showCompleted}
         label={'Show Completed'}
-        style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingBottom: 30 }}
+        style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingRight: 10, paddingTop: 10 }}
       />
-      <SectionTitle title='Recent Plans'>
-        <AddButton parentId={0} depth={0} type={'plan'} />
-      </SectionTitle>
-      <RootPlans rootPlans={rootPlans} plans={filteredPlans} />
-    </Scroll>
+      <Scroll stickyIndices={[0]}>
+        <SectionTitle title='Recent Plans'>
+          <AddButton parentId={0} depth={0} type={'plan'} />
+        </SectionTitle>
+        <RootPlans rootPlans={rootPlans} plans={filteredPlans} expanded={expanded} setExpanded={setExpanded} />
+      </Scroll>
+    </View>
   );
 }

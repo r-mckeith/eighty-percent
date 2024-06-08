@@ -52,7 +52,7 @@ export default function Edit({ item, swipeableRow, type }: Edit) {
   }
 
   return (
-    <View>
+    <>
       <RightSwipeButton
         icon={'square-edit-outline'}
         backgroundColor={'orange'}
@@ -68,6 +68,6 @@ export default function Edit({ item, swipeableRow, type }: Edit) {
         type={type}
         target={target}
       />
-    </View>
+    </>
   );
 }

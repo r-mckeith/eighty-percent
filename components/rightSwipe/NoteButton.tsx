@@ -41,10 +41,10 @@ export default function NoteButton({ type, itemId, swipeableRow }: NoteButton) {
   }
 
   return (
-    <View>
+    <>
       <RightSwipeButton icon='book' backgroundColor='blue' text='Note' onPress={() => setShowAddModal(true)}/>
 
       <AddModal visible={showAddModal} onClose={handleClose} onSave={handleAddNote} displayName='Note' />
-    </View>
+    </>
   );
 }

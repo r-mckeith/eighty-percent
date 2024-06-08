@@ -42,7 +42,7 @@ export default function EditDataButton({ item, habitData, swipeableRow }: EditDa
   }
 
   return (
-    <View>
+    <>
     <RightSwipeButton icon='table-edit' backgroundColor='green' text='Edit day' onPress={() => setShowEditDataModal(true)}/>
       <DataModal
         visible={showEditDataModal}
@@ -51,6 +51,6 @@ export default function EditDataButton({ item, habitData, swipeableRow }: EditDa
         placeholder={'Edit Day'}
         habitData={habitData}
       />
-    </View>
+    </>
   );
 }

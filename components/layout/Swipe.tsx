@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
+import { useColorScheme, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import { View } from 'react-native';
+import { getColors } from '../../src/colors';
 
 type SwipeProps = {
   children: React.ReactNode;
@@ -10,6 +11,9 @@ type SwipeProps = {
 
 const Swipe: React.FC<SwipeProps> = ({ children, swipeableRow, renderRightActions }) => {
   const swipeableRef = useRef<any>(null);
+
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
 
   const handleOpenRow = () => {
     if (swipeableRow.current && swipeableRow.current !== swipeableRef.current) {
@@ -26,7 +30,7 @@ const Swipe: React.FC<SwipeProps> = ({ children, swipeableRow, renderRightAction
       overshootLeft={false}
       rightThreshold={120}
     >
-      <View>
+      <View style={colors.background}>
         {children}
       </View>
     </Swipeable>
