@@ -18,7 +18,7 @@ export default function SmallModal({ children, visible, disabled, stickyIndices,
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
-  const containerStyle = [colors.background, { padding: 20 }];
+  const containerStyle = [colors.background, { paddingTop: 30 }];
 
   return (
     <Portal>

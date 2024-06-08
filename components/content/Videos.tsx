@@ -1,18 +1,17 @@
 import * as React from 'react';
 import { View, StyleSheet, Button, ScrollView, TouchableOpacity } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
-import { IconButton } from 'react-native-paper';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Icon } from 'react-native-paper';
 
-export default function HowToUse({ handlePressBack }: { handlePressBack: () => void }) {
+export default function Videos({ uri, handlePressBack }: { uri: string; handlePressBack: () => void }) {
   const video = React.useRef<any>(null);
   const [status, setStatus] = React.useState<any>({});
 
   return (
     <>
       <View style={styles.backButton}>
-        <TouchableOpacity onPress={() => {}}>
-          <MaterialCommunityIcons name='chevron-left' size={30} color={'white'} onPress={handlePressBack} />
+        <TouchableOpacity onPress={handlePressBack}>
+          <Icon source='chevron-left' size={30} />
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.scrollView} keyboardShouldPersistTaps='handled'>
@@ -21,11 +20,11 @@ export default function HowToUse({ handlePressBack }: { handlePressBack: () => v
             ref={video}
             style={styles.video}
             source={{
-              uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+              uri: uri,
             }}
-            useNativeControls
+            useNativeControls={true}
             resizeMode={ResizeMode.CONTAIN}
-            isLooping
+            isLooping={false}
             onPlaybackStatusUpdate={status => setStatus(() => status)}
             shouldPlay={true}
           />

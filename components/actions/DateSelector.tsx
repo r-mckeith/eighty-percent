@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, useColorScheme } from 'react-native';
+import { View, useColorScheme, TouchableOpacity } from 'react-native';
 import { addDays } from 'date-fns';
-import { Appbar } from 'react-native-paper';
+import { Text, Icon } from 'react-native-paper';
 import { getColors } from '../../src/colors';
 
 type DateSelector = {
@@ -53,22 +53,27 @@ export default function DateSelector({ selectedDate, onDateChange }: DateSelecto
   }
 
   const dayDisplay = formatDateRelative(selectedDate);
+  const disabled = dayDisplay === 'Today'
 
   return (
-    <View>
-      <View style={[{ paddingBottom: 10 }, colors.background]}>
-        <Appbar mode='center-aligned' style={[colors.background, colors.border, { borderBottomWidth: 1 }]}>
-          <Appbar.Action icon='chevron-left' style={{ paddingLeft: 35 }}  color='#0E5FFF' onPress={decrementDate} />
-          <Appbar.Content title={dayDisplay} titleStyle={{color: '#0E5FFF'}} />
-          <Appbar.Action
-            icon='chevron-right'
-            color='#0E5FFF'
-            style={{ paddingRight: 35 }}
-            onPress={incrementDate}
-            disabled={dayDisplay === 'Today' ? true : false}
-          />
-        </Appbar>
-      </View>
+    <View
+      style={[
+        colors.background,
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          paddingVertical: 10,
+          paddingRight: 10,
+        },
+      ]}>
+      <TouchableOpacity onPress={decrementDate}>
+        <Icon source='chevron-left' size={25} />
+      </TouchableOpacity>
+      <Text variant='headlineSmall'>{dayDisplay}</Text>
+      <TouchableOpacity onPress={incrementDate} disabled={disabled}>
+        <Icon source='chevron-right' size={25} color={disabled ? 'grey' : colors.text.color} />
+      </TouchableOpacity>
     </View>
   );
 }

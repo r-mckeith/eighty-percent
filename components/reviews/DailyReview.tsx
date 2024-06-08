@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useColorScheme, View, TouchableOpacity, Vibration } from 'react-native';
+import { View, TouchableOpacity, Vibration } from 'react-native';
 import { addDailyReview } from '../../src/api/DailyReviews';
 import { useDateContext, useDailyReviewContext, usePlanContext, useHabitDataContext } from '../../src/contexts';
 import { markPlanAsComplete } from '../../src/api/Plans';
 import { Modal, SectionTitle } from '../shared';
 import { useDailyHabitData } from '../../src/hooks/dailyHabitData';
-import { TextInput, Button, Card, List, Divider, IconButton, MD3Colors, Text, Icon } from 'react-native-paper';
+import { TextInput, List, Divider, MD3Colors, Text, Icon } from 'react-native-paper';
 import { HabitProps, PlanProps } from '../../src/types';
-import { getColors } from '../../src/colors';
 import { editHabitData } from '../../src/api/Habits';
 
 type DailyReview = {
@@ -34,9 +33,6 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
   const { dispatch: planDispatch } = usePlanContext();
   // still have to dispatch habit data updates
   const { dispatch: habitDataDispatch } = useHabitDataContext();
-
-  const scheme = useColorScheme();
-  const colors = getColors(scheme);
 
   const lastReview = dailyReviews && dailyReviews[0]?.response;
   const isAnswered = answer.day !== '' || answer.feel !== '' || Object.keys(changedHabits).length > 0;
@@ -170,7 +166,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
       onClose={handleCancel}
       onSave={handleSaveReview}
       disabled={!isAnswered}
-      stickyIndices={[0, 2, 4, 6]}>
+      stickyIndices={[0, 2, 4, 6, 8]}>
       {lastReview && <SectionTitle title='Last review' />}
       {lastReview && (
         <View style={{ paddingBottom: 30 }}>
@@ -203,10 +199,10 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
                   right={props => (
                     <>
                       <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => handleToggleCompleted(plan)}>
-                        <Icon {...props} source='check' color={MD3Colors.primary40} size={20} />
+                        <Icon {...props} source='check' size={25} color='#0E5FFF' />
                       </TouchableOpacity>
                       <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => {}}>
-                        <Icon {...props} source='arrow-right' color={MD3Colors.error50} size={20} />
+                        <Icon {...props} source='arrow-right' size={25} color={MD3Colors.error50} />
                       </TouchableOpacity>
                     </>
                   )}
@@ -227,18 +223,18 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
                 <List.Item
                   title={habit.name}
                   right={props => (
-                    <>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => {handleDecrement(habit.id); Vibration.vibrate(100)}}>
-                        <Icon {...props} source='minus' color={MD3Colors.error50} size={20} />
+                        <Icon {...props} source='minus' size={25} color={MD3Colors.error50} />
                       </TouchableOpacity>
                       <Text style={{ paddingLeft: 10 }}>
                         {isYesterdayReview ? habitCounts[habit.id]?.yesterday : habitCounts[habit.id]?.day}
                       </Text>
 
                       <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => handleIncrement(habit.id)}>
-                        <Icon {...props} source='plus' color={MD3Colors.primary40} size={20} />
+                        <Icon {...props} source='plus' size={25} color='#0E5FFF' />
                       </TouchableOpacity>
-                    </>
+                    </View>
                   )}
                 />
                 <Divider />
@@ -256,7 +252,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
         mode='flat'
         dense={true}
         onChangeText={e => handleChange('day', e)}
-        autoFocus={true}
+        autoFocus={false}
         returnKeyType='done'
       />
       <TextInput
@@ -266,12 +262,8 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
         mode='flat'
         dense={true}
         onChangeText={e => handleChange('feel', e)}
-        autoFocus={true}
         returnKeyType='done'
       />
-      <Button mode='contained' style={{ marginTop: 10, marginBottom: 20 }} onPress={handleSaveReview}>
-        Submit
-      </Button>
     </Modal>
   );
 }

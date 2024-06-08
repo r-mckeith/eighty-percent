@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { List, Divider } from 'react-native-paper';
-import HowToUse from '../components/content/HowToUse';
+import Videos from '../components/content/Videos';
 import { Scroll, SectionTitle } from '../components/shared';
 
-const videos = ['How to use the app', 'Habits', 'Plans'];
+const videos = ['Actions', 'Thinking ahead', 'Plans', 'How to use the app'];
 const templates = ['Set up app', 'Start a business', 'Buy a house'];
 const lockedSections = ['Get in shape', 'Start a business'];
 
@@ -13,6 +13,9 @@ const sections = [
   { name: 'Templates', content: templates, locked: false },
   { name: 'Available', content: lockedSections, locked: true },
 ];
+
+const actions = 'https://storage.googleapis.com/flywheel_videos/P1.%20Understanding%20Actions.MOV'
+const thinkingAhead = 'https://storage.googleapis.com/flywheel_videos/P2.%20Thinking%20Ahead.MOV'
 
 export default function ContentSection() {
   const [selected, setSelected] = useState<string | null>(null);
@@ -48,5 +51,6 @@ export default function ContentSection() {
       </Scroll>
     );
 
-  if (selected === 'How to use the app') return <HowToUse handlePressBack={handlePressBack} />;
+  if (selected === 'Actions') return <Videos uri={actions} handlePressBack={handlePressBack} />;
+  if (selected === 'Thinking ahead') return <Videos uri={thinkingAhead} handlePressBack={handlePressBack} />;
 }

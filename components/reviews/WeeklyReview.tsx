@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
+import { View } from 'react-native';
+import { TextInput, List, Divider } from 'react-native-paper';
 import { addReview } from '../../src/api/Reviews';
+import { useWeeklyPlanData } from '../../src/hooks/weeklyPlanData';
 import { useWeeklyHabitData } from '../../src/hooks/weeklyHabitData';
 import { useDateContext, useReviewContext } from '../../src/contexts';
-import { Grid, Summary } from '.';
-// import Modal from '../shared/Modal';
 import { SectionTitle, Modal } from '../shared';
-import { TextInput, Button } from 'react-native-paper';
+import Grid from './Grid';
 import GridHeader from './GridHeader';
-import { useWeeklyPlanData } from '../../src/hooks/weeklyPlanData';
 
 type WeeklyReview = {
   visible: boolean;
@@ -61,7 +61,15 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
       disabled={!isAnswered}
       stickyIndices={[0, 2, 4, 6]}>
       {lastReview && <SectionTitle title='Last week' />}
-      {lastReview && <Summary lastReview={lastReview} />}
+      {lastReview && (
+        <View style={{ paddingBottom: 30 }}>
+          <List.Item title={lastReview.good} />
+          <Divider />
+          <List.Item title={lastReview.bad} />
+          <Divider />
+          <List.Item title={lastReview.improve} />
+        </View>
+      )}
 
       {weeklyPlanData.length > 0 && <GridHeader title='Plans' selectedDate={selectedDate} />}
       {weeklyPlanData.length > 0 && <Grid data={weeklyPlanData} />}
@@ -77,7 +85,6 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
         mode='flat'
         dense={true}
         onChangeText={e => handleChange('good', e)}
-        autoFocus={true}
         returnKeyType='done'
       />
       <TextInput
@@ -87,7 +94,6 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
         mode='flat'
         dense={true}
         onChangeText={e => handleChange('bad', e)}
-        autoFocus={false}
         returnKeyType='done'
       />
       <TextInput
@@ -100,9 +106,6 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
         autoFocus={false}
         returnKeyType='done'
       />
-      <Button mode='contained' style={{ marginTop: 10 }} onPress={handleSaveReview}>
-        Submit
-      </Button>
     </Modal>
   );
 }

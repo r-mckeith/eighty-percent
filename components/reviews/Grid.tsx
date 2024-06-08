@@ -1,19 +1,14 @@
 import React from 'react';
-import { View, useColorScheme } from 'react-native';
-import { getColors } from '../../src/colors';
-import { DataTable, Card, Divider, Text } from 'react-native-paper';
+import { View } from 'react-native';
+import { DataTable, Divider, Text } from 'react-native-paper';
 
 type Grid = {
   data: any;
 };
 
 export default function Grid({ data }: Grid) {
-  const scheme = useColorScheme();
-  const colors = getColors(scheme);
-
   return (
-    <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
-      <DataTable style={{ flex: 12 }}>
+      <DataTable style={{ flex: 12, paddingBottom: 30 }}>
         {data &&
           data.map((data: any, index: number) => {
             return (
@@ -22,7 +17,7 @@ export default function Grid({ data }: Grid) {
                   <DataTable.Cell style={{ flex: 4, paddingRight: 20 }}>{data.name}</DataTable.Cell>
                   <View style={{ flexDirection: 'row', flex: 8, justifyContent: 'space-evenly' }}>
                     {data.days.map((day: any, index: number) => {
-                      const color = day.status === 'P' || day.icon === '-' ? day.color : colors.text.color;
+                      const color = day.status === 'P' || day.icon === '-' ? day.color : day.color;
 
                       return (
                         <DataTable.Cell key={index}>
@@ -37,6 +32,5 @@ export default function Grid({ data }: Grid) {
             );
           })}
       </DataTable>
-    </Card>
   );
 }

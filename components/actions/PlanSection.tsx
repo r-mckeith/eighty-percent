@@ -48,7 +48,7 @@ export default function PlanSection({ plans }: Plans) {
               style={{opacity: isSelected || isSelectedLater ? 0.25 : 1}}
               onPress={!isSelectedLater ? () => handleToggleCompleted(plan, selectedDate, dispatch) : () => {}}
               right={props => (
-                <List.Icon {...props} icon={isSelected ? 'check' : isSelectedLater ? 'arrow-right' : ''} />
+                <List.Icon {...props} icon={isSelected ? 'check' : isSelectedLater ? 'arrow-right' : ''} color={'#0E5FFF'} />
               )}
             />
             <Divider />
