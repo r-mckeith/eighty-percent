@@ -1,31 +1,29 @@
 import React from 'react';
-import { Text, useColorScheme } from 'react-native';
-import { Section, SectionTitle, Row } from '../layout';
+import { useColorScheme } from 'react-native';
 import { getColors } from '../../src/colors';
+import { Card, Divider, Text } from 'react-native-paper';
 
 export default function Summary({ lastReview }: any) {
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
   return (
-    <Section>
-      <SectionTitle title='Last Week' />
-
-      <Row opacity={1} first={true} last={false}>
-        <Text>
-          <Text style={colors.text}>{lastReview.good}</Text>
+    <Card mode='outlined' style={[colors.background, { paddingBottom: 30 }]}>
+      <Card.Content style={{ paddingBottom: 10 }}>
+        <Text variant='bodyMedium' style={{ paddingBottom: 10 }}>
+          {lastReview.good}
         </Text>
-      </Row>
-      <Row opacity={1} first={false} last={false}>
-        <Text>
-          <Text style={colors.text}>{lastReview.bad}</Text>
+        <Divider />
+      </Card.Content>
+      <Card.Content style={{ paddingBottom: 10 }}>
+        <Text variant='bodyMedium' style={{ paddingBottom: 10 }}>
+          {lastReview.bad}
         </Text>
-      </Row>
-      <Row opacity={1} first={false} last={true}>
-        <Text>
-          <Text style={colors.text}>{lastReview.improve}</Text>
-        </Text>
-      </Row>
-    </Section>
+        <Divider />
+      </Card.Content>
+      <Card.Content>
+        <Text variant='bodyMedium'>{lastReview.improve}</Text>
+      </Card.Content>
+    </Card>
   );
 }

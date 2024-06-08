@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Swipeable } from 'react-native-gesture-handler';
 import { addNote } from '../../src/api/Notes';
 import { useDateContext, useNoteContext } from '../../src/contexts';
-import { NoteProps } from '../../src/types/shared';
+import { NoteProps } from '../../src/types';
 import { AddModal } from '../shared';
 import RightSwipeButton from './RightSwipeButton';
 

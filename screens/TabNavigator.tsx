@@ -27,11 +27,10 @@ export function MyTabs() {
             iconName = 'settings';
           }
 
-          // You can return any component that you like here!
           return <CustomIcon name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: colors.text.color, // Active tab color
-        tabBarInactiveTintColor: 'gray', // Inactive tab color
+        tabBarActiveTintColor: colors.text.color,
+        tabBarInactiveTintColor: 'gray',
         tabBarStyle: {
           paddingVertical: 10,
           backgroundColor: colors.background.backgroundColor,

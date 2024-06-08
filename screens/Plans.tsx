@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import { usePlanContext } from '../src/contexts';
-import { PlanProps } from '../src/types/shared';
-import { PlanSection, NestedList, ToggleAndBack } from '../components/plans';
-import { SectionTitle, Scroll } from '../components/layout';
-import { AddButton, Toggle } from '../components/shared';
+import { PlanProps } from '../src/types';
+import { RootPlans } from '../components/plans';
+import { AddButton, Toggle, SectionTitle, Scroll } from '../components/shared';
 
 export default function Plans() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
-  const [planRoots, setPlanRoots] = useState<PlanProps[]>([]);
+  const [rootPlans, setRootPlans] = useState<PlanProps[]>([]);
   const [filteredPlans, setFilteredPlans] = useState<PlanProps[]>([]);
-  const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
+  const [expanded, setExpanded] = useState<number[]>([]);
+
 
   const { plans } = usePlanContext();
 
@@ -19,37 +19,23 @@ export default function Plans() {
     setFilteredPlans(filteredPlans);
 
     const planRoots = filteredPlans.filter(plan => plan.parentId === 0);
-    setPlanRoots(planRoots);
-  }, [showCompleted, plans, selectedPlan]);
-
-  function handlePressBack() {
-    setSelectedPlan(null);
-    setShowCompleted(false);
-  }
+    setRootPlans(planRoots);
+  }, [plans, showCompleted]);
 
   return (
-    <Scroll>
-      {selectedPlan && (
-        <View>
-          <ToggleAndBack onPressBack={handlePressBack} onToggle={setShowCompleted} showCompleted={showCompleted} />
-          <NestedList plans={filteredPlans} rootPlanId={selectedPlan} />
-        </View>
-      )}
-
-      {!selectedPlan && (
-        <>
-          <Toggle
-            onToggle={setShowCompleted}
-            value={showCompleted}
-            label={'Show Completed'}
-            style={{ justifyContent: 'flex-end', paddingBottom: 30 }}
-          />
-          <SectionTitle title='Recent'>
-            <AddButton parentId={0} depth={0} type={'plan'} />
-          </SectionTitle>
-          <PlanSection plans={planRoots} setSelected={setSelectedPlan} />
-        </>
-      )}
-    </Scroll>
+    <View>
+      <Toggle
+        onToggle={() => setShowCompleted(!showCompleted)}
+        value={showCompleted}
+        label={'Show Completed'}
+        style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingRight: 10, paddingTop: 10 }}
+      />
+      <Scroll stickyIndices={[0]}>
+        <SectionTitle title='Recent Plans'>
+          <AddButton parentId={0} depth={0} type={'plan'} />
+        </SectionTitle>
+        <RootPlans rootPlans={rootPlans} plans={filteredPlans} expanded={expanded} setExpanded={setExpanded} />
+      </Scroll>
+    </View>
   );
 }

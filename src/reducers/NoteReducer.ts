@@ -1,4 +1,4 @@
-import { NoteProps } from '../types/shared';
+import { NoteProps } from '../types';
 
 export type Action =
   | { type: 'INITIALIZE_NOTES'; payload: NoteProps[] }

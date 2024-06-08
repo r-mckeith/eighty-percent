@@ -4,7 +4,7 @@ import { editHabit } from '../../src/api/Habits';
 import { editPlan } from '../../src/api/Plans';
 import EditModal from './EditModal';
 import RightSwipeButton from './RightSwipeButton';
-import { HabitProps, PlanProps } from '../../src/types/shared';
+import { HabitProps, PlanProps } from '../../src/types';
 import { usePlanContext, useHabitContext } from '../../src/contexts';
 
 type Edit = {

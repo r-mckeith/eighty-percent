@@ -1,6 +1,6 @@
 import React from 'react';
 import { Action } from '../../reducers/PlanReducer';
-import { PlanProps } from '../../types/shared';
+import { PlanProps } from '../../types';
 
 type PlanContextType = {
   plans: PlanProps[];

@@ -1,4 +1,4 @@
-import { NewTaskProps, TaskProps } from '../types/shared';
+import { NewTaskProps, TaskProps } from '../types';
 
 export type Action =
   | { type: 'INITIALIZE_TASKS'; payload: TaskProps[] }

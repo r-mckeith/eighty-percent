@@ -1,17 +1,18 @@
 import { supabase } from '../../src/api/Client';
 import { StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-elements';
-import { Scroll } from '../layout';
+import { Button } from 'react-native-paper';
+import { Scroll } from '../shared';
+
 export default function Account({session}: any) {
   return (
-    <>
+    <View>
       <Scroll>
         <View style={styles.container}>
           <View style={styles.verticallySpaced}></View>
         </View>
       </Scroll>
-      <Button title='Sign Out' onPress={() => supabase.auth.signOut()} />
-    </>
+      <Button onPress={() => supabase.auth.signOut()}>Sign out</Button>
+    </View>
   );
 }
 

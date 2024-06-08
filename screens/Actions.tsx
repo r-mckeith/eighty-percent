@@ -1,37 +1,36 @@
-import React from 'react';
-import { ActivityIndicator, View, StyleSheet, useColorScheme } from 'react-native';
+import React, { useState } from 'react';
+import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { Banner, List } from 'react-native-paper';
 import {
+  useDailyReviewContext,
   useDateContext,
   useGroupContext,
   useHabitContext,
   usePlanContext,
   useReviewContext,
-  useTaskContext,
 } from '../src/contexts';
-import { getColors } from '../src/colors';
-import { PlanProps } from '../src/types/shared';
-import { WeeklyReviewButton, AddButton } from '../components/shared';
-import { Scroll, SectionTitle } from '../components/layout';
-import { DateSelector, Focus, HabitSection, PlanSection } from '../components/actions';
+import { PlanProps } from '../src/types';
+import { WeeklyReviewButton, Scroll, SectionTitle } from '../components/shared';
+import { DateSelector, HabitSection, HabitSectionTitle, PlanSection } from '../components/actions';
+import { DailyReview, DailyReviewButton } from '../components/reviews';
 
 export default function Actions() {
-  const { selectedDate, setSelectedDate } = useDateContext();
+  const [dailyReview, setDailyReview] = useState(false);
 
+  const { selectedDate, setSelectedDate, selectedDateString, todayString, yesterdayString } = useDateContext();
   const { groups } = useGroupContext();
   const { habits } = useHabitContext();
   const { plans } = usePlanContext();
   const { reviews } = useReviewContext();
-  const { tasks } = useTaskContext();
+  const { dailyReviews } = useDailyReviewContext();
 
-  const scheme = useColorScheme();
-  const colors = getColors(scheme);
-
-  const selectedDateString = selectedDate.toLocaleDateString('en-CA');
   const habitGroup = groups.filter(group => group.name === 'habits');
   const groupId = habitGroup && habitGroup[0]?.id;
   const planSection = filterPlans(plans, selectedDateString);
   const habitSection = habits.filter(habit => habit.section === 'habits');
-  const lastReview = reviews && reviews[0]?.response ? reviews[0]?.response : null;
+  const lastWeekReview = reviews && reviews[0]?.response ? reviews[0]?.response : null;
+  const yesterdayReview = dailyReviews.filter(review => review.date.toString() === yesterdayString);
+  const incompleteYesterdayReview = yesterdayReview.length === 0 && selectedDateString === todayString;
 
   function filterPlans(plans: any, selectedDateString: string) {
     return plans.filter((plan: any) => {
@@ -52,6 +51,10 @@ export default function Actions() {
     }
 
     breadcrumb.pop();
+
+    if (breadcrumb.length > 0) {
+      breadcrumb[breadcrumb.length - 1] += ' > ';
+    }
 
     return breadcrumb.length > 0 ? breadcrumb.join(' > ') : null;
   }
@@ -74,15 +77,25 @@ export default function Actions() {
     );
   }
 
+  function renderFocusTitle() {
+    if (lastWeekReview?.improve) {
+      return <SectionTitle title='Focus' />;
+    }
+  }
+
   function renderFocus() {
-    if (lastReview) {
-      return <Focus review={lastReview.improve} />;
+    if (lastWeekReview?.improve) {
+      return (
+        <View style={{ paddingBottom: 30 }}>
+          <List.Item title={lastWeekReview.improve} />
+        </View>
+      );
     }
   }
 
   function renderPlanSectionTitle() {
     if (plansWithBreadcrumbs.length > 0) {
-      return <SectionTitle title='Plans' />;
+      return <SectionTitle title="Today's plans" />;
     }
   }
 
@@ -92,33 +105,68 @@ export default function Actions() {
     }
   }
 
+  function handleCompleteDailyReview() {
+    setDailyReview(true);
+  }
+  // console.log(!!lastWeekReview)
+
   function getStickyIndices() {
-    if (lastReview && plansWithBreadcrumbs.length > 0) {
-      return [1, 3];
-    } else if (lastReview && plansWithBreadcrumbs.length === 0) {
+    if (lastWeekReview && plansWithBreadcrumbs.length > 0) {
+      return [1, 3, 5];
+    } else if (lastWeekReview && plansWithBreadcrumbs.length === 0) {
+      return [1, 3, 5];
+    } else if (lastWeekReview && plansWithBreadcrumbs.length > 0) {
+      return [1, 3, 5];
+    } else if (!lastWeekReview && plansWithBreadcrumbs.length === 0) {
       return [1];
-    } else if (!lastReview && plansWithBreadcrumbs.length > 0) {
-      return [0, 2];
-    } else if (!lastReview && plansWithBreadcrumbs.length === 0) {
-      return [0];
     }
   }
 
   return (
     <>
-      <View style={colors.background}>
-        <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
-      </View>
+      <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
       <Scroll stickyIndices={getStickyIndices()}>
-        {renderFocus()}
-        {renderPlanSectionTitle()}
-        {renderPlanSection()}
-
-        <SectionTitle title='Habits'>
-          <AddButton sectionName='habits' type='habit' groupId={groupId} />
-        </SectionTitle>
-        <HabitSection habits={habitSection} sectionName='habits' groupId={groupId} />
+        <Banner
+          visible={incompleteYesterdayReview}
+          actions={[
+            {
+              label: 'Complete',
+              onPress: () => handleCompleteDailyReview(),
+            },
+          ]}>
+          Complete yesterday's review
+        </Banner>
+        <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
+          <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>{renderFocusTitle()}</View>
+        </View>
+        <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
+          <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>{renderFocus()}</View>
+        </View>
+        <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
+          <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>{renderPlanSectionTitle()}</View>
+        </View>
+        <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
+          <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>{renderPlanSection()}</View>
+        </View>
+        <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
+          <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>
+            <HabitSectionTitle groupId={groupId} />
+          </View>
+        </View>
+        <View style={{ opacity: incompleteYesterdayReview ? 0.25 : 1 }}>
+          <View pointerEvents={incompleteYesterdayReview ? 'none' : 'auto'}>
+            <HabitSection habits={habitSection} />
+          </View>
+        </View>
+        <DailyReviewButton habits={habitSection} plans={planSection} isYesterdayReview={incompleteYesterdayReview} />
         <WeeklyReviewButton />
+        <DailyReview
+          visible={dailyReview}
+          onClose={() => setDailyReview(false)}
+          habits={habitSection}
+          plans={planSection}
+          isYesterdayReview={incompleteYesterdayReview}
+        />
       </Scroll>
     </>
   );

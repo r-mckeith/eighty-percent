@@ -3,7 +3,7 @@ import { Swipeable } from 'react-native-gesture-handler';
 import { editHabitData } from '../../src/api/Habits';
 import DataModal from './DataModal';
 import RightSwipeButton from './RightSwipeButton';
-import { HabitProps } from '../../src/types/shared';
+import { HabitProps } from '../../src/types';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
 
 type EditDataButton = {

@@ -1,16 +1,16 @@
-import { ReviewProps } from '../types';
+import { DailyReviewProps } from '../types';
 
 export type Action =
-  | { type: 'INITIALIZE_REVIEWS'; payload: ReviewProps[] }
+  | { type: 'INITIALIZE_REVIEWS'; payload: DailyReviewProps[] }
   | { type: 'DELETE_REVIEW'; id: number }
-  | { type: 'ADD_REVIEW'; payload: ReviewProps; date: string }
-  | { type: 'UPDATE_REVIEW'; id: number; newReview: ReviewProps };
+  | { type: 'ADD_REVIEW'; payload: DailyReviewProps; date: string }
+  | { type: 'UPDATE_REVIEW'; id: number; newReview: DailyReviewProps };
 
 export const initialState = {
   reviews: [],
 };
 
-export function reviewReducer(state: ReviewProps[], action: Action): ReviewProps[] {
+export function dailyReviewReducer(state: DailyReviewProps[], action: Action): DailyReviewProps[] {
   switch (action.type) {
     case 'INITIALIZE_REVIEWS':
       return action.payload;

@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, Text, useColorScheme } from 'react-native';
+import { View, useColorScheme } from 'react-native';
 import { addDays } from 'date-fns';
-import { Icon } from '../shared';
-import { StyleSheet } from 'react-native';
+import { Appbar } from 'react-native-paper';
 import { getColors } from '../../src/colors';
 
 type DateSelector = {
@@ -55,35 +54,21 @@ export default function DateSelector({ selectedDate, onDateChange }: DateSelecto
 
   const dayDisplay = formatDateRelative(selectedDate);
 
-  function renderArrowForward() {
-    if (dayDisplay !== 'Today') {
-      return (
-        <Icon name={'chevron-right'} size={24} style={{ marginHorizontal: 10 }} opacity={0.2} onPress={incrementDate} />
-      );
-    } else {
-      return <View style={{ marginHorizontal: 30 }} />;
-    }
-  }
-
   return (
-    <View style={[styles.datePicker, colors.background]}>
-      <View style={styles.datePickerContainer}>
-        <Icon name={'chevron-left'} size={24} style={{ marginHorizontal: 10 }} opacity={0.2} onPress={decrementDate} />
-        <Text style={colors.text}>{dayDisplay}</Text>
-        {renderArrowForward()}
+    <View>
+      <View style={[{ paddingBottom: 10 }, colors.background]}>
+        <Appbar mode='center-aligned' style={[colors.background, colors.border, { borderBottomWidth: 1 }]}>
+          <Appbar.Action icon='chevron-left' style={{ paddingLeft: 35 }}  color='#0E5FFF' onPress={decrementDate} />
+          <Appbar.Content title={dayDisplay} titleStyle={{color: '#0E5FFF'}} />
+          <Appbar.Action
+            icon='chevron-right'
+            color='#0E5FFF'
+            style={{ paddingRight: 35 }}
+            onPress={incrementDate}
+            disabled={dayDisplay === 'Today' ? true : false}
+          />
+        </Appbar>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  datePicker: {
-    alignSelf: 'flex-end',
-    marginBottom: 15,
-  },
-  datePickerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

@@ -1,4 +1,4 @@
-import { PlanProps } from '../types/shared';
+import { PlanProps } from '../types';
 
 export type Action =
   | { type: 'INITIALIZE_PLANS'; payload: PlanProps[] }

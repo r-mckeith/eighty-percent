@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { NewHabitProps } from '../../src/types/shared';
+import { NewHabitProps } from '../../src/types';
 import { useGroupContext, useHabitContext, usePlanContext } from '../../src/contexts';
 import { addHabit } from '../../src/api/Habits';
 import { addPlan } from '../../src/api/Plans';
 import { addGroup } from '../../src/api/Groups';
 import AddModal from './AddModal';
 import Icon from './Icon';
+import { View } from 'react-native';
 
 type AddButton = {
   type: string;
@@ -92,16 +93,16 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
     }
     return 'Group';
   }
-
+  
   return (
-    <>
-      <Icon name='plus' size={24} opacity={1} onPress={() => setShowModal(true)} />
+    <View>
+      <Icon name='plus' size={24} opacity={1} color='#0E5FFF' onPress={() => setShowModal(true)} />
       <AddModal
         visible={showModal}
         onClose={() => setShowModal(false)}
         onSave={handleAction}
         displayName={getDisplayName()}
       />
-    </>
+    </View>
   );
 }

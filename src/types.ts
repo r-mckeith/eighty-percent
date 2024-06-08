@@ -11,7 +11,7 @@ export type HabitDataProps = {
   tag_id: number;
   count: number;
   tag_name: string;
-  date: Date;
+  date: string;
 };
 
 export type HabitProps = {
@@ -67,6 +67,8 @@ export type GroupProps = {
 };
 
 export type ReviewProps = any;
+
+export type DailyReviewProps = any;
 
 export type NoteProps = any;
 

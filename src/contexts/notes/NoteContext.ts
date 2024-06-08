@@ -1,6 +1,6 @@
 import React from 'react';
 import { Action } from '../../reducers/NoteReducer';
-import { NoteProps } from '../../types/shared';
+import { NoteProps } from '../../types';
 
 export interface NoteContextType {
   notes: NoteProps[];

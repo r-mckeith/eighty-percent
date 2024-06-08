@@ -1,4 +1,4 @@
-import { TaskProps, NewTaskProps } from '../types/shared';
+import { TaskProps, NewTaskProps } from '../types';
 import { supabase } from './Client';
 
 export async function getTasks() {

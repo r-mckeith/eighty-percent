@@ -1,6 +1,6 @@
 import React from 'react';
 import { Action } from '../../reducers/GroupReducer';
-import { GroupProps } from '../../types/shared';
+import { GroupProps } from '../../types';
 
 export interface GroupContextType {
   groups: GroupProps[];

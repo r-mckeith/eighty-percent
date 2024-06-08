@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Content, HowToUse } from '../components/content';
-import { Scroll, Section, SectionTitle } from '../components/layout';
+import { View } from 'react-native';
+import { List, Divider } from 'react-native-paper';
+import HowToUse from '../components/content/HowToUse';
+import { Scroll, SectionTitle } from '../components/shared';
 
 const videos = ['How to use the app', 'Habits', 'Plans'];
 const templates = ['Set up app', 'Start a business', 'Buy a house'];
@@ -24,23 +26,23 @@ export default function ContentSection() {
       <Scroll>
         {sections.map((section, index) => {
           return (
-            <>
+            <View key={index} style={{ paddingBottom: 30 }}>
               <SectionTitle title={section.name} />
-              <Section key={index}>
-                {section.content.map((content, index) => {
-                  return (
-                    <Content
-                      key={index}
-                      name={content}
-                      setSelected={setSelected}
-                      first={index === 0}
-                      last={index === section.content.length - 1}
-                      isLocked={section.locked}
+              {section.content.map((content, index) => {
+                return (
+                  <View key={index}>
+                    <List.Item
+                      title={content}
+                      disabled={section.locked}
+                      style={{ opacity: section.locked ? 0.25 : 1 }}
+                      onPress={() => (section.locked ? () => {} : setSelected(content))}
+                      right={props => <List.Icon {...props} icon={section.locked ? 'lock' : ''} />}
                     />
-                  );
-                })}
-              </Section>
-            </>
+                    <Divider />
+                  </View>
+                );
+              })}
+            </View>
           );
         })}
       </Scroll>

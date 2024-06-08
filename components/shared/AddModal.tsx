@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
-import Toggle from './Toggle';
-import TextInput from './TextInput';
+import { View, Text } from 'react-native';
 import Modal from './Modal';
+import TargetSelector from './TargetSelector';
+import { TextInput, Switch } from 'react-native-paper';
 
 type AddHabitModal = {
   visible: boolean;
@@ -41,82 +40,28 @@ export default function AddHabitModal({ visible, displayName, onClose, onSave }:
   const disabled = newName === '';
 
   return (
-    <Modal
-      placeholder={`New ${displayName}`}
-      visible={visible}
-      onClose={handleCancel}
-      onSave={handleSave}
-      disabled={disabled}>
-      {displayName === 'Habit' && (
-        <Toggle onToggle={setHasTarget} value={hasTarget} label={'Set target'} style={{ justifyContent: 'flex-end' }} />
-      )}
-
+    <Modal visible={visible} onClose={handleCancel} onSave={handleSave} disabled={disabled}>
       <TextInput
-        placeholder={displayName}
+        placeholder={`New ${displayName}`}
         value={newName}
-        handleChangeText={setNewName}
+        mode='flat'
+        dense={true}
+        onChangeText={setNewName}
         autoFocus={true}
-        onSave={handleSave}
+        onSubmitEditing={handleSave}
+        returnKeyType='done'
       />
 
+      {displayName === 'Habit' && (
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingVertical: 10 }}>
+          <Text style={{ paddingRight: 10 }}>Set target</Text>
+          <Switch onValueChange={setHasTarget} value={hasTarget} />
+        </View>
+      )}
+
       {hasTarget && (
-        <>
-          <View style={styles.dropdownContainer}>
-            <RNPickerSelect
-              style={pickerSelectStyles}
-              value={times}
-              onValueChange={value => setTimes(value)}
-              items={[...Array(10).keys()].map(i => ({ label: (i + 1).toString(), value: (i + 1).toString() }))}
-            />
-            <Text style={styles.inlineLabel}>times per</Text>
-            <RNPickerSelect
-              style={pickerSelectStyles}
-              value={timeframe}
-              onValueChange={value => setTimeframe(value)}
-              items={[
-                { label: 'Day', value: 'day' },
-                { label: 'Week', value: 'week' },
-              ]}
-            />
-          </View>
-        </>
+        <TargetSelector times={times} timeframe={timeframe} setTimes={setTimes} setTimeframe={setTimeframe} />
       )}
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  dropdownContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 30,
-  },
-  inlineLabel: {
-    marginHorizontal: 10,
-    fontSize: 16,
-  },
-});
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30,
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: 'purple',
-    borderRadius: 8,
-    color: 'black',
-    paddingRight: 30,
-  },
-});

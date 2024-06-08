@@ -1,6 +1,6 @@
 import React from 'react';
 import { Action } from '../../reducers/HabitDataReducer';
-import { HabitDataProps } from '../../types/shared';
+import { HabitDataProps } from '../../types';
 
 type HabitDataContextType = {
   habitData: HabitDataProps[];

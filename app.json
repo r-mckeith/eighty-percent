@@ -2,13 +2,13 @@
   "expo": {
     "name": "flywheel-app",
     "slug": "flywheel-app",
-    "version": "1.1.2",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [

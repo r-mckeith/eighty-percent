@@ -1,4 +1,4 @@
-import { HabitDataProps } from '../types/shared';
+import { HabitDataProps } from '../types';
 
 export type Action =
   | { type: 'INITIALIZE_HABIT_DATA'; payload: HabitDataProps[] }
