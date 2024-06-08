@@ -79,11 +79,12 @@ export default function RootPlans({ rootPlans, plans, expanded, setExpanded }: R
             <List.Item
               key={index}
               style={{ backgroundColor: '#D3D3D3' }}
+              titleStyle={{color: 'black'}}
               title={rootPlan.name}
               left={props => (
                 <>
                   <TouchableOpacity style={{paddingLeft: 10}} onPress={() => handleSetExpanded(rootPlan.id)}>
-                    <Icon {...props} source={isExpanded ? 'chevron-down' : 'chevron-up'} size={20} />
+                    <Icon {...props} source={isExpanded ? 'chevron-down' : 'chevron-up'} color='black' size={20} />
                   </TouchableOpacity>
                 </>
               )}

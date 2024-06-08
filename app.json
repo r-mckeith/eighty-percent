@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "flywheel-app",
-    "slug": "flywheel-app",
-    "version": "1.0.0",
+    "slug": "flywheel",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "userInterfaceStyle": "automatic",
@@ -16,7 +16,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.rmckeith.eightypercenttags"
+      "bundleIdentifier": "com.rmckeith.flywheelapp"
     },
     "android": {
       "adaptiveIcon": {
@@ -26,6 +26,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7422f812-1b2f-4a38-a077-a300110643d3"
+      }
     }
   }
 }

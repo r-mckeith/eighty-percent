@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useColorScheme, View, TouchableOpacity, Vibration } from 'react-native';
+import { View, TouchableOpacity, Vibration } from 'react-native';
 import { addDailyReview } from '../../src/api/DailyReviews';
 import { useDateContext, useDailyReviewContext, usePlanContext, useHabitDataContext } from '../../src/contexts';
 import { markPlanAsComplete } from '../../src/api/Plans';
 import { Modal, SectionTitle } from '../shared';
 import { useDailyHabitData } from '../../src/hooks/dailyHabitData';
-import { TextInput, Button, Card, List, Divider, IconButton, MD3Colors, Text, Icon } from 'react-native-paper';
+import { TextInput, List, Divider, MD3Colors, Text, Icon } from 'react-native-paper';
 import { HabitProps, PlanProps } from '../../src/types';
-import { getColors } from '../../src/colors';
 import { editHabitData } from '../../src/api/Habits';
 
 type DailyReview = {
@@ -34,9 +33,6 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
   const { dispatch: planDispatch } = usePlanContext();
   // still have to dispatch habit data updates
   const { dispatch: habitDataDispatch } = useHabitDataContext();
-
-  const scheme = useColorScheme();
-  const colors = getColors(scheme);
 
   const lastReview = dailyReviews && dailyReviews[0]?.response;
   const isAnswered = answer.day !== '' || answer.feel !== '' || Object.keys(changedHabits).length > 0;
@@ -256,7 +252,6 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
         mode='flat'
         dense={true}
         onChangeText={e => handleChange('day', e)}
-        autoFocus={true}
         returnKeyType='done'
       />
       <TextInput
@@ -266,12 +261,8 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
         mode='flat'
         dense={true}
         onChangeText={e => handleChange('feel', e)}
-        autoFocus={true}
         returnKeyType='done'
       />
-      <Button mode='contained' style={{ marginTop: 10, marginBottom: 20 }} onPress={handleSaveReview}>
-        Submit
-      </Button>
     </Modal>
   );
 }

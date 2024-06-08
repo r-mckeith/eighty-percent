@@ -17,13 +17,13 @@ export default function GridHeader({ title, selectedDate }: { title: string; sel
 
   return (
     <View style={[colors.background, { flexDirection: 'row', alignItems: 'center', flex: 10 }]}>
-      <Text variant='headlineMedium' style={{ flex: 4 }}>
+      <Text variant='headlineMedium' style={{ flex: 4, color: '#0E5FFF' }}>
         {title}
       </Text>
       <View style={{ flexDirection: 'row', flex: 6, justifyContent: 'space-evenly', paddingRight: 20 }}>
         {generateDayHeaders().map((header, index) => (
           <DataTable.Title key={index}>
-            <Text variant='bodyMedium' style={{ flex: 4 }}>
+            <Text variant='bodyMedium' style={{ flex: 4, color: '#0E5FFF' }}>
               {header}
             </Text>
           </DataTable.Title>
