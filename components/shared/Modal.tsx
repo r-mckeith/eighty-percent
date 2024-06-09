@@ -18,13 +18,13 @@ export default function SmallModal({ children, visible, disabled, stickyIndices,
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
-  const containerStyle = [colors.background, { paddingTop: 30 }];
+  const containerStyle = [colors.background, {  flex: 1, paddingTop: 10 }];
 
   return (
     <Portal>
       <Modal visible={visible} onDismiss={onClose} contentContainerStyle={containerStyle}>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between',  paddingTop: 30, paddingBottom: 10 }}>
             <Button onPress={onClose} textColor='red'>
               Cancel
             </Button>

@@ -167,8 +167,8 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
       onSave={handleSaveReview}
       disabled={!isAnswered}
       stickyIndices={[0, 2, 4, 6, 8]}>
-      {lastReview && <SectionTitle title='Last review' />}
-      {lastReview && (
+      {lastReview.day && <SectionTitle title='Last review' />}
+      {lastReview.day && (
         <View style={{ paddingBottom: 30 }}>
           <List.Item title={lastReview.day} />
         </View>
@@ -216,15 +216,20 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
 
       {habitsWithData.length > 0 && Object.keys(habitCounts).length > 0 && <SectionTitle title='Habits' />}
       {habitsWithData.length > 0 && Object.keys(habitCounts).length > 0 && (
-        <View style={{ paddingBottom: 30 }}>
+        <View>
           {sortedHabits.map((habit: any, index: number) => {
             return (
               <View key={index}>
                 <List.Item
                   title={habit.name}
                   right={props => (
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => {handleDecrement(habit.id); Vibration.vibrate(100)}}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <TouchableOpacity
+                        style={{ paddingLeft: 10 }}
+                        onPress={() => {
+                          handleDecrement(habit.id);
+                          Vibration.vibrate(100);
+                        }}>
                         <Icon {...props} source='minus' size={25} color={MD3Colors.error50} />
                       </TouchableOpacity>
                       <Text style={{ paddingLeft: 10 }}>

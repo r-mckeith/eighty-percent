@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "flywheel",
-    "slug": "flywheel-app",
+    "name": "Flywheel",
+    "slug": "flywheelapp",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/logo.png",

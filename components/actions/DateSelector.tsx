@@ -63,14 +63,14 @@ export default function DateSelector({ selectedDate, onDateChange }: DateSelecto
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'flex-end',
-          paddingVertical: 10,
+          paddingVertical: 5,
           paddingRight: 10,
         },
       ]}>
       <TouchableOpacity onPress={decrementDate}>
         <Icon source='chevron-left' size={25} />
       </TouchableOpacity>
-      <Text variant='headlineSmall'>{dayDisplay}</Text>
+      <Text variant='bodyLarge'>{dayDisplay}</Text>
       <TouchableOpacity onPress={incrementDate} disabled={disabled}>
         <Icon source='chevron-right' size={25} color={disabled ? 'grey' : colors.text.color} />
       </TouchableOpacity>

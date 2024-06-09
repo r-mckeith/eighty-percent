@@ -79,7 +79,6 @@ export default function RootPlans({ rootPlans, plans, expanded, setExpanded }: R
             <List.Item
               key={index}
               style={{ backgroundColor: rootPlan.completed? '#b1b1b3' : '#0E5FFF' }}
-              // titleStyle={rootPlan.completed ? { color: 'black'} : {}}
               title={rootPlan.name}
               left={props => (
                 <>

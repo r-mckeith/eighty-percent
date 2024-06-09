@@ -41,8 +41,8 @@ export default function Scope({ plan }: Scope) {
   }
 
   return (
-    <TouchableOpacity onPress={handleToggleScope} style={{ opacity: plan.completed ? 0.2 : 1 }}>
-      <Icon source={inScope ? 'radiobox-marked' : 'radiobox-blank'} size={20} />
+    <TouchableOpacity onPress={handleToggleScope} style={{ opacity: plan.completed ? 0.2 : 1, paddingLeft: 20 }}>
+      <Icon source={inScope ? 'radiobox-marked' : 'radiobox-blank'} size={25} />
     </TouchableOpacity>
   );
 }
