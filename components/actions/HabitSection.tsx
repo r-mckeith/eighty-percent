@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import { DataTable, ProgressBar, MD3Colors } from 'react-native-paper';
+import { DataTable, ProgressBar, MD3Colors, Text, Divider } from 'react-native-paper';
 import { selectHabit } from '../../src/api/Habits';
 import { HabitProps } from '../../src/types';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';
@@ -50,7 +50,7 @@ export default function Habits({ habits }: Habits) {
   };
 
   return (
-    <DataTable>
+    <View>
       {sortedHabits.map(habit => {
         const { habitData, target } = habit;
 
@@ -81,20 +81,29 @@ export default function Habits({ habits }: Habits) {
                   type={'habit'}
                 />
               )}>
-              <DataTable.Row onPress={() => handleSelectHabit(habit)}>
-                <DataTable.Cell style={{ flex: 6 }}>{habit.name}</DataTable.Cell>
-                <DataTable.Cell style={{ flex: 1.5, paddingRight: 10 }} textStyle={{color: '#0E5FFF'}}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text variant='bodyMedium' style={{ flex: 6, paddingLeft: 15, paddingTop: 5 }} onPress={() => handleSelectHabit(habit)}>
+                  {habit.name}
+                </Text>
+                <Text style={{ flex: 1, paddingRight: 10, color: '#0E5FFF', paddingTop: 5 }}>
                   {habitData?.day ? habitData.day : 0}
-                </DataTable.Cell>
-                <DataTable.Cell style={{ flex: 0.5 }} textStyle={{color: MD3Colors.error50}}>{habitData?.week ? habitData.week : 0}</DataTable.Cell>
-              </DataTable.Row>
+                </Text>
+                <Text style={{ flex: 1, color: '#0E7FFF', paddingLeft: 10, paddingTop: 5 }}>
+                  {habitData?.week ? habitData.week : 0}
+                </Text>
+              </View>
+              <ProgressBar progress={dayPercentage} color={'#0E5FFF'} style={styles.progressBar} />
+              <ProgressBar
+                progress={weekPercentage}
+                color='#0E7FFF'
+                style={[styles.progressBar, { marginBottom: 10 }]}
+              />
             </Swipe>
-            <ProgressBar progress={dayPercentage} color={'#0E5FFF'} style={styles.progressBar} />
-            <ProgressBar progress={weekPercentage} color={MD3Colors.error50} style={styles.progressBar} />
+            <Divider style={{marginBottom: 10}} />
           </View>
         );
       })}
-    </DataTable>
+    </View>
   );
 }
 
@@ -102,6 +111,5 @@ const styles = StyleSheet.create({
   progressBar: {
     marginHorizontal: 16,
     marginTop: 4,
-    marginBottom: 8,
   },
 });

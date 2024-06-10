@@ -18,13 +18,13 @@ export default function SmallModal({ children, visible, disabled, stickyIndices,
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
-  const containerStyle = [colors.background, {  flex: 1, paddingTop: 10 }];
+  const containerStyle = [colors.background, {  padding: 10 }];
 
   return (
     <Portal>
       <Modal visible={visible} onDismiss={onClose} contentContainerStyle={containerStyle}>
-        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between',  paddingTop: 30, paddingBottom: 10 }}>
+        {/* <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}> */}
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 10 }}>
             <Button onPress={onClose} textColor='red'>
               Cancel
             </Button>
@@ -33,7 +33,7 @@ export default function SmallModal({ children, visible, disabled, stickyIndices,
             </Button>
           </View>
           <Scroll stickyIndices={stickyIndices}>{children}</Scroll>
-        </KeyboardAvoidingView>
+        {/* </KeyboardAvoidingView> */}
       </Modal>
     </Portal>
   );

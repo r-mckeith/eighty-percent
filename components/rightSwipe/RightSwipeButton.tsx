@@ -13,7 +13,7 @@ export default function RightSwipeButton({ backgroundColor, icon, text, onPress 
   return (
     <View style={{ flexDirection: 'column', backgroundColor: backgroundColor }}>
       <TouchableOpacity onPress={onPress} style={styles.rightSwipeItem}>
-        <Icon source={icon} size={20} />
+        <Icon source={icon} size={20} color='white' />
       </TouchableOpacity>
       <Text style={{ fontSize: 10, textAlign: 'center', color: 'white' }}>{text}</Text>
     </View>
