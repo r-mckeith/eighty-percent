@@ -15,7 +15,7 @@ export const initialState = {
 const updateScope = (state: PlanProps[], action: { id: number; selectedDate: string }): PlanProps[] => {
   return state.map(plan => {
     if (plan.id === action.id) {
-      const newScopeDay = plan.inScopeDay === action.selectedDate ? null : action.selectedDate;
+      const newScopeDay = plan.inScopeDay ? null : action.selectedDate;
       return { ...plan, inScopeDay: newScopeDay };
     }
     return plan;

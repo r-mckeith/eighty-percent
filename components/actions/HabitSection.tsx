@@ -85,17 +85,17 @@ export default function Habits({ habits }: Habits) {
                 <Text variant='bodyMedium' style={{ flex: 6, paddingLeft: 15, paddingTop: 5 }} onPress={() => handleSelectHabit(habit)}>
                   {habit.name}
                 </Text>
-                <Text style={{ flex: 1, paddingRight: 10, color: '#0E5FFF', paddingTop: 5 }}>
+                <Text style={{ flex: 1, paddingRight: 10, color: '#0E9FFF', paddingTop: 5 }}>
                   {habitData?.day ? habitData.day : 0}
                 </Text>
-                <Text style={{ flex: 1, color: '#0E7FFF', paddingLeft: 10, paddingTop: 5 }}>
+                <Text style={{ flex: 1, color: '#0E5FFF', paddingLeft: 10, paddingTop: 5 }}>
                   {habitData?.week ? habitData.week : 0}
                 </Text>
               </View>
-              <ProgressBar progress={dayPercentage} color={'#0E5FFF'} style={styles.progressBar} />
+              <ProgressBar progress={dayPercentage} color='#0E9FFF' style={styles.progressBar} />
               <ProgressBar
                 progress={weekPercentage}
-                color='#0E7FFF'
+                color='#0E5FFF'
                 style={[styles.progressBar, { marginBottom: 10 }]}
               />
             </Swipe>

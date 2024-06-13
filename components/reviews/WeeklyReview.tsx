@@ -29,7 +29,7 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
   const lastReview = reviews && reviews[0]?.response;
   const isAnswered = answer.good !== '' || answer.bad !== '' || answer.improve !== '';
 
-  async function handleSaveReview(): Promise<void> {
+  async function handleSave(): Promise<void> {
     if (answer) {
       onClose();
       try {
@@ -57,7 +57,7 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
     <Modal
       visible={visible}
       onClose={handleCancel}
-      onSave={handleSaveReview}
+      onSave={handleSave}
       disabled={!isAnswered}
       stickyIndices={[0, 2, 4, 6]}>
       {lastReview && <SectionTitle title='Last week' />}
@@ -85,6 +85,7 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
         mode='flat'
         dense={true}
         onChangeText={e => handleChange('good', e)}
+        onSubmitEditing={handleSave}
         returnKeyType='done'
       />
       <TextInput
@@ -94,6 +95,7 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
         mode='flat'
         dense={true}
         onChangeText={e => handleChange('bad', e)}
+        onSubmitEditing={handleSave}
         returnKeyType='done'
       />
       <TextInput
@@ -104,6 +106,7 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
         dense={true}
         onChangeText={e => handleChange('improve', e)}
         autoFocus={false}
+        onSubmitEditing={handleSave}
         returnKeyType='done'
       />
     </Modal>

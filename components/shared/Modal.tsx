@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, KeyboardAvoidingView, Platform, useColorScheme } from 'react-native';
+import { View, useColorScheme } from 'react-native';
 import { Modal, Portal, Button } from 'react-native-paper';
 import { Scroll } from '../shared';
 import { getColors } from '../../src/colors';
@@ -18,22 +18,20 @@ export default function SmallModal({ children, visible, disabled, stickyIndices,
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
-  const containerStyle = [colors.background, {  padding: 10 }];
+  const containerStyle = [colors.background, {minHeight: 350}];
 
   return (
     <Portal>
       <Modal visible={visible} onDismiss={onClose} contentContainerStyle={containerStyle}>
-        {/* <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}> */}
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 10 }}>
-            <Button onPress={onClose} textColor='red'>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10 }}>
+            <Button onPress={onClose} textColor='red' style={{paddingLeft: 10}}>
               Cancel
             </Button>
-            <Button onPress={onSave} disabled={disabled} textColor='blue'>
+            <Button onPress={onSave} disabled={disabled} textColor='blue' style={{paddingRight: 10}}>
               Done
             </Button>
           </View>
           <Scroll stickyIndices={stickyIndices}>{children}</Scroll>
-        {/* </KeyboardAvoidingView> */}
       </Modal>
     </Portal>
   );

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import Modal from './Modal';
 import TargetSelector from './TargetSelector';
-import { TextInput, Switch } from 'react-native-paper';
+import { Text, TextInput, Switch } from 'react-native-paper';
 
 type AddHabitModal = {
   visible: boolean;
@@ -51,10 +51,11 @@ export default function AddHabitModal({ visible, displayName, onClose, onSave }:
         onSubmitEditing={handleSave}
         returnKeyType='done'
       />
-
       {displayName === 'Habit' && (
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingVertical: 10 }}>
-          <Text style={{ paddingRight: 10 }}>Set target</Text>
+          <Text variant='bodyMedium' style={{ paddingRight: 10 }}>
+            Set target
+          </Text>
           <Switch onValueChange={setHasTarget} value={hasTarget} />
         </View>
       )}

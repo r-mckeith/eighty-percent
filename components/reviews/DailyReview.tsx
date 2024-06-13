@@ -118,7 +118,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
     }
   }
 
-  async function handleSaveReview(): Promise<void> {
+  async function handleSave(): Promise<void> {
     onClose();
     handleUpdate();
     const dateString = reviewDate.toISOString().split('T')[0];
@@ -164,11 +164,11 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
     <Modal
       visible={visible}
       onClose={handleCancel}
-      onSave={handleSaveReview}
+      onSave={handleSave}
       disabled={!isAnswered}
       stickyIndices={[0, 2, 4, 6, 8]}>
-      {lastReview.day && <SectionTitle title='Last review' />}
-      {lastReview.day && (
+      {lastReview?.day && <SectionTitle title='Last review' />}
+      {lastReview?.day && (
         <View style={{ paddingBottom: 30 }}>
           <List.Item title={lastReview.day} />
         </View>
@@ -258,6 +258,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
         dense={true}
         onChangeText={e => handleChange('day', e)}
         autoFocus={false}
+        onSubmitEditing={handleSave}
         returnKeyType='done'
       />
       <TextInput
@@ -267,6 +268,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
         mode='flat'
         dense={true}
         onChangeText={e => handleChange('feel', e)}
+        onSubmitEditing={handleSave}
         returnKeyType='done'
       />
     </Modal>
