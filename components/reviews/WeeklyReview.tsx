@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
-import { TextInput, List, Divider, Text } from 'react-native-paper';
+import { View, useColorScheme } from 'react-native';
+import { TextInput, Divider, Text } from 'react-native-paper';
+import { getColors } from '../../src/colors';
 import { addReview } from '../../src/api/Reviews';
 import { useWeeklyPlanData } from '../../src/hooks/weeklyPlanData';
 import { useWeeklyHabitData } from '../../src/hooks/weeklyHabitData';
@@ -28,6 +29,9 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
 
   const lastReview = reviews && reviews[0]?.response;
   const isAnswered = answer.good !== '' || answer.bad !== '' || answer.improve !== '';
+
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
 
   async function handleSave(): Promise<void> {
     if (answer) {
@@ -96,31 +100,37 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
       <SectionTitle title={'Review'} />
       <View style={{ paddingBottom: 30 }}>
         <TextInput
-          style={{ marginBottom: 10 }}
+          style={[{ marginBottom: 10 }, colors.background]}
           label='What went well?'
-          value={answer.good}
+          activeUnderlineColor={colors.text.color}
+          defaultValue={answer.good}
           mode='flat'
           dense={true}
+          multiline={true}
           onChangeText={e => handleChange('good', e)}
           onSubmitEditing={handleSave}
           returnKeyType='done'
         />
         <TextInput
-          style={{ marginBottom: 10 }}
+          style={[{ marginBottom: 10 }, colors.background]}
           label="What didn't go went well?"
-          value={answer.bad}
+          activeUnderlineColor={colors.text.color}
+          defaultValue={answer.bad}
           mode='flat'
           dense={true}
+          multiline={true}
           onChangeText={e => handleChange('bad', e)}
           onSubmitEditing={handleSave}
           returnKeyType='done'
         />
         <TextInput
-          style={{ marginBottom: 10 }}
+          style={[{ marginBottom: 10 }, colors.background]}
           label="What's your plan to improve?"
-          value={answer.improve}
+          activeUnderlineColor={colors.text.color}
+          defaultValue={answer.improve}
           mode='flat'
           dense={true}
+          multiline={true}
           onChangeText={e => handleChange('improve', e)}
           autoFocus={false}
           onSubmitEditing={handleSave}

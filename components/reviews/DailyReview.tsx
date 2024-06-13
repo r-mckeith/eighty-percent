@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Vibration } from 'react-native';
+import { View, TouchableOpacity, Vibration, useColorScheme } from 'react-native';
+import Slider from '@react-native-community/slider';
+import { getColors } from '../../src/colors';
 import { addDailyReview } from '../../src/api/DailyReviews';
 import { useDateContext, useDailyReviewContext, usePlanContext, useHabitDataContext } from '../../src/contexts';
 import { markPlanAsComplete } from '../../src/api/Plans';
@@ -18,9 +20,10 @@ type DailyReview = {
 };
 
 export default function DailyReview({ habits, plans, visible, isYesterdayReview, onClose }: DailyReview) {
-  const [answer, setAnswer] = useState<{ day: string; feel: string }>({
+  const [sentiment, setSentiment] = useState<number>(0);
+  const [answer, setAnswer] = useState<{ day: string; sentiment: number }>({
     day: '',
-    feel: '',
+    sentiment: 0,
   });
 
   const [habitCounts, setHabitCounts] = useState<any>({});
@@ -35,9 +38,12 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
   const { dispatch: habitDataDispatch } = useHabitDataContext();
 
   const lastReview = dailyReviews && dailyReviews[0]?.response;
-  const isAnswered = answer.day !== '' || answer.feel !== '' || Object.keys(changedHabits).length > 0;
+  const isAnswered = answer.day !== '' || answer.sentiment !== 0 || Object.keys(changedHabits).length > 0;
   const completedPlans = plans.filter(plan => plan.completed);
   const incompletePlans = plans.filter(plan => !plan.completed);
+
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
 
   const habitsWithData = habits.map(habit => ({
     ...habit,
@@ -127,7 +133,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
       try {
         const newReview = await addDailyReview(answer, dateString);
         dispatch({ type: 'ADD_REVIEW', payload: newReview, date: dateString });
-        setAnswer({ day: '', feel: '' });
+        setAnswer({ day: '', sentiment: 0 });
         onClose();
       } catch (error) {
         console.error('Failed to add review:', error);
@@ -251,24 +257,27 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
       <SectionTitle title={'Review'} />
       <View style={{ paddingBottom: 30 }}>
         <TextInput
-          style={{ marginBottom: 10 }}
+          style={[{ marginBottom: 10, textAlignVertical: 'top' }, colors.background]}
           label='How was your day?'
-          value={answer.day}
+          activeUnderlineColor={colors.text.color}
+          defaultValue={answer.day}
           mode='flat'
           dense={true}
           onChangeText={e => handleChange('day', e)}
           autoFocus={false}
+          multiline={true}
           onSubmitEditing={handleSave}
           returnKeyType='done'
         />
-        <TextInput
-          label='How do you feel?'
-          value={answer.feel}
-          mode='flat'
-          dense={true}
-          onChangeText={e => handleChange('feel', e)}
-          onSubmitEditing={handleSave}
-          returnKeyType='done'
+        <Text variant='bodyLarge' style={{paddingLeft: 18, marginTop: 10}}>How do you feel?</Text>
+        <Slider
+          style={{ width: '100%', height: 40 }}
+          minimumValue={0}
+          maximumValue={10}
+          onValueChange={e => handleChange('sentiment', e.toString())}
+          step={1}
+          tapToSeek={true}
+          minimumTrackTintColor='#0E9FFF'
         />
       </View>
     </Modal>

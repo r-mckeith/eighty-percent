@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { View, useColorScheme } from 'react-native';
+import { Text, TextInput, Switch } from 'react-native-paper';
+import { getColors } from '../../src/colors';
 import Modal from './Modal';
 import TargetSelector from './TargetSelector';
-import { Text, TextInput, Switch } from 'react-native-paper';
 
 type AddHabitModal = {
   visible: boolean;
@@ -16,6 +17,9 @@ export default function AddHabitModal({ visible, displayName, onClose, onSave }:
   const [hasTarget, setHasTarget] = useState(false);
   const [times, setTimes] = useState(1);
   const [timeframe, setTimeframe] = useState('day');
+
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
 
   function handleSave() {
     if (newName) {
@@ -42,7 +46,9 @@ export default function AddHabitModal({ visible, displayName, onClose, onSave }:
   return (
     <Modal visible={visible} onClose={handleCancel} onSave={handleSave} disabled={disabled}>
       <TextInput
+        style={colors.background}
         label={`New ${displayName}`}
+        activeUnderlineColor={colors.text.color}
         value={newName}
         mode='flat'
         dense={true}
@@ -56,7 +62,7 @@ export default function AddHabitModal({ visible, displayName, onClose, onSave }:
           <Text variant='bodyMedium' style={{ paddingRight: 10 }}>
             Set target
           </Text>
-          <Switch onValueChange={setHasTarget} value={hasTarget} />
+          <Switch onValueChange={setHasTarget} value={hasTarget} color='#0E5FFF' />
         </View>
       )}
 
