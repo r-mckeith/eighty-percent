@@ -34,7 +34,7 @@ export default function Plans() {
   }, [plans, showCompleted]);
 
   return (
-    <DraggableList rootPlans={rootPlans} plans={filteredPlans} expanded={expanded} setExpanded={setExpanded}/>
+    <DraggableList plans={filteredPlans} expanded={expanded} setExpanded={setExpanded}/>
     // <View style={[colors.background, { flex: 1 }]}>
     //   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
     //     <Toggle

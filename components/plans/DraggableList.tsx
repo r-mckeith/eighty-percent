@@ -10,22 +10,29 @@ import RightSwipe from '../rightSwipe/RightSwipe';
 import Scope from './Scope';
 
 type PlanSection = {
-  rootPlans: PlanProps[];
   plans: PlanProps[];
   expanded: number[];
   setExpanded: (arg0: any) => void;
 };
 
-export default function DraggableList({ rootPlans, plans, expanded, setExpanded }: PlanSection) {
-  const [data, setData] = useState(rootPlans);
+export default function DraggableList({ plans, expanded, setExpanded }: PlanSection) {
+  // Assign default order if not present
+  const initializePlans = (plans: PlanProps[]) => {
+    return plans.map((plan, index) => ({
+      ...plan,
+      order: plan.order !== undefined ? plan.order : index,
+    }));
+  };
+
+  const [data, setData] = useState(initializePlans(plans));
   const swipeableRow = useRef<Swipeable | null>(null);
 
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
   useEffect(() => {
-    setData(rootPlans);
-  }, [rootPlans]);
+    setData(initializePlans(plans));
+  }, [plans]);
 
   const handleSetExpanded = (planId: number) => {
     setExpanded((prevExpanded: number[]) =>
@@ -33,95 +40,120 @@ export default function DraggableList({ rootPlans, plans, expanded, setExpanded 
     );
   };
 
-  const updateNestedPlans = (updatedPlan: PlanProps) => {
-    const updatedPlans = plans.map(plan => (plan.id === updatedPlan.id ? updatedPlan : plan));
-    setData(updatedPlans.filter(plan => plan.parentId === null));
+  const updatePlansOrder = (updatedPlans: PlanProps[], parentId: number | null) => {
+    setData(prevData => {
+      const updatedPlanIds = new Set(updatedPlans.map(plan => plan.id));
+      const newPlans = prevData.map(plan => {
+        if (updatedPlanIds.has(plan.id)) {
+          const updatedPlan = updatedPlans.find(p => p.id === plan.id);
+          return updatedPlan ? { ...plan, ...updatedPlan } : plan;
+        }
+        return plan;
+      });
+
+      if (parentId === null) {
+        return newPlans;
+      }
+
+      return [
+        ...newPlans.filter(plan => plan.parentId === null),
+        ...updatedPlans,
+        ...newPlans.filter(plan => plan.parentId !== null && !updatedPlanIds.has(plan.id))
+      ];
+    });
   };
 
   const renderNestedPlans = (parentId: number, level: number) => {
-    const nestedPlans = plans.filter(plan => plan.parentId === parentId);
+    const nestedPlans = data.filter(plan => plan.parentId === parentId).sort((a, b) => a.order - b.order);
+    if (nestedPlans.length === 0) {
+      return null;
+    }
     return (
       <DraggableFlatList
         data={nestedPlans}
         keyExtractor={item => item.id.toString()}
         onDragEnd={({ data }) => {
-          data.forEach((item, index) => {
-            item.order = index;
-            updateNestedPlans(item);
-          });
+          const updatedPlans = data.map((item, index) => ({ ...item, order: index }));
+          updatePlansOrder(updatedPlans, parentId);
         }}
         renderItem={({ item, drag, isActive }) => renderItem({ item, drag, isActive, level })}
-        contentContainerStyle={styles.draggableListContent}
+        contentContainerStyle={styles.itemContainer}
       />
     );
   };
 
   const renderItem = ({ item, drag, isActive, level }: any) => {
     const isExpanded = expanded.includes(item.id);
-    const hasChildPlans = plans.some(childPlan => childPlan.parentId === item.id);
+    const hasChildPlans = data.some(childPlan => childPlan.parentId === item.id);
 
     return (
-      <View key={item.id} style={styles.itemContainer}>
-        <View>
-          <ScaleDecorator>
-            <TouchableOpacity onLongPress={drag} disabled={isActive} style={{ opacity: isActive ? 0.5 : 1 }}>
-              <Swipe
-                swipeableRow={swipeableRow}
-                renderRightActions={() => <RightSwipe item={item} swipeableRow={swipeableRow} type={'plan'} />}>
-                <List.Item
-                  style={[
-                    {
-                      padding: level * 10,
-                      backgroundColor: item.parentId
-                        ? colors.background.backgroundColor
-                        : item.completed
-                        ? '#0E9FFF'
-                        : '#0E5FFF',
-                    },
-                  ]}
-                  title={item.name}
-                  left={props => (
-                    <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => handleSetExpanded(item.id)}>
-                      <Icon
-                        {...props}
-                        source={hasChildPlans ? (isExpanded ? 'chevron-down' : 'chevron-up') : ''}
-                        size={20}
-                      />
-                    </TouchableOpacity>
-                  )}
-                  right={props => (
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <AddButton parentId={item.id} depth={item.depth ? item.depth : 0} type={'plan'} />
-                      <Scope plan={item} />
-                    </View>
-                  )}
-                />
-                <Divider bold={true} />
-              </Swipe>
-            </TouchableOpacity>
-          </ScaleDecorator>
-          {isExpanded && hasChildPlans && renderNestedPlans(item.id, level + 1)}
-        </View>
+      <View key={item.id} >
+        <ScaleDecorator>
+          <TouchableOpacity onLongPress={drag} disabled={isActive} style={{ opacity: isActive ? 0.5 : 1 }}>
+            <Swipe
+              swipeableRow={swipeableRow}
+              renderRightActions={() => <RightSwipe item={item} swipeableRow={swipeableRow} type={'plan'} />}
+            >
+              <List.Item
+                style={[
+                  {
+                    paddingLeft: level * 10,
+                    backgroundColor: item.parentId
+                      ? colors.background.backgroundColor
+                      : item.completed
+                      ? '#0E9FFF'
+                      : '#0E5FFF',
+                  },
+                ]}
+                title={item.name}
+                left={props => (
+                  <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => handleSetExpanded(item.id)}>
+                    <Icon
+                      {...props}
+                      source={hasChildPlans ? (isExpanded ? 'chevron-down' : 'chevron-up') : ''}
+                      size={20}
+                    />
+                  </TouchableOpacity>
+                )}
+                right={props => (
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <AddButton parentId={item.id} depth={item.depth ? item.depth : 0} type={'plan'} />
+                    <Scope plan={item} />
+                  </View>
+                )}
+              />
+              <Divider bold={true} />
+
+            </Swipe>
+          </TouchableOpacity>
+        </ScaleDecorator>
+        {isExpanded && hasChildPlans && renderNestedPlans(item.id, level + 1)}
       </View>
     );
   };
 
+  const rootPlans = data.filter(plan => plan.parentId === 0).sort((a, b) => a.order - b.order);
+
   return (
     <DraggableFlatList
-      data={data}
-      onDragEnd={({ data }) => setData(data)}
-      keyExtractor={item => item.id.toString()}
+      style={styles.draggableListContent}
+      data={rootPlans}
+      onDragEnd={({ data }) => {
+        const updatedPlans = data.map((item, index) => ({ ...item, order: index }));
+        updatePlansOrder(updatedPlans, null);
+      }}
+      keyExtractor={plan => plan.id.toString()}
       renderItem={({ item, drag, isActive }) => renderItem({ item, drag, isActive, level: 0 })}
-      contentContainerStyle={styles.draggableListContent}
+      contentContainerStyle={styles.itemContainer}
     />
   );
 }
 
 const styles = StyleSheet.create({
   draggableListContent: {
-    paddingHorizontal: 0,
+    paddingHorizontal: 16,
   },
   itemContainer: {
-    marginBottom: 0,
+    marginBottom: 10,
   },
 });
