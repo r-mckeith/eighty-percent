@@ -6,6 +6,7 @@ import { getColors } from '../src/colors';
 import { PlanProps } from '../src/types';
 import PlanSection from '../components/plans/PlanSection';
 import { AddButton, Toggle, SectionTitle, Scroll } from '../components/shared';
+import DraggableList from '../components/plans/DraggableList';
 
 export default function Plans() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
@@ -33,25 +34,26 @@ export default function Plans() {
   }, [plans, showCompleted]);
 
   return (
-    <View style={[colors.background, { flex: 1 }]}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
-        <Toggle
-          onToggle={() => setShowCompleted(!showCompleted)}
-          value={showCompleted}
-          label={'Show Completed'}
-          style={{ paddingLeft: 15 }}
-        />
-        <Button mode='text' style={{ paddingRight: 10 }} textColor={colors.text.color} onPress={() => setExpanded([])}>
-          Collapse all
-        </Button>
-      </View>
+    <DraggableList rootPlans={rootPlans} plans={filteredPlans} expanded={expanded} setExpanded={setExpanded}/>
+    // <View style={[colors.background, { flex: 1 }]}>
+    //   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
+    //     <Toggle
+    //       onToggle={() => setShowCompleted(!showCompleted)}
+    //       value={showCompleted}
+    //       label={'Show Completed'}
+    //       style={{ paddingLeft: 15 }}
+    //     />
+    //     <Button mode='text' style={{ paddingRight: 10 }} textColor={colors.text.color} onPress={() => setExpanded([])}>
+    //       Collapse all
+    //     </Button>
+    //   </View>
 
-      <Scroll stickyIndices={[0]}>
-        <SectionTitle title='Recent Plans'>
-          <AddButton parentId={0} depth={0} type={'plan'} />
-        </SectionTitle>
-        <PlanSection rootPlans={rootPlans} plans={filteredPlans} expanded={expanded} setExpanded={setExpanded} />
-      </Scroll>
-    </View>
+    //   <Scroll stickyIndices={[0]}>
+    //     <SectionTitle title='Recent Plans'>
+    //       <AddButton parentId={0} depth={0} type={'plan'} />
+    //     </SectionTitle>
+    //     <PlanSection rootPlans={rootPlans} plans={filteredPlans} expanded={expanded} setExpanded={setExpanded} />
+    //   </Scroll>
+    // </View>
   );
 }
