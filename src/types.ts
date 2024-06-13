@@ -52,6 +52,7 @@ export type PlanProps = {
   completed?: string | null;
   depth?: number;
   parentId?: number;
+  order?: number;
 };
 
 export type NewPlanProps = {

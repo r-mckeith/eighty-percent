@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native';
 import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
+import { getColors } from '../../src/colors';
 import { PlanProps } from '../../src/types';
 import { Swipeable } from 'react-native-gesture-handler';
 import { Divider, List, Icon } from 'react-native-paper';
@@ -19,6 +20,8 @@ export default function DraggableList({ rootPlans, plans, expanded, setExpanded 
   const [data, setData] = useState(rootPlans);
   const swipeableRow = useRef<Swipeable | null>(null);
 
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
 
   useEffect(() => {
     setData(rootPlans);
@@ -30,80 +33,74 @@ export default function DraggableList({ rootPlans, plans, expanded, setExpanded 
     );
   };
 
-  const renderPlansRecursively = (parentId: number) => {
-    return plans
-      .filter(plan => plan.parentId === parentId)
-      .map((plan, index) => {
-        const hasChildPlans = plans.some(childPlan => childPlan.parentId === plan.id);
-        const isExpanded = expanded.includes(plan.id);
-
-        return (
-          <Swipe
-            key={plan.id}
-            swipeableRow={swipeableRow}
-            renderRightActions={() => <RightSwipe item={plan} swipeableRow={swipeableRow} type={'plan'} />}>
-            <View key={plan.id} style={styles.childPlan}>
-              <List.Item
-                key={index}
-                title={plan.name}
-                style={{ opacity: plan.completed ? 0.25 : 1 }}
-                disabled={!!plan.completed}
-                left={props => (
-                  <TouchableOpacity
-                    onPress={() => handleSetExpanded(plan.id)}
-                    style={{ paddingLeft: hasChildPlans ? 0 : 22 }}>
-                    <Icon
-                      {...props}
-                      source={hasChildPlans ? (isExpanded ? 'chevron-down' : 'chevron-up') : ''}
-                      size={20}
-                    />
-                  </TouchableOpacity>
-                )}
-                right={props => (
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <AddButton parentId={plan.id} depth={plan.depth ? plan.depth : 0} type={'plan'} />
-                    <Scope plan={plan} />
-                  </View>
-                )}
-              />
-              <Divider />
-              {isExpanded && renderPlansRecursively(plan.id)}
-            </View>
-          </Swipe>
-        );
-      });
+  const updateNestedPlans = (updatedPlan: PlanProps) => {
+    const updatedPlans = plans.map(plan => (plan.id === updatedPlan.id ? updatedPlan : plan));
+    setData(updatedPlans.filter(plan => plan.parentId === null));
   };
 
-  const renderItem = ({ item, drag, isActive }: any) => {
-    const isExpanded = expanded.includes(item.id);
+  const renderNestedPlans = (parentId: number, level: number) => {
+    const nestedPlans = plans.filter(plan => plan.parentId === parentId);
     return (
-      <View style={{ marginBottom: 30 }}>
-        <View key={item.id}>
+      <DraggableFlatList
+        data={nestedPlans}
+        keyExtractor={item => item.id.toString()}
+        onDragEnd={({ data }) => {
+          data.forEach((item, index) => {
+            item.order = index;
+            updateNestedPlans(item);
+          });
+        }}
+        renderItem={({ item, drag, isActive }) => renderItem({ item, drag, isActive, level })}
+        contentContainerStyle={styles.draggableListContent}
+      />
+    );
+  };
+
+  const renderItem = ({ item, drag, isActive, level }: any) => {
+    const isExpanded = expanded.includes(item.id);
+    const hasChildPlans = plans.some(childPlan => childPlan.parentId === item.id);
+
+    return (
+      <View key={item.id} style={styles.itemContainer}>
+        <View>
           <ScaleDecorator>
-            <TouchableOpacity
-              onLongPress={drag}
-              disabled={isActive}
-              style={{ opacity: isActive ? 0.5 : 1 }}>
-              <List.Item
-                style={{ backgroundColor: item.completed ? '#0E9FFF' : '#0E5FFF' }}
-                title={item.name}
-                left={props => (
-                  <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => handleSetExpanded(item.id)}>
-                    <Icon {...props} source={isExpanded ? 'chevron-down' : 'chevron-up'} size={20} />
-                  </TouchableOpacity>
-                )}
-                right={props => (
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <AddButton parentId={item.id} depth={item.depth ? item.depth : 0} type={'plan'} />
-                    <Scope plan={item} />
-                  </View>
-                )}
-              />
-              <Divider bold={true} />
+            <TouchableOpacity onLongPress={drag} disabled={isActive} style={{ opacity: isActive ? 0.5 : 1 }}>
+              <Swipe
+                swipeableRow={swipeableRow}
+                renderRightActions={() => <RightSwipe item={item} swipeableRow={swipeableRow} type={'plan'} />}>
+                <List.Item
+                  style={[
+                    {
+                      padding: level * 10,
+                      backgroundColor: item.parentId
+                        ? colors.background.backgroundColor
+                        : item.completed
+                        ? '#0E9FFF'
+                        : '#0E5FFF',
+                    },
+                  ]}
+                  title={item.name}
+                  left={props => (
+                    <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => handleSetExpanded(item.id)}>
+                      <Icon
+                        {...props}
+                        source={hasChildPlans ? (isExpanded ? 'chevron-down' : 'chevron-up') : ''}
+                        size={20}
+                      />
+                    </TouchableOpacity>
+                  )}
+                  right={props => (
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <AddButton parentId={item.id} depth={item.depth ? item.depth : 0} type={'plan'} />
+                      <Scope plan={item} />
+                    </View>
+                  )}
+                />
+                <Divider bold={true} />
+              </Swipe>
             </TouchableOpacity>
           </ScaleDecorator>
-
-          {isExpanded && renderPlansRecursively(item.id)}
+          {isExpanded && hasChildPlans && renderNestedPlans(item.id, level + 1)}
         </View>
       </View>
     );
@@ -114,13 +111,17 @@ export default function DraggableList({ rootPlans, plans, expanded, setExpanded 
       data={data}
       onDragEnd={({ data }) => setData(data)}
       keyExtractor={item => item.id.toString()}
-      renderItem={renderItem}
+      renderItem={({ item, drag, isActive }) => renderItem({ item, drag, isActive, level: 0 })}
+      contentContainerStyle={styles.draggableListContent}
     />
   );
 }
 
 const styles = StyleSheet.create({
-  childPlan: {
-    paddingLeft: 10,
+  draggableListContent: {
+    paddingHorizontal: 0,
+  },
+  itemContainer: {
+    marginBottom: 0,
   },
 });
