@@ -5,7 +5,7 @@ import { useDateContext, useDailyReviewContext, usePlanContext, useHabitDataCont
 import { markPlanAsComplete } from '../../src/api/Plans';
 import { Modal, SectionTitle } from '../shared';
 import { useDailyHabitData } from '../../src/hooks/dailyHabitData';
-import { TextInput, List, Divider, MD3Colors, Text, Icon } from 'react-native-paper';
+import { TextInput, List, Divider, Text, Icon } from 'react-native-paper';
 import { HabitProps, PlanProps } from '../../src/types';
 import { editHabitData } from '../../src/api/Habits';
 
@@ -169,19 +169,18 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
       stickyIndices={[0, 2, 4, 6, 8]}>
       {lastReview?.day && <SectionTitle title='Last review' />}
       {lastReview?.day && (
-        <View style={{ paddingBottom: 30 }}>
+        <View style={{ paddingBottom: 10 }}>
           <List.Item title={lastReview.day} />
         </View>
       )}
 
       {completedPlans.length > 0 && <SectionTitle title='Completed plans' />}
       {completedPlans.length > 0 && (
-        <View style={{ paddingBottom: 30 }}>
+        <View style={{ paddingBottom: 10 }}>
           {completedPlans.map((plan, index) => {
             return (
               <View key={index}>
-                <List.Item title={plan.name} style={{ paddingVertical: 15 }} />
-                <Divider />
+                <List.Item title={plan.name} style={{ paddingVertical: 10 }} />
               </View>
             );
           })}
@@ -198,11 +197,11 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
                   title={plan.name}
                   right={props => (
                     <>
+                      <TouchableOpacity style={{ paddingRight: 15 }} onPress={() => {}}>
+                        <Icon {...props} source='arrow-right' size={25} color='#0E9FFF' />
+                      </TouchableOpacity>
                       <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => handleToggleCompleted(plan)}>
                         <Icon {...props} source='check' size={25} color='#0E5FFF' />
-                      </TouchableOpacity>
-                      <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => {}}>
-                        <Icon {...props} source='arrow-right' size={25} color={MD3Colors.error50} />
                       </TouchableOpacity>
                     </>
                   )}
@@ -219,7 +218,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
         <View>
           {sortedHabits.map((habit: any, index: number) => {
             return (
-              <View key={index}>
+              <View key={index} style={{ paddingBottom: 10 }}>
                 <List.Item
                   title={habit.name}
                   right={props => (
@@ -230,7 +229,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
                           handleDecrement(habit.id);
                           Vibration.vibrate(100);
                         }}>
-                        <Icon {...props} source='minus' size={25} color={MD3Colors.error50} />
+                        <Icon {...props} source='minus' size={25} color='#0E9FFF' />
                       </TouchableOpacity>
                       <Text style={{ paddingLeft: 10 }}>
                         {isYesterdayReview ? habitCounts[habit.id]?.yesterday : habitCounts[habit.id]?.day}
@@ -250,27 +249,28 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
       )}
 
       <SectionTitle title={'Review'} />
-      <TextInput
-        style={{ marginBottom: 10 }}
-        placeholder='How was your day?'
-        value={answer.day}
-        mode='flat'
-        dense={true}
-        onChangeText={e => handleChange('day', e)}
-        autoFocus={false}
-        onSubmitEditing={handleSave}
-        returnKeyType='done'
-      />
-      <TextInput
-        style={{ marginBottom: 10 }}
-        placeholder='How do you feel?'
-        value={answer.feel}
-        mode='flat'
-        dense={true}
-        onChangeText={e => handleChange('feel', e)}
-        onSubmitEditing={handleSave}
-        returnKeyType='done'
-      />
+      <View style={{ paddingBottom: 30 }}>
+        <TextInput
+          style={{ marginBottom: 10 }}
+          label='How was your day?'
+          value={answer.day}
+          mode='flat'
+          dense={true}
+          onChangeText={e => handleChange('day', e)}
+          autoFocus={false}
+          onSubmitEditing={handleSave}
+          returnKeyType='done'
+        />
+        <TextInput
+          label='How do you feel?'
+          value={answer.feel}
+          mode='flat'
+          dense={true}
+          onChangeText={e => handleChange('feel', e)}
+          onSubmitEditing={handleSave}
+          returnKeyType='done'
+        />
+      </View>
     </Modal>
   );
 }

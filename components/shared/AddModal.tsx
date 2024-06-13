@@ -42,7 +42,7 @@ export default function AddHabitModal({ visible, displayName, onClose, onSave }:
   return (
     <Modal visible={visible} onClose={handleCancel} onSave={handleSave} disabled={disabled}>
       <TextInput
-        placeholder={`New ${displayName}`}
+        label={`New ${displayName}`}
         value={newName}
         mode='flat'
         dense={true}

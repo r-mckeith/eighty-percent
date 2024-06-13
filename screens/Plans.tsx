@@ -34,14 +34,14 @@ export default function Plans() {
 
   return (
     <View style={[colors.background, { flex: 1 }]}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 5 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
         <Toggle
           onToggle={() => setShowCompleted(!showCompleted)}
           value={showCompleted}
           label={'Show Completed'}
-          style={{ paddingLeft: 10 }}
+          style={{ paddingLeft: 15 }}
         />
-        <Button mode='text' style={{ paddingRight: 10 }} onPress={() => setExpanded([])}>
+        <Button mode='text' style={{ paddingRight: 10 }} textColor={colors.text.color} onPress={() => setExpanded([])}>
           Collapse all
         </Button>
       </View>

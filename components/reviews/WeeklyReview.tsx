@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { TextInput, List, Divider } from 'react-native-paper';
+import { TextInput, List, Divider, Text } from 'react-native-paper';
 import { addReview } from '../../src/api/Reviews';
 import { useWeeklyPlanData } from '../../src/hooks/weeklyPlanData';
 import { useWeeklyHabitData } from '../../src/hooks/weeklyHabitData';
@@ -62,12 +62,28 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
       stickyIndices={[0, 2, 4, 6]}>
       {lastReview && <SectionTitle title='Last week' />}
       {lastReview && (
-        <View style={{ paddingBottom: 30 }}>
-          <List.Item title={lastReview.good} />
+        <View style={{ paddingBottom: 10 }}>
+          <Text variant='bodyMedium' style={{ paddingLeft: 20 }}>
+            What went well:
+          </Text>
+          <Text variant='bodyMedium' style={{ paddingLeft: 20, paddingVertical: 10 }}>
+            {lastReview.good}
+          </Text>
           <Divider />
-          <List.Item title={lastReview.bad} />
+          <Text variant='bodyMedium' style={{ paddingLeft: 20, paddingTop: 10 }}>
+            What didn't go well:
+          </Text>
+          <Text variant='bodyMedium' style={{ paddingLeft: 20, paddingVertical: 10 }}>
+            {lastReview.bad}
+          </Text>
           <Divider />
-          <List.Item title={lastReview.improve} />
+          <Text variant='bodyMedium' style={{ paddingLeft: 20, paddingTop: 10 }}>
+            What's your plan to improve:
+          </Text>
+          <Text variant='bodyMedium' style={{ paddingLeft: 20, paddingVertical: 10 }}>
+            {lastReview.improve}
+          </Text>
+          <Divider />
         </View>
       )}
 
@@ -78,37 +94,39 @@ export default function WeeklyReview({ visible, onClose }: WeeklyReview) {
       {weeklyHabitData.length > 0 && <Grid data={weeklyHabitData} />}
 
       <SectionTitle title={'Review'} />
-      <TextInput
-        style={{ marginBottom: 10 }}
-        placeholder='What went well?'
-        value={answer.good}
-        mode='flat'
-        dense={true}
-        onChangeText={e => handleChange('good', e)}
-        onSubmitEditing={handleSave}
-        returnKeyType='done'
-      />
-      <TextInput
-        style={{ marginBottom: 10 }}
-        placeholder="What didn't go went well?"
-        value={answer.bad}
-        mode='flat'
-        dense={true}
-        onChangeText={e => handleChange('bad', e)}
-        onSubmitEditing={handleSave}
-        returnKeyType='done'
-      />
-      <TextInput
-        style={{ marginBottom: 10 }}
-        placeholder="What's your plan to improve?"
-        value={answer.improve}
-        mode='flat'
-        dense={true}
-        onChangeText={e => handleChange('improve', e)}
-        autoFocus={false}
-        onSubmitEditing={handleSave}
-        returnKeyType='done'
-      />
+      <View style={{ paddingBottom: 30 }}>
+        <TextInput
+          style={{ marginBottom: 10 }}
+          label='What went well?'
+          value={answer.good}
+          mode='flat'
+          dense={true}
+          onChangeText={e => handleChange('good', e)}
+          onSubmitEditing={handleSave}
+          returnKeyType='done'
+        />
+        <TextInput
+          style={{ marginBottom: 10 }}
+          label="What didn't go went well?"
+          value={answer.bad}
+          mode='flat'
+          dense={true}
+          onChangeText={e => handleChange('bad', e)}
+          onSubmitEditing={handleSave}
+          returnKeyType='done'
+        />
+        <TextInput
+          style={{ marginBottom: 10 }}
+          label="What's your plan to improve?"
+          value={answer.improve}
+          mode='flat'
+          dense={true}
+          onChangeText={e => handleChange('improve', e)}
+          autoFocus={false}
+          onSubmitEditing={handleSave}
+          returnKeyType='done'
+        />
+      </View>
     </Modal>
   );
 }

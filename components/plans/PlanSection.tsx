@@ -75,7 +75,7 @@ export default function RootPlans({ rootPlans, plans, expanded, setExpanded }: R
         return (
           <View key={index} style={{ paddingBottom: 10 }}>
             <List.Item
-              style={{ backgroundColor: rootPlan.completed ? '#b1b1b3' : '#0E5FFF' }}
+              style={{ backgroundColor: rootPlan.completed ? '#0E9FFF' : '#0E5FFF' }}
               title={rootPlan.name}
               left={props => (
                 <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => handleSetExpanded(rootPlan.id)}>
