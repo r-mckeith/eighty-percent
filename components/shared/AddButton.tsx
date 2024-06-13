@@ -97,7 +97,7 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
   return (
     <View>
       <TouchableOpacity onPress={() => setShowModal(true)}>
-        <Icon source='plus' size={20} />
+        <Icon source='plus' size={25} />
       </TouchableOpacity>
       <AddModal
         visible={showModal}

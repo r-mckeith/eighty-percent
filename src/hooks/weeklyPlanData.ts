@@ -74,16 +74,16 @@ export function useWeeklyPlanData() {
 
             let status = '';
             let icon = '';
-            let color = 'red';
+            let color = '#0E9FFF';
 
             if (isPushed || isIncomplete) {
               status = 'P';
               icon = '→';
-              color = '#FF0000';
+              color = '#0E9FFF';
             } else if (isCompleted) {
               status = 'C';
               icon = '✓';
-              color = 'blue';
+              color = '#0E5FFF';
             } else if (isIncomplete) {
               status = 'I';
               icon = '✗';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
-import { Banner, List } from 'react-native-paper';
+import { Banner, Text } from 'react-native-paper';
 import {
   useDailyReviewContext,
   useDateContext,
@@ -87,7 +87,12 @@ export default function Actions() {
     if (lastWeekReview?.improve) {
       return (
         <View style={{ paddingBottom: 30 }}>
-          <List.Item title={lastWeekReview.improve} />
+          <Text variant='bodyMedium' style={{ paddingLeft: 20 }}>
+            What's your plan to improve:
+          </Text>
+          <Text variant='bodyMedium' style={{ paddingLeft: 20, paddingVertical: 10 }}>
+            {lastWeekReview.good}
+          </Text>
         </View>
       );
     }
@@ -108,7 +113,6 @@ export default function Actions() {
   function handleCompleteDailyReview() {
     setDailyReview(true);
   }
-  // console.log(!!lastWeekReview)
 
   function getStickyIndices() {
     if (lastWeekReview && plansWithBreadcrumbs.length > 0) {
@@ -158,8 +162,11 @@ export default function Actions() {
             <HabitSection habits={habitSection} />
           </View>
         </View>
-        <DailyReviewButton habits={habitSection} plans={planSection} isYesterdayReview={incompleteYesterdayReview} />
-        <WeeklyReviewButton />
+        <View style={{ paddingBottom: 30 }}>
+          <DailyReviewButton habits={habitSection} plans={planSection} isYesterdayReview={incompleteYesterdayReview} />
+          <WeeklyReviewButton />
+        </View>
+
         <DailyReview
           visible={dailyReview}
           onClose={() => setDailyReview(false)}

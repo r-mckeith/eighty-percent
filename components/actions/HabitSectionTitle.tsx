@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, useColorScheme } from 'react-native';
 import { getColors } from '../../src/colors';
 import { AddButton } from '../shared';
-import { Text, Divider } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 
 export default function StatsHeader({ groupId }: { groupId: number }) {
   const scheme = useColorScheme();

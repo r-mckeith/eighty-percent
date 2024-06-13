@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Vibration } from 'react-native';
+import { View, TouchableOpacity, Vibration, useColorScheme } from 'react-native';
+import Slider from '@react-native-community/slider';
+import { getColors } from '../../src/colors';
 import { addDailyReview } from '../../src/api/DailyReviews';
 import { useDateContext, useDailyReviewContext, usePlanContext, useHabitDataContext } from '../../src/contexts';
 import { markPlanAsComplete } from '../../src/api/Plans';
 import { Modal, SectionTitle } from '../shared';
 import { useDailyHabitData } from '../../src/hooks/dailyHabitData';
-import { TextInput, List, Divider, MD3Colors, Text, Icon } from 'react-native-paper';
+import { TextInput, List, Divider, Text, Icon } from 'react-native-paper';
 import { HabitProps, PlanProps } from '../../src/types';
 import { editHabitData } from '../../src/api/Habits';
 
@@ -18,9 +20,10 @@ type DailyReview = {
 };
 
 export default function DailyReview({ habits, plans, visible, isYesterdayReview, onClose }: DailyReview) {
-  const [answer, setAnswer] = useState<{ day: string; feel: string }>({
+  const [sentiment, setSentiment] = useState<number>(0);
+  const [answer, setAnswer] = useState<{ day: string; sentiment: number }>({
     day: '',
-    feel: '',
+    sentiment: 0,
   });
 
   const [habitCounts, setHabitCounts] = useState<any>({});
@@ -35,9 +38,12 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
   const { dispatch: habitDataDispatch } = useHabitDataContext();
 
   const lastReview = dailyReviews && dailyReviews[0]?.response;
-  const isAnswered = answer.day !== '' || answer.feel !== '' || Object.keys(changedHabits).length > 0;
+  const isAnswered = answer.day !== '' || answer.sentiment !== 0 || Object.keys(changedHabits).length > 0;
   const completedPlans = plans.filter(plan => plan.completed);
   const incompletePlans = plans.filter(plan => !plan.completed);
+
+  const scheme = useColorScheme();
+  const colors = getColors(scheme);
 
   const habitsWithData = habits.map(habit => ({
     ...habit,
@@ -118,7 +124,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
     }
   }
 
-  async function handleSaveReview(): Promise<void> {
+  async function handleSave(): Promise<void> {
     onClose();
     handleUpdate();
     const dateString = reviewDate.toISOString().split('T')[0];
@@ -127,7 +133,7 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
       try {
         const newReview = await addDailyReview(answer, dateString);
         dispatch({ type: 'ADD_REVIEW', payload: newReview, date: dateString });
-        setAnswer({ day: '', feel: '' });
+        setAnswer({ day: '', sentiment: 0 });
         onClose();
       } catch (error) {
         console.error('Failed to add review:', error);
@@ -164,24 +170,23 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
     <Modal
       visible={visible}
       onClose={handleCancel}
-      onSave={handleSaveReview}
+      onSave={handleSave}
       disabled={!isAnswered}
       stickyIndices={[0, 2, 4, 6, 8]}>
-      {lastReview && <SectionTitle title='Last review' />}
-      {lastReview && (
-        <View style={{ paddingBottom: 30 }}>
+      {lastReview?.day && <SectionTitle title='Last review' />}
+      {lastReview?.day && (
+        <View style={{ paddingBottom: 10 }}>
           <List.Item title={lastReview.day} />
         </View>
       )}
 
       {completedPlans.length > 0 && <SectionTitle title='Completed plans' />}
       {completedPlans.length > 0 && (
-        <View style={{ paddingBottom: 30 }}>
+        <View style={{ paddingBottom: 10 }}>
           {completedPlans.map((plan, index) => {
             return (
               <View key={index}>
-                <List.Item title={plan.name} style={{ paddingVertical: 15 }} />
-                <Divider />
+                <List.Item title={plan.name} style={{ paddingVertical: 10 }} />
               </View>
             );
           })}
@@ -198,11 +203,11 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
                   title={plan.name}
                   right={props => (
                     <>
+                      <TouchableOpacity style={{ paddingRight: 15 }} onPress={() => {}}>
+                        <Icon {...props} source='arrow-right' size={25} color='#0E9FFF' />
+                      </TouchableOpacity>
                       <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => handleToggleCompleted(plan)}>
                         <Icon {...props} source='check' size={25} color='#0E5FFF' />
-                      </TouchableOpacity>
-                      <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => {}}>
-                        <Icon {...props} source='arrow-right' size={25} color={MD3Colors.error50} />
                       </TouchableOpacity>
                     </>
                   )}
@@ -216,16 +221,21 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
 
       {habitsWithData.length > 0 && Object.keys(habitCounts).length > 0 && <SectionTitle title='Habits' />}
       {habitsWithData.length > 0 && Object.keys(habitCounts).length > 0 && (
-        <View style={{ paddingBottom: 30 }}>
+        <View>
           {sortedHabits.map((habit: any, index: number) => {
             return (
-              <View key={index}>
+              <View key={index} style={{ paddingBottom: 10 }}>
                 <List.Item
                   title={habit.name}
                   right={props => (
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => {handleDecrement(habit.id); Vibration.vibrate(100)}}>
-                        <Icon {...props} source='minus' size={25} color={MD3Colors.error50} />
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <TouchableOpacity
+                        style={{ paddingLeft: 10 }}
+                        onPress={() => {
+                          handleDecrement(habit.id);
+                          Vibration.vibrate(100);
+                        }}>
+                        <Icon {...props} source='minus' size={25} color='#0E9FFF' />
                       </TouchableOpacity>
                       <Text style={{ paddingLeft: 10 }}>
                         {isYesterdayReview ? habitCounts[habit.id]?.yesterday : habitCounts[habit.id]?.day}
@@ -245,25 +255,31 @@ export default function DailyReview({ habits, plans, visible, isYesterdayReview,
       )}
 
       <SectionTitle title={'Review'} />
-      <TextInput
-        style={{ marginBottom: 10 }}
-        placeholder='How was your day?'
-        value={answer.day}
-        mode='flat'
-        dense={true}
-        onChangeText={e => handleChange('day', e)}
-        autoFocus={false}
-        returnKeyType='done'
-      />
-      <TextInput
-        style={{ marginBottom: 10 }}
-        placeholder='How do you feel?'
-        value={answer.feel}
-        mode='flat'
-        dense={true}
-        onChangeText={e => handleChange('feel', e)}
-        returnKeyType='done'
-      />
+      <View style={{ paddingBottom: 30 }}>
+        <TextInput
+          style={[{ marginBottom: 10, textAlignVertical: 'top' }, colors.background]}
+          label='How was your day?'
+          activeUnderlineColor={colors.text.color}
+          defaultValue={answer.day}
+          mode='flat'
+          dense={true}
+          onChangeText={e => handleChange('day', e)}
+          autoFocus={false}
+          multiline={true}
+          onSubmitEditing={handleSave}
+          returnKeyType='done'
+        />
+        <Text variant='bodyLarge' style={{paddingLeft: 18, marginTop: 10}}>How do you feel?</Text>
+        <Slider
+          style={{ width: '100%', height: 40 }}
+          minimumValue={0}
+          maximumValue={10}
+          onValueChange={e => handleChange('sentiment', e.toString())}
+          step={1}
+          tapToSeek={true}
+          minimumTrackTintColor='#0E9FFF'
+        />
+      </View>
     </Modal>
   );
 }

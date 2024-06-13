@@ -55,8 +55,8 @@ export function useWeeklyHabitData() {
           name: habit.tag_name,
           days: dates.map(date => ({
             day: date.toDateString(),
-            icon: '-',
-            color: '#FF0000',
+            icon: '0',
+            color: '#0E9FFF',
           })),
         };
       }
@@ -65,7 +65,7 @@ export function useWeeklyHabitData() {
         if (completedDate.toDateString() === date.toDateString()) {
           const dayData = habitGridMap[habit.tag_id].days[index];
           dayData.icon = habit.count;
-          dayData.color = 'blue';
+          dayData.color = '#0E5FFF';
         }
       });
     });
