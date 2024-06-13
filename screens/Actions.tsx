@@ -114,22 +114,10 @@ export default function Actions() {
     setDailyReview(true);
   }
 
-  function getStickyIndices() {
-    if (lastWeekReview && plansWithBreadcrumbs.length > 0) {
-      return [1, 3, 5];
-    } else if (lastWeekReview && plansWithBreadcrumbs.length === 0) {
-      return [1, 3, 5];
-    } else if (lastWeekReview && plansWithBreadcrumbs.length > 0) {
-      return [1, 3, 5];
-    } else if (!lastWeekReview && plansWithBreadcrumbs.length === 0) {
-      return [1];
-    }
-  }
-
   return (
     <>
       <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
-      <Scroll stickyIndices={getStickyIndices()}>
+      <Scroll stickyIndices={[1, 3, 5]}>
         <Banner
           visible={incompleteYesterdayReview}
           actions={[
