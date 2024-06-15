@@ -3,9 +3,10 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { Divider, List, Icon } from 'react-native-paper';
 import { PlanProps } from '../../src/types';
-import { AddButton, Swipe } from '../shared';
+import { Swipe } from '../shared';
 import RightSwipe from '../rightSwipe/RightSwipe';
 import Scope from './Scope';
+import AddPlan from './AddPlan';
 
 type RootPlans = {
   rootPlans: PlanProps[];
@@ -29,6 +30,8 @@ export default function RootPlans({ rootPlans, plans, expanded, setExpanded }: R
       .map((plan, index) => {
         const hasChildPlans = plans.some(childPlan => childPlan.parentId === plan.id);
         const isExpanded = expanded.includes(plan.id);
+        const maxOrder = plans.reduce((max, plan) => Math.max(max, plan.order || 0), 0);
+        const order = maxOrder + 1
 
         return (
           <Swipe
@@ -54,7 +57,7 @@ export default function RootPlans({ rootPlans, plans, expanded, setExpanded }: R
                 )}
                 right={props => (
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <AddButton parentId={plan.id} depth={plan.depth ? plan.depth : 0} type={'plan'} />
+                    <AddPlan parentId={plan.id} order={order} />
                     <Scope plan={plan} />
                   </View>
                 )}
@@ -71,6 +74,9 @@ export default function RootPlans({ rootPlans, plans, expanded, setExpanded }: R
     <View style={{ marginBottom: 30 }}>
       {rootPlans.map((rootPlan, index) => {
         const isExpanded = expanded.includes(rootPlan.id);
+        const maxOrder = rootPlans.reduce((max, plan) => Math.max(max, plan.order || 0), 0);
+        const order = maxOrder + 1
+
 
         return (
           <View key={index} style={{ paddingBottom: 10 }}>
@@ -84,7 +90,7 @@ export default function RootPlans({ rootPlans, plans, expanded, setExpanded }: R
               )}
               right={props => (
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <AddButton parentId={rootPlan.id} depth={rootPlan.depth ? rootPlan.depth : 0} type={'plan'} />
+                  <AddPlan parentId={rootPlan.id} order={order} />
                   <Scope plan={rootPlan} />
                 </View>
               )}

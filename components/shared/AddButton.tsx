@@ -13,10 +13,9 @@ type AddButton = {
   sectionName?: string;
   groupId?: number;
   parentId?: number;
-  depth?: number;
 };
 
-export default function AddButton({ sectionName, groupId, parentId, depth, type }: AddButton) {
+export default function AddButton({ sectionName, groupId, parentId, type }: AddButton) {
   const [showModal, setShowModal] = useState(false);
 
   const { dispatch: habitDispatch } = useHabitContext();
@@ -52,7 +51,6 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
       const newPlan: any = {
         name: name,
         parentId: parentId,
-        depth: depth && depth + 1,
       };
 
       try {
@@ -73,23 +71,13 @@ export default function AddButton({ sectionName, groupId, parentId, depth, type 
     }
   }
 
-  function getProjectLevelName(depth: number): 'Plan' | 'Task' | 'Subtask' {
-    const newProjectDepth = depth + 1;
-    switch (newProjectDepth) {
-      case 1:
-        return 'Plan';
-      case 2:
-        return 'Task';
-      default:
-        return 'Subtask';
-    }
-  }
+
 
   function getDisplayName() {
     if (habit) {
       return 'Habit';
     } else if (plan) {
-      return depth && depth >= 0 ? getProjectLevelName(depth) : 'Plan';
+      return 'Plan';
     }
     return 'Group';
   }

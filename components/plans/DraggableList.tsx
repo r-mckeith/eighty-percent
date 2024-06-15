@@ -1,13 +1,16 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { View, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native';
 import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
+import { usePlanContext } from '../../src/contexts';
 import { getColors } from '../../src/colors';
 import { PlanProps } from '../../src/types';
 import { Swipeable } from 'react-native-gesture-handler';
 import { Divider, List, Icon } from 'react-native-paper';
-import { AddButton, Swipe } from '../shared';
+import { Swipe } from '../shared';
+import AddPlan from './AddPlan';
 import RightSwipe from '../rightSwipe/RightSwipe';
 import Scope from './Scope';
+import { updatePlan } from '../../src/api/Plans';
 
 type PlanSection = {
   plans: PlanProps[];
@@ -16,55 +19,45 @@ type PlanSection = {
 };
 
 export default function DraggableList({ plans, expanded, setExpanded }: PlanSection) {
-  // Assign default order if not present
-  const initializePlans = (plans: PlanProps[]) => {
-    return plans.map((plan, index) => ({
-      ...plan,
-      order: plan.order !== undefined ? plan.order : index,
-    }));
-  };
-
-  const [data, setData] = useState(initializePlans(plans));
+  const { dispatch } = usePlanContext();
   const swipeableRow = useRef<Swipeable | null>(null);
-
   const scheme = useColorScheme();
   const colors = getColors(scheme);
 
-  useEffect(() => {
-    setData(initializePlans(plans));
-  }, [plans]);
-
-  const handleSetExpanded = (planId: number) => {
+  function handleSetExpanded(planId: number) {
     setExpanded((prevExpanded: number[]) =>
       prevExpanded.includes(planId) ? prevExpanded.filter((id: number) => id !== planId) : [...prevExpanded, planId]
     );
-  };
+  }
 
-  const updatePlansOrder = (updatedPlans: PlanProps[], parentId: number | null) => {
-    setData(prevData => {
-      const updatedPlanIds = new Set(updatedPlans.map(plan => plan.id));
-      const newPlans = prevData.map(plan => {
-        if (updatedPlanIds.has(plan.id)) {
-          const updatedPlan = updatedPlans.find(p => p.id === plan.id);
-          return updatedPlan ? { ...plan, ...updatedPlan } : plan;
-        }
-        return plan;
-      });
+  async function updatePlansOrder(updatedPlans: PlanProps[], parentId: number | null) {
+    // Filter original plans to only include those with the same parentId
+    const originalPlans = plans
+      .filter(plan => plan.parentId === parentId)
+      .sort((a, b) => a.order - b.order);
 
-      if (parentId === null) {
-        return newPlans;
+    const movedItem = updatedPlans.find((item, index) => item.id !== originalPlans[index]?.id);
+
+    console.log('movedItem', movedItem);
+
+    const updatedPlanIds = new Set(updatedPlans.map(plan => plan.id));
+    if (movedItem) {
+      await updatePlan(movedItem.id, movedItem.name, movedItem.order);
+    }
+
+    const newPlans = plans.map(plan => {
+      if (updatedPlanIds.has(plan.id)) {
+        const updatedPlan = updatedPlans.find(p => p.id === plan.id);
+        return updatedPlan ? { ...plan, ...updatedPlan } : plan;
       }
-
-      return [
-        ...newPlans.filter(plan => plan.parentId === null),
-        ...updatedPlans,
-        ...newPlans.filter(plan => plan.parentId !== null && !updatedPlanIds.has(plan.id))
-      ];
+      return plan;
     });
-  };
 
-  const renderNestedPlans = (parentId: number, level: number) => {
-    const nestedPlans = data.filter(plan => plan.parentId === parentId).sort((a, b) => a.order - b.order);
+    dispatch({ type: 'INITIALIZE_PLANS', payload: newPlans });
+  }
+
+  function renderNestedPlans(parentId: number, level: number) {
+    const nestedPlans = plans.filter(plan => plan.parentId === parentId).sort((a, b) => a.order - b.order);
     if (nestedPlans.length === 0) {
       return null;
     }
@@ -73,21 +66,22 @@ export default function DraggableList({ plans, expanded, setExpanded }: PlanSect
         data={nestedPlans}
         keyExtractor={item => item.id.toString()}
         onDragEnd={({ data }) => {
-          const updatedPlans = data.map((item, index) => ({ ...item, order: index }));
+          const updatedPlans = data.map((item, index) => ({ ...item, order: index + 1 }));
           updatePlansOrder(updatedPlans, parentId);
         }}
         renderItem={({ item, drag, isActive }) => renderItem({ item, drag, isActive, level })}
         contentContainerStyle={styles.itemContainer}
       />
     );
-  };
+  }
 
-  const renderItem = ({ item, drag, isActive, level }: any) => {
+  function renderItem({ item, drag, isActive, level }: any) {
     const isExpanded = expanded.includes(item.id);
-    const hasChildPlans = data.some(childPlan => childPlan.parentId === item.id);
+    const hasChildPlans = plans.some(childPlan => childPlan.parentId === item.id);
+    const order = plans.filter(plan => plan.parentId === item.parentId).length + 1;
 
     return (
-      <View key={item.id} >
+      <View key={item.id}>
         <ScaleDecorator>
           <TouchableOpacity onLongPress={drag} disabled={isActive} style={{ opacity: isActive ? 0.5 : 1 }}>
             <Swipe
@@ -117,29 +111,28 @@ export default function DraggableList({ plans, expanded, setExpanded }: PlanSect
                 )}
                 right={props => (
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <AddButton parentId={item.id} depth={item.depth ? item.depth : 0} type={'plan'} />
+                    <AddPlan parentId={item.id} order={order} />
                     <Scope plan={item} />
                   </View>
                 )}
               />
               <Divider bold={true} />
-
             </Swipe>
           </TouchableOpacity>
         </ScaleDecorator>
         {isExpanded && hasChildPlans && renderNestedPlans(item.id, level + 1)}
       </View>
     );
-  };
+  }
 
-  const rootPlans = data.filter(plan => plan.parentId === 0).sort((a, b) => a.order - b.order);
+  const rootPlans = plans.filter(plan => !plan.parentId).sort((a, b) => a.order - b.order);
 
   return (
     <DraggableFlatList
       style={styles.draggableListContent}
       data={rootPlans}
       onDragEnd={({ data }) => {
-        const updatedPlans = data.map((item, index) => ({ ...item, order: index }));
+        const updatedPlans = data.map((item, index) => ({ ...item, order: index + 1 }));
         updatePlansOrder(updatedPlans, null);
       }}
       keyExtractor={plan => plan.id.toString()}

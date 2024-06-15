@@ -7,10 +7,10 @@ import { PlanProps } from '../src/types';
 import PlanSection from '../components/plans/PlanSection';
 import { AddButton, Toggle, SectionTitle, Scroll } from '../components/shared';
 import DraggableList from '../components/plans/DraggableList';
+import AddPlan from '../components/plans/AddPlan';
 
 export default function Plans() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
-  const [rootPlans, setRootPlans] = useState<PlanProps[]>([]);
   const [filteredPlans, setFilteredPlans] = useState<PlanProps[]>([]);
   const [expanded, setExpanded] = useState<number[]>([]);
 
@@ -28,32 +28,31 @@ export default function Plans() {
   useEffect(() => {
     const filteredPlans = showCompleted ? sortedPlans : sortedPlans.filter(plan => !plan.completed);
     setFilteredPlans(filteredPlans);
-
-    const planRoots = filteredPlans.filter(plan => plan.parentId === 0);
-    setRootPlans(planRoots);
   }, [plans, showCompleted]);
 
   return (
-    <DraggableList plans={filteredPlans} expanded={expanded} setExpanded={setExpanded}/>
-    // <View style={[colors.background, { flex: 1 }]}>
-    //   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
-    //     <Toggle
-    //       onToggle={() => setShowCompleted(!showCompleted)}
-    //       value={showCompleted}
-    //       label={'Show Completed'}
-    //       style={{ paddingLeft: 15 }}
-    //     />
-    //     <Button mode='text' style={{ paddingRight: 10 }} textColor={colors.text.color} onPress={() => setExpanded([])}>
-    //       Collapse all
-    //     </Button>
-    //   </View>
+    <View style={[colors.background, { flex: 1 }]}>
+      <View
+        style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
+        <Toggle
+          onToggle={() => setShowCompleted(!showCompleted)}
+          value={showCompleted}
+          label={'Show Completed'}
+          style={{ paddingLeft: 15 }}
+        />
+        <Button mode='text' style={{ paddingRight: 10 }} textColor={colors.text.color} onPress={() => setExpanded([])}>
+          Collapse all
+        </Button>
+      </View>
 
-    //   <Scroll stickyIndices={[0]}>
-    //     <SectionTitle title='Recent Plans'>
-    //       <AddButton parentId={0} depth={0} type={'plan'} />
-    //     </SectionTitle>
-    //     <PlanSection rootPlans={rootPlans} plans={filteredPlans} expanded={expanded} setExpanded={setExpanded} />
-    //   </Scroll>
-    // </View>
+      {/* <Scroll stickyIndices={[0]}> */}
+      <SectionTitle title='Recent Plans'>
+        <AddPlan order={plans.filter(plan => !plan.parentId).length + 1} />
+      </SectionTitle>
+      <DraggableList plans={filteredPlans} expanded={expanded} setExpanded={setExpanded} />
+
+      {/* <PlanSection rootPlans={rootPlans} plans={filteredPlans} expanded={expanded} setExpanded={setExpanded} /> */}
+      {/* </Scroll> */}
+    </View>
   );
 }

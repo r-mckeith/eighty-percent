@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Swipeable } from 'react-native-gesture-handler';
 import { editHabit } from '../../src/api/Habits';
-import { editPlan } from '../../src/api/Plans';
+import { updatePlan } from '../../src/api/Plans';
 import EditModal from './EditModal';
 import RightSwipeButton from './RightSwipeButton';
 import { HabitProps, PlanProps } from '../../src/types';
@@ -38,7 +38,7 @@ export default function Edit({ item, swipeableRow, type }: Edit) {
 
   async function handleEditPlan(id: number, newName: string) {
     try {
-      await editPlan(id, newName);
+      await updatePlan(id, newName);
       swipeableRow.current?.close();
       planDispatch({ type: 'EDIT_PLAN', id, newName });
     } catch (error) {

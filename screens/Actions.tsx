@@ -91,7 +91,7 @@ export default function Actions() {
             What's your plan to improve:
           </Text>
           <Text variant='bodyMedium' style={{ paddingLeft: 20, paddingVertical: 10 }}>
-            {lastWeekReview.good}
+            {lastWeekReview.improve}
           </Text>
         </View>
       );

@@ -23,7 +23,6 @@ export type HabitProps = {
   tag_data: HabitDataProps[];
   inScopeDay?: string | null;
   completed?: string | null;
-  depth?: number;
   parentId?: number;
   target?: { times: number; timeframe: string } | null;
 };
@@ -34,14 +33,12 @@ export type TaskProps = {
   user_id: number;
   inScopeDay?: string | null;
   completed?: string | null;
-  depth?: number;
   parentId?: number;
 };
 
 export type NewTaskProps = {
   name: string;
   parentId?: number;
-  depth?: number;
 };
 
 export type PlanProps = {
@@ -50,7 +47,6 @@ export type PlanProps = {
   user_id: number;
   inScopeDay?: string | null;
   completed?: string | null;
-  depth?: number;
   parentId?: number;
   order: number;
 };
@@ -58,7 +54,6 @@ export type PlanProps = {
 export type NewPlanProps = {
   name: string;
   parentId?: number;
-  depth?: number;
 };
 
 export type GroupProps = {
