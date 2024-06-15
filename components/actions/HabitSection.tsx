@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import { DataTable, ProgressBar, MD3Colors, Text, Divider } from 'react-native-paper';
+import { ProgressBar, Text, Divider } from 'react-native-paper';
 import { selectHabit } from '../../src/api/Habits';
 import { HabitProps } from '../../src/types';
 import { useDateContext, useHabitDataContext } from '../../src/contexts';

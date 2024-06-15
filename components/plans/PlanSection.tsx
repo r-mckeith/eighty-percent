@@ -18,7 +18,7 @@ type PlanSection = {
   setExpanded: (arg0: any) => void;
 };
 
-export default function DraggableList({ plans, expanded, setExpanded }: PlanSection) {
+export default function PlanSection({ plans, expanded, setExpanded }: PlanSection) {
   const { dispatch } = usePlanContext();
   const swipeableRow = useRef<Swipeable | null>(null);
   const scheme = useColorScheme();

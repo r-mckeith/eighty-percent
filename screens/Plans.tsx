@@ -7,7 +7,7 @@ import { getColors } from '../src/colors';
 import { PlanProps } from '../src/types';
 import { Toggle, SectionTitle } from '../components/shared';
 import AddPlan from '../components/plans/AddPlan';
-import DraggableList from '../components/plans/DraggableList';
+import PlanSection from '../components/plans/PlanSection';
 
 export default function Plans() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
@@ -49,7 +49,7 @@ export default function Plans() {
         <SectionTitle title='Recent Plans'>
           <AddPlan order={plans.filter(plan => !plan.parentId).length + 1} />
         </SectionTitle>
-        <DraggableList plans={filteredPlans} expanded={expanded} setExpanded={setExpanded} />
+        <PlanSection plans={filteredPlans} expanded={expanded} setExpanded={setExpanded} />
       </NestableScrollContainer>
     </View>
   );
