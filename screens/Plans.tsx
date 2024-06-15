@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { View, useColorScheme } from 'react-native';
+import { NestableScrollContainer } from 'react-native-draggable-flatlist';
 import { Button } from 'react-native-paper';
 import { usePlanContext } from '../src/contexts';
 import { getColors } from '../src/colors';
 import { PlanProps } from '../src/types';
+import { Toggle, SectionTitle } from '../components/shared';
+import AddPlan from '../components/plans/AddPlan';
 import PlanSection from '../components/plans/PlanSection';
-import { AddButton, Toggle, SectionTitle, Scroll } from '../components/shared';
 
 export default function Plans() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
-  const [rootPlans, setRootPlans] = useState<PlanProps[]>([]);
   const [filteredPlans, setFilteredPlans] = useState<PlanProps[]>([]);
   const [expanded, setExpanded] = useState<number[]>([]);
 
@@ -27,14 +28,14 @@ export default function Plans() {
   useEffect(() => {
     const filteredPlans = showCompleted ? sortedPlans : sortedPlans.filter(plan => !plan.completed);
     setFilteredPlans(filteredPlans);
-
-    const planRoots = filteredPlans.filter(plan => plan.parentId === 0);
-    setRootPlans(planRoots);
   }, [plans, showCompleted]);
 
   return (
     <View style={[colors.background, { flex: 1 }]}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
+
+      <NestableScrollContainer stickyHeaderIndices={[1]}>
+      <View
+        style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
         <Toggle
           onToggle={() => setShowCompleted(!showCompleted)}
           value={showCompleted}
@@ -45,13 +46,11 @@ export default function Plans() {
           Collapse all
         </Button>
       </View>
-
-      <Scroll stickyIndices={[0]}>
         <SectionTitle title='Recent Plans'>
-          <AddButton parentId={0} depth={0} type={'plan'} />
+          <AddPlan order={plans.filter(plan => !plan.parentId).length + 1} />
         </SectionTitle>
-        <PlanSection rootPlans={rootPlans} plans={filteredPlans} expanded={expanded} setExpanded={setExpanded} />
-      </Scroll>
+        <PlanSection plans={filteredPlans} expanded={expanded} setExpanded={setExpanded} />
+      </NestableScrollContainer>
     </View>
   );
 }

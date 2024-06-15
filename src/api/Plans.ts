@@ -29,19 +29,36 @@ export async function addPlan(newPlan: NewPlanProps): Promise<PlanProps> {
   }
 }
 
-export async function editPlan(planId: number, newName: string): Promise<PlanProps> {
-  let { data, error } = await supabase.from('plans').update({ name: newName }).eq('id', planId).select();
+export async function updatePlan(planId: number, newName?: string, order?: number): Promise<PlanProps> {
+  const { data, error } = await supabase.from('plans').select('*').eq('id', planId).single();
 
   if (error) {
-    console.error(error);
-    throw new Error('Failed to update plan');
+    console.error('Error fetching plan:', error);
+    throw new Error('Failed to fetch plan');
   }
 
   if (!data) {
-    throw new Error('No data returned after update operation');
-  } else {
-    return data[0];
+    throw new Error('No plan found with the given ID');
   }
+
+  const newPlan = {
+    ...data,
+    name: newName ? newName : data.name,
+    order: order !== undefined ? order : data.order
+  };
+
+  const { data: updatedData, error: updateError } = await supabase.from('plans').update(newPlan).eq('id', planId).select();
+
+  if (updateError) {
+    console.error('Error updating plan:', updateError);
+    throw new Error('Failed to update plan');
+  }
+
+  if (!updatedData || updatedData.length === 0) {
+    throw new Error('No data returned after update operation');
+  }
+
+  return updatedData[0];
 }
 
 export async function deletePlan(planId: number) {
@@ -108,17 +125,17 @@ export async function markPlanAsComplete(planId: number, completionDate: Date) {
 
 // to be used later to toggle/ complete children plans
 
-// export const findChildTags = (tagId: number, tags: HabitProps[]): HabitProps[] => {
-//   if (!tags) {
-//     console.error('Tasks is undefined!');
+// export const findChildPlans = (planId: number, plans: PlanProps[]): PlanProps[] => {
+//   if (!plans) {
+//     console.error('Plan is undefined!');
 //     return [];
 //   }
 
-//   const directChildren = tags.filter(tag => tag.parentId === tagId);
+//   const directChildren = plans.filter(plan => plan.parentId === planId);
 //   let allChildren = [...directChildren];
 
 //   directChildren.forEach(child => {
-//     const grandchildren = findChildTags(child.id, tags);
+//     const grandchildren = findChildPlans(child.id, plans);
 //     allChildren = [...allChildren, ...grandchildren];
 //   });
 

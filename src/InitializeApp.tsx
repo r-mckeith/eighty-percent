@@ -29,8 +29,6 @@ const InitializeApp = ({ children }: any) => {
 
         const newPlan: any = {
           name: 'Weekly review',
-          parentId: 0,
-          depth: 1,
           inScopeDay: selectedDate.toISOString().split('T')[0],
         };
 
