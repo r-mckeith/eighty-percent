@@ -31,7 +31,15 @@ export default function DraggableList({ plans, expanded, setExpanded }: PlanSect
   }
 
   async function updatePlansOrder(updatedPlans: PlanProps[], parentId: number | null) {
-    // Filter original plans to only include those with the same parentId
+    // Optimistically update the frontend state
+    const newPlans = plans.map(plan => {
+      const updatedPlan = updatedPlans.find(p => p.id === plan.id);
+      return updatedPlan ? { ...plan, ...updatedPlan } : plan;
+    });
+
+    dispatch({ type: 'INITIALIZE_PLANS', payload: newPlans });
+
+    // Update the backend
     const originalPlans = plans
       .filter(plan => plan.parentId === parentId)
       .sort((a, b) => a.order - b.order);
@@ -42,18 +50,14 @@ export default function DraggableList({ plans, expanded, setExpanded }: PlanSect
 
     const updatedPlanIds = new Set(updatedPlans.map(plan => plan.id));
     if (movedItem) {
-      await updatePlan(movedItem.id, movedItem.name, movedItem.order);
-    }
-
-    const newPlans = plans.map(plan => {
-      if (updatedPlanIds.has(plan.id)) {
-        const updatedPlan = updatedPlans.find(p => p.id === plan.id);
-        return updatedPlan ? { ...plan, ...updatedPlan } : plan;
+      try {
+        await updatePlan(movedItem.id, movedItem.name, movedItem.order);
+      } catch (error) {
+        // Revert the optimistic update if the backend update fails
+        dispatch({ type: 'INITIALIZE_PLANS', payload: plans });
+        console.error('Failed to update plan order:', error);
       }
-      return plan;
-    });
-
-    dispatch({ type: 'INITIALIZE_PLANS', payload: newPlans });
+    }
   }
 
   function renderNestedPlans(parentId: number, level: number) {
