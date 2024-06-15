@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { View, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native';
-import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
+import { ScaleDecorator, NestableDraggableFlatList } from 'react-native-draggable-flatlist';
 import { usePlanContext } from '../../src/contexts';
 import { getColors } from '../../src/colors';
 import { PlanProps } from '../../src/types';
@@ -31,7 +31,6 @@ export default function DraggableList({ plans, expanded, setExpanded }: PlanSect
   }
 
   async function updatePlansOrder(updatedPlans: PlanProps[], parentId: number | null) {
-    // Optimistically update the frontend state
     const newPlans = plans.map(plan => {
       const updatedPlan = updatedPlans.find(p => p.id === plan.id);
       return updatedPlan ? { ...plan, ...updatedPlan } : plan;
@@ -39,21 +38,14 @@ export default function DraggableList({ plans, expanded, setExpanded }: PlanSect
 
     dispatch({ type: 'INITIALIZE_PLANS', payload: newPlans });
 
-    // Update the backend
-    const originalPlans = plans
-      .filter(plan => plan.parentId === parentId)
-      .sort((a, b) => a.order - b.order);
+    const originalPlans = plans.filter(plan => plan.parentId === parentId).sort((a, b) => a.order - b.order);
 
     const movedItem = updatedPlans.find((item, index) => item.id !== originalPlans[index]?.id);
 
-    console.log('movedItem', movedItem);
-
-    const updatedPlanIds = new Set(updatedPlans.map(plan => plan.id));
     if (movedItem) {
       try {
         await updatePlan(movedItem.id, movedItem.name, movedItem.order);
       } catch (error) {
-        // Revert the optimistic update if the backend update fails
         dispatch({ type: 'INITIALIZE_PLANS', payload: plans });
         console.error('Failed to update plan order:', error);
       }
@@ -66,7 +58,7 @@ export default function DraggableList({ plans, expanded, setExpanded }: PlanSect
       return null;
     }
     return (
-      <DraggableFlatList
+      <NestableDraggableFlatList
         data={nestedPlans}
         keyExtractor={item => item.id.toString()}
         onDragEnd={({ data }) => {
@@ -90,8 +82,7 @@ export default function DraggableList({ plans, expanded, setExpanded }: PlanSect
           <TouchableOpacity onLongPress={drag} disabled={isActive} style={{ opacity: isActive ? 0.5 : 1 }}>
             <Swipe
               swipeableRow={swipeableRow}
-              renderRightActions={() => <RightSwipe item={item} swipeableRow={swipeableRow} type={'plan'} />}
-            >
+              renderRightActions={() => <RightSwipe item={item} swipeableRow={swipeableRow} type={'plan'} />}>
               <List.Item
                 style={[
                   {
@@ -132,7 +123,7 @@ export default function DraggableList({ plans, expanded, setExpanded }: PlanSect
   const rootPlans = plans.filter(plan => !plan.parentId).sort((a, b) => a.order - b.order);
 
   return (
-    <DraggableFlatList
+    <NestableDraggableFlatList
       style={styles.draggableListContent}
       data={rootPlans}
       onDragEnd={({ data }) => {

@@ -30,7 +30,6 @@ export async function addPlan(newPlan: NewPlanProps): Promise<PlanProps> {
 }
 
 export async function updatePlan(planId: number, newName?: string, order?: number): Promise<PlanProps> {
-  console.log(planId, order)
   const { data, error } = await supabase.from('plans').select('*').eq('id', planId).single();
 
   if (error) {
@@ -61,27 +60,6 @@ export async function updatePlan(planId: number, newName?: string, order?: numbe
 
   return updatedData[0];
 }
-
-// export async function updatePlan(planId: number, newName?: string, order?: number): Promise<PlanProps> {
-//   const { data, error } = await supabase.from('plans').select('*').eq('id', planId).single();
-//   const newPlan = {
-//     ...data,
-//     newName: newName ? newName : data.name,
-//     order: order? order : data.order
-//   }
-//   let { data: updatedData, error: updateError } = await supabase.from('plans').update([newPlan]).eq('id', planId).select();
-
-//   if (updateError) {
-//     console.error(error);
-//     throw new Error('Failed to update plan');
-//   }
-
-//   if (!updatedData) {
-//     throw new Error('No data returned after update operation');
-//   } else {
-//     return updatedData[0];
-//   }
-// }
 
 export async function deletePlan(planId: number) {
   const { error } = await supabase.from('plans').delete().eq('id', planId);

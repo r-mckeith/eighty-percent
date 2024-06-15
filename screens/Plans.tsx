@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, useColorScheme } from 'react-native';
+import { NestableScrollContainer } from 'react-native-draggable-flatlist';
 import { Button } from 'react-native-paper';
 import { usePlanContext } from '../src/contexts';
 import { getColors } from '../src/colors';
 import { PlanProps } from '../src/types';
-import PlanSection from '../components/plans/PlanSection';
-import { AddButton, Toggle, SectionTitle, Scroll } from '../components/shared';
-import DraggableList from '../components/plans/DraggableList';
+import { Toggle, SectionTitle } from '../components/shared';
 import AddPlan from '../components/plans/AddPlan';
+import DraggableList from '../components/plans/DraggableList';
 
 export default function Plans() {
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
@@ -32,6 +32,8 @@ export default function Plans() {
 
   return (
     <View style={[colors.background, { flex: 1 }]}>
+
+      <NestableScrollContainer stickyHeaderIndices={[1]}>
       <View
         style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
         <Toggle
@@ -44,15 +46,11 @@ export default function Plans() {
           Collapse all
         </Button>
       </View>
-
-      {/* <Scroll stickyIndices={[0]}> */}
-      <SectionTitle title='Recent Plans'>
-        <AddPlan order={plans.filter(plan => !plan.parentId).length + 1} />
-      </SectionTitle>
-      <DraggableList plans={filteredPlans} expanded={expanded} setExpanded={setExpanded} />
-
-      {/* <PlanSection rootPlans={rootPlans} plans={filteredPlans} expanded={expanded} setExpanded={setExpanded} /> */}
-      {/* </Scroll> */}
+        <SectionTitle title='Recent Plans'>
+          <AddPlan order={plans.filter(plan => !plan.parentId).length + 1} />
+        </SectionTitle>
+        <DraggableList plans={filteredPlans} expanded={expanded} setExpanded={setExpanded} />
+      </NestableScrollContainer>
     </View>
   );
 }
